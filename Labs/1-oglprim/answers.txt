@@ -1,2 +1,20 @@
-Q1:     They make the points smaller than 1
-Q2:     
+Q1:     It has no effect on the size of the image because the smallest size
+        that can be rendered is 1 pixel
+
+Q2:     GL_LINES
+            When 2 vertices are provided for GL_LINES it creates a line between
+            those two points, and when 4 are provided it just creates lines
+            between first and second point and between the third and fourth
+            point but not between the second and third.
+        GL_LINE_STRIP
+            GL_LINE_STRIP, unlike GL_LINES, connects each new vertex added to
+            the previous one. It does not connect the last one declared to the
+            first, however.
+        GL_LINE_LOOP
+            GL_LINE_STRIP works like GL_LINE_STRIP, but it also connects the
+            last vertex back to the first.
+
+Q3:     When an odd number of vertices is provided to GL_LINES it draws nothing
+        for the final vertex 
+
+Q4:     

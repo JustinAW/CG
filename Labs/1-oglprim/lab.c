@@ -6,7 +6,7 @@
  ********************************************************/
 
 #include <GL/glut.h>
-#include <GL/freeglut.h>
+//#include <GL/freeglut.h>
 
 void init (void)
 {
@@ -20,13 +20,44 @@ void display (void)
 	glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
     
     glColor3f (1.0, 0.0, 0.0);
-    glPointSize (10.25);
+    glPointSize (4.25);
 
     glBegin(GL_POINTS);
-        glVertex3s (30, 30, 1);
-        glVertex3s (50, 50, 1);
-        glVertex3s (50, 30, 1);
+        glVertex3s (3, 3, 1);
+        glVertex3s (5, 5, 1);
+        glVertex3s (5, 3, 1);
     glEnd();
+
+
+    glBegin(GL_LINES);
+        glVertex3s (91, 70, 1);
+        glVertex3s (53, 42, 1);
+        glVertex3s (25, 34, 1);
+        glVertex3s (47, 76, 1);
+        glVertex3s (39, 58, 1);
+        glVertex3s (62, 81, 1);
+        glVertex3s (191, 70, 1);
+    glEnd();
+
+    glBegin(GL_LINE_STRIP);
+        glVertex3s (191, 70, 1);
+        glVertex3s (153, 42, 1);
+        glVertex3s (125, 34, 1);
+        glVertex3s (147, 76, 1);
+        glVertex3s (139, 58, 1);
+        glVertex3s (162, 81, 1);
+    glEnd();
+
+    glBegin(GL_LINE_LOOP);
+        glVertex3s (291, 70, 1);
+        glVertex3s (253, 42, 1);
+        glVertex3s (225, 34, 1);
+        glVertex3s (247, 76, 1);
+        glVertex3s (239, 58, 1);
+        glVertex3s (262, 81, 1);
+    glEnd();
+
+
 
 	glFlush ();
 }
