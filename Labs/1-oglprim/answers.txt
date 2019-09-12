@@ -1,5 +1,5 @@
-Q1:     It has no effect on the size of the image because the smallest size
-        that can be rendered is 1 pixel
+Q1:     It seems to round up to the nearest pixel since the smallest thing that
+        can be rendered is a single pixel
 
 Q2:     GL_LINES
             When 2 vertices are provided for GL_LINES it creates a line between
@@ -17,4 +17,6 @@ Q2:     GL_LINES
 Q3:     When an odd number of vertices is provided to GL_LINES it draws nothing
         for the final vertex 
 
-Q4:     
+Q4:     The same as Q1, it seems to round up to the nearest whole pixel value
+
+Q5:

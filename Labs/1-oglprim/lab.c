@@ -22,12 +22,12 @@ void display (void)
     glColor3f (1.0, 0.0, 0.0);
     glPointSize (4.25);
 
+/*
     glBegin(GL_POINTS);
         glVertex3s (3, 3, 1);
         glVertex3s (5, 5, 1);
         glVertex3s (5, 3, 1);
     glEnd();
-
 
     glBegin(GL_LINES);
         glVertex3s (91, 70, 1);
@@ -56,8 +56,20 @@ void display (void)
         glVertex3s (239, 58, 1);
         glVertex3s (262, 81, 1);
     glEnd();
+*/
 
-
+    glLineWidth(9.5);
+    glBegin(GL_LINES);
+        // Horizontal
+        glVertex3s (10, 20, 1);
+        glVertex3s (110, 20, 1);
+        // Vertical
+        glVertex3s (80, 100, 1);
+        glVertex3s (80, 200, 1);
+        // Fourty-Five
+        glVertex3s (30, 30, 1);
+        glVertex3s (75, 75, 1);
+    glEnd();
 
 	glFlush ();
 }
