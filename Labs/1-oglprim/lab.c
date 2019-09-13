@@ -6,7 +6,6 @@
  ********************************************************/
 
 #include <GL/glut.h>
-//#include <GL/freeglut.h>
 
 void init (void)
 {
@@ -24,51 +23,62 @@ void display (void)
 
 /*
     glBegin(GL_POINTS);
-        glVertex3s (3, 3, 1);
-        glVertex3s (5, 5, 1);
-        glVertex3s (5, 3, 1);
+        glVertex2s (3, 3);
+        glVertex2s (5, 5);
+        glVertex2s (5, 3);
     glEnd();
 
     glBegin(GL_LINES);
-        glVertex3s (91, 70, 1);
-        glVertex3s (53, 42, 1);
-        glVertex3s (25, 34, 1);
-        glVertex3s (47, 76, 1);
-        glVertex3s (39, 58, 1);
-        glVertex3s (62, 81, 1);
-        glVertex3s (191, 70, 1);
+        glVertex2s (91, 70);
+        glVertex2s (53, 42);
+        glVertex2s (25, 34);
+        glVertex2s (47, 76);
+        glVertex2s (39, 58);
+        glVertex2s (62, 81);
+        glVertex2s (191, 70);
     glEnd();
 
     glBegin(GL_LINE_STRIP);
-        glVertex3s (191, 70, 1);
-        glVertex3s (153, 42, 1);
-        glVertex3s (125, 34, 1);
-        glVertex3s (147, 76, 1);
-        glVertex3s (139, 58, 1);
-        glVertex3s (162, 81, 1);
+        glVertex2s (191, 70);
+        glVertex2s (153, 42);
+        glVertex2s (125, 34);
+        glVertex2s (147, 76);
+        glVertex2s (139, 58);
+        glVertex2s (162, 81);
     glEnd();
 
     glBegin(GL_LINE_LOOP);
-        glVertex3s (291, 70, 1);
-        glVertex3s (253, 42, 1);
-        glVertex3s (225, 34, 1);
-        glVertex3s (247, 76, 1);
-        glVertex3s (239, 58, 1);
-        glVertex3s (262, 81, 1);
+        glVertex2s (291, 70);
+        glVertex2s (253, 42);
+        glVertex2s (225, 34);
+        glVertex2s (247, 76);
+        glVertex2s (239, 58);
+        glVertex2s (262, 81);
     glEnd();
-*/
 
     glLineWidth(9.5);
     glBegin(GL_LINES);
         // Horizontal
-        glVertex3s (10, 20, 1);
-        glVertex3s (110, 20, 1);
+        glVertex2s (10, 20);
+        glVertex2s (110, 20);
         // Vertical
-        glVertex3s (80, 100, 1);
-        glVertex3s (80, 200, 1);
+        glVertex2s (80, 100);
+        glVertex2s (80, 200);
         // Fourty-Five
-        glVertex3s (30, 30, 1);
-        glVertex3s (75, 75, 1);
+        glVertex2s (30, 30);
+        glVertex2s (75, 75);
+    glEnd();
+*/
+
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2s (10, 100);
+        glVertex2s (10, 160);
+        glVertex2s (40, 160);
+        glVertex2s (80, 100);
+        glVertex2s (40, 40);
+        glVertex2s (10, 40);
+        glVertex2s (75, 75);
+//        glVertex2s (30, 30);
     glEnd();
 
 	glFlush ();

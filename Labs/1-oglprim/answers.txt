@@ -19,4 +19,25 @@ Q3:     When an odd number of vertices is provided to GL_LINES it draws nothing
 
 Q4:     The same as Q1, it seems to round up to the nearest whole pixel value
 
-Q5:
+Q5:     GL_TRIANGLES
+            This makes 2 separate triangles with the 6 vertices where the first
+            3 make one triangle and the second 3 make another
+        GL_TRIANGLE_STRIP
+            This makes it so that every new vertex that is added connects or
+            attempts to connect to the previous two vertices added
+        GL_TRIANGLE_FAN
+            This takes each vertex and connects lines between them to create a
+            set of triangles that don't have intersecting edges and form one
+            big convex polygon made from triangles
+
+Q6:     GL_TRIANGLES
+            Adding one more vertex does nothing, and so does adding two.
+        GL_TRIANGLE_STRIP
+            Adding one more vertex results in that vertex being connected
+            to the previous two vertices to create another triangle
+        GL_TRIANGLE_FAN
+            Adding one more vertex results in the first vertex being connected
+            to it as well as the last vertex, and it causes intersection of the
+            edges due to placement
+
+Q7:     
