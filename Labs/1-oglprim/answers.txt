@@ -1,3 +1,6 @@
+Justin Weigle
+Primitives Lab (Lab 1)
+
 Q1:     It seems to round up to the nearest pixel since the smallest thing that
         can be rendered is a single pixel
 
@@ -40,4 +43,65 @@ Q6:     GL_TRIANGLES
             to it as well as the last vertex, and it causes intersection of the
             edges due to placement
 
-Q7:     
+Q7:     GL_QUADS
+            Processes vertices in the order given and connects 4 vertices
+            together to make a quadrilateral
+        GL_QUAD_STRIP
+            Processes vertices expecting both left, then both right
+            vertices, or vice versa. Or both top followed by both bottom or
+            vice versa
+
+Q8:     Order with no intersections: 
+            (10, 160), 
+            (40, 160), 
+            (10, 100), 
+            (40, 100), 
+            (10, 40), 
+            (40, 40), 
+            (10, 10), 
+            (40, 10)
+
+Q9:     It will likely have no impact on GL_QUADS, but will try to create
+        another quadrilateral for GL_QUAD_STRIP
+
+Q10:    Line mode worked fine, fill mode was not so fine... (image in Images
+        folder)
+
+Q11:    The pentagon is not filled in, but the outer triangles are
+
+Q12:    
+        glBegin (GL_POLYGON);
+            glVertex2s (0, 60);
+            glEdgeFlag(GL_FALSE);
+            glVertex2s (26, 41);
+            glEdgeFlag(GL_TRUE);
+            glVertex2s (32, 60);
+        glEnd ();
+        glBegin (GL_POLYGON);
+            glVertex2s (16, 10);
+            glEdgeFlag(GL_FALSE);
+            glVertex2s (42, 29);
+            glEdgeFlag(GL_TRUE);
+            glVertex2s (26, 41);
+        glEnd ();
+        glBegin (GL_POLYGON);
+            glVertex2s (68, 10);
+            glEdgeFlag(GL_FALSE);
+            glVertex2s (59, 41);
+            glEdgeFlag(GL_TRUE);
+            glVertex2s (42, 29);
+        glEnd ();
+        glBegin (GL_POLYGON);
+            glVertex2s (84, 60);
+            glEdgeFlag(GL_FALSE);
+            glVertex2s (52, 60);
+            glEdgeFlag(GL_TRUE);
+            glVertex2s (59, 41);
+        glEnd ();
+        glBegin (GL_POLYGON);
+            glVertex2s (42, 90);
+            glEdgeFlag(GL_FALSE);
+            glVertex2s (32, 60);
+            glEdgeFlag(GL_TRUE);
+            glVertex2s (52, 60);
+        glEnd ();
