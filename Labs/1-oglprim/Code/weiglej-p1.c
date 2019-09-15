@@ -1,9 +1,13 @@
 
 /********************************************************
  *              OpenGL Primitives Lab                   *
+ *                      Lab 1                           *
  * Author: Justin Weigle                                *
  * Edited: 14 Sep, 2019                                 *
+ * Submitted: 14 Sep, 2019                              *
  ********************************************************/
+// Demonstrates the various primitives that OpenGL is
+// capable of creating
 
 #include <GL/glut.h>
 
