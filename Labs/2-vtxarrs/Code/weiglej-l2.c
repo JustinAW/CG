@@ -26,6 +26,9 @@ void display (void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    glEnableClientState(GL_VERTEX_ARRAY);
+    vertices = glVertexPointer()
+
 	//Draw panel1 (cw)
 	glBegin(GL_POLYGON);
         glColor3f(1.0, 1.0, 0.0);
