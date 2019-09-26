@@ -90,7 +90,7 @@ void reshape (int w, int h)
     }
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
-    gluOrtho2D (0.0, (GLdouble)100, 0.0, (GLdouble)100);                //values as appropriate
+    gluOrtho2D (0.0, (GLdouble)200, 0.0, (GLdouble)200);                //values as appropriate
 }
 
 
