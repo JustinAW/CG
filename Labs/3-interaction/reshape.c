@@ -79,10 +79,10 @@ void display (void)
 //reshape function
 void reshape (int w, int h)
 {
-  //glViewport ();                //values as appropriate
+  glViewport (0, 0, 100, 100);                //values as appropriate
   glMatrixMode (GL_PROJECTION);
   glLoadIdentity ();
-  //gluOrtho2D ();                //values as appropriate
+  gluOrtho2D (0.0, (GLdouble)100, 0.0, (GLdouble)100);                //values as appropriate
 }
 
 
@@ -90,19 +90,21 @@ int main (int argc, char** argv)
 {
   glutInit (&argc, argv);
   glutInitDisplayMode (GLUT_SINGLE|GLUT_RGB);
-  glutInitWindowSize (300, 300);
+  glutInitWindowSize (100, 100);
   glutInitWindowPosition (0, 0);
   glutCreateWindow (argv[0]);
   init ();
 
   //These 3 lines will migrate to the reshape function
+  /*
   glMatrixMode (GL_PROJECTION);
   glLoadIdentity ();
-  gluOrtho2D (0.0, (GLdouble) 300, 0.0, (GLdouble) 300);
+  gluOrtho2D (0.0, (GLdouble) 100, 0.0, (GLdouble) 100);
+  */
 
   glutDisplayFunc (display);
 
-  //glutReshapeFunc (reshape);  //enable when use reshape function
+  glutReshapeFunc (reshape);  //enable when use reshape function
   glutMainLoop ();
   return 0;
 }
