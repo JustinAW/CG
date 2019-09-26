@@ -1,32 +1,45 @@
-/*
- *
- */
+Q1:
+Resizing the window just resizes the square that is visible, it does not
+make any of the other squares visible
 
-// Q1
-/*
- * Resizing the window just resizes the square that is visible, it does not
- * make any of the other squares visible
- */
 
-// Q2
-//in main
+Q2:
+in main:
     glutInitWindowSize (100, 100);
     gluOrtho2D (0.0, (GLdouble) 100, 0.0, (GLdouble) 100);
 
-//Q3
-//in reshape function
+Q3:
+in reshape function:
     glViewport (0, 0, 100, 100);
     gluOrtho2D (0.0, (GLdouble) 100, 0.0, (GLdouble) 100);
 
-//Q4
-/*
- * The image being displayed always retains its square shape, but it doesn't
- * necessarily stay in the window depending on how resizing is done.
- * Resizing the window to be wider without making it taller allows the viewport
- * to extend out of the window. Resizing the window to be thinner makes the 
- * viewport smaller.  Resizing to be taller but not wider keeps the viewport 
- * the same size. Resizing to be shorter makes the viewport smaller.
- */
+Q4:
+The square being displayed always retains its square shape and it always
+keeps the whole image in view
 
-//Q5
+
+Q5:
+in reshape function:
+    if (w > h)
+    {
+        glViewport(0, 0, (GLfloat)h, (GLfloat)h/2);
+    }
+    else
+    {
+        glViewport(0, 0, (GLfloat)w, (GLfloat)w/2);
+    }
+    ...
+    gluOrtho2D (0.0, (GLdouble)200, 0.0, (GLdouble)100);
+
+Q6:
+Resizing the window does not affect the size or shape of the rendered image,
+it only shows more or less of it
+
+Q7:
+in reshape function:
+    glViewport(0, 0, w, h);
+    ...
+    gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
+
+Q8:
 

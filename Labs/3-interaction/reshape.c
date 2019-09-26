@@ -80,17 +80,20 @@ void display (void)
 void reshape (int w, int h)
 {
     //glViewport (0, 0, 100, 100);                //values as appropriate
+    /*
     if (w > h)
     {
-        glViewport(0, 0, (GLfloat)h, (GLfloat)w);
+        glViewport(0, 0, (GLfloat)h, (GLfloat)h/2);
     }
     else
     {
-        glViewport(0, 0, (GLfloat)w, (GLfloat)w);
+        glViewport(0, 0, (GLfloat)w, (GLfloat)w/2);
     }
+    */
+    glViewport(0, 0, w, h);
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
-    gluOrtho2D (0.0, (GLdouble)200, 0.0, (GLdouble)200);                //values as appropriate
+    gluOrtho2D (0.0, (GLdouble)w, 0.0, (GLdouble)h);                //values as appropriate
 }
 
 

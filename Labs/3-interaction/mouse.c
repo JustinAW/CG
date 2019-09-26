@@ -57,6 +57,21 @@ void display (void)
   glutSwapBuffers();
 }
 
+void mouse (int button, int state, int x, int y)
+{
+    switch(button)
+    {
+        case GLUT_LEFT_BUTTON:
+            if(state == GLUT_DOWN)
+            {
+                glutPostRedisplay();
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 int main (int argc, char** argv)
 {
   glutInit (&argc, argv);
@@ -66,6 +81,7 @@ int main (int argc, char** argv)
   glutCreateWindow (argv[0]);
   init ();
   glutDisplayFunc (display);
+  glutMouseFunc (mouse);
   glutMainLoop ();
   return 0;
 }
