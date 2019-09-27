@@ -1,3 +1,12 @@
+/************************************
+ *      Interaction Lab             *
+ *          Lab 3                   *
+ *  Author: Justin Weigle           *
+ *  Edited: 26 Sep 2019             *
+ *  Submitted: 26 Sep 2019          *
+ ************************************/
+
+
 ________________Q1_________________
 Resizing the window just resizes the square that is visible, it does not
 make any of the other squares visible
