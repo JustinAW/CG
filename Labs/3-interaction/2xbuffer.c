@@ -33,7 +33,7 @@ void display (void);
 int main (int argc, char** argv)
 {
   glutInit (&argc, argv);
-  glutInitDisplayMode (GLUT_SINGLE|GLUT_RGB);
+  glutInitDisplayMode (GLUT_DOUBLE|GLUT_RGB);
   glutInitWindowSize (800, 800);
   glutInitWindowPosition (0, 50);
   glutCreateWindow (argv[0]);
@@ -85,6 +85,7 @@ void display (void)
     X = X0; Y += YINC;
   }
       
+  glutSwapBuffers();
   glFlush ();
 }
 

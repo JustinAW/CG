@@ -53,6 +53,30 @@ void display (void)
 }
 
 //Put menu and submenu function definitions here
+void choice (int selection)
+{
+    if (selection == 1)
+    {
+        exit(0);
+    }
+}
+
+void color_choice (int selection)
+{
+    if (selection == 1)
+    {
+        Red = 1.0, Green = 0.0, Blue = 0.0;
+    }
+    if (selection == 2)
+    {
+        Red = 0.0, Green = 1.0, Blue = 0.0;
+    }
+    if (selection == 3)
+    {
+        Red = 0.0, Green = 0.0, Blue = 1.0;
+    }
+    glutPostRedisplay();
+}
 
 int main (int argc, char** argv)
 {
@@ -64,6 +88,15 @@ int main (int argc, char** argv)
   init ();
 
   //Create the submenu and menu here
+    int submenu = glutCreateMenu(color_choice);
+    glutAddMenuEntry("Red", 1);
+    glutAddMenuEntry("Green", 2);
+    glutAddMenuEntry("Blue", 3);
+
+    glutCreateMenu(choice);
+    glutAddMenuEntry("EXIT", 1);
+    glutAddSubMenu("Change Color", submenu);
+    glutAttachMenu (GLUT_RIGHT_BUTTON);
 
   glutDisplayFunc (display);
   glutReshapeFunc (reshape);

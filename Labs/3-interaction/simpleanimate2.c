@@ -15,11 +15,13 @@
 #include <time.h>
 #include <stdio.h>
 
-long ResetTime;
 int Cycle = 0;
 float Colors[3][3] = {{0.0, 1.0, 0.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}};
 float Red, Green, Blue;
-long Time, ResetTime;
+long Time, ResetTime = 0;
+float position = 0.0;
+float increment = 0.5;
+float speed = 1.0;
 
 
 void init (void)
@@ -44,13 +46,9 @@ void idle (void)
 {
   Time = clock();
   if (Time > ResetTime) {
-    ResetTime = ResetTime + 3 * CLOCKS_PER_SEC;
-    Cycle++;
-    Cycle = Cycle % 3;
+    ResetTime = ResetTime + increment * CLOCKS_PER_SEC;
+    position += speed;
     glutPostRedisplay();
-    Red = Colors[Cycle][0];
-    Green = Colors[Cycle][1];
-    Blue = Colors[Cycle][2];
   }
 }
 
@@ -65,13 +63,36 @@ void display (void)
   Blue = Colors[Cycle][2];
   glColor3f (Red, Green, Blue);
   glBegin (GL_POLYGON);
-    glVertex2s (6, 0);
-    glVertex2s (16, 0);
-    glVertex2s (16, 42);
-    glVertex2s (6, 42);
+    glVertex2s (position, 0);
+    glVertex2s (position+10, 0);
+    glVertex2s (position+10, 42);
+    glVertex2s (position, 42);
   glEnd ();
 
   glFlush ();
+}
+
+void mouse (int button, int state, int x, int y)
+{
+    switch(button)
+    {
+        case GLUT_LEFT_BUTTON:
+            if(state == GLUT_DOWN)
+            {
+                printf("Speeding up\n");
+                speed = 2.0;
+            }
+            break;
+        case GLUT_RIGHT_BUTTON:
+            if(state == GLUT_DOWN)
+            {
+                printf("Slowing back down\n");
+                speed = 1.0;
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 int main (int argc, char** argv)
@@ -87,6 +108,7 @@ int main (int argc, char** argv)
   glutDisplayFunc (display);
   Time = clock();                 //initialize timer
   ResetTime = Time + 3 * CLOCKS_PER_SEC;
+  glutMouseFunc (mouse);
   glutMainLoop ();
   return 0;
 }

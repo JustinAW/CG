@@ -11,6 +11,7 @@
 
 
 #include <GL/glut.h>
+#include <stdio.h>
 
 float R1 = 1.0, G1 = 0.0, B1 = 0.0, 
       R2 = 0.0, G2 = 1.0, B2 = 0.0, 
@@ -19,7 +20,7 @@ float BGR = 1.0, BGG = 1.0, BGB = 1.0; //background colors
 int   X1 = 50, Y1 = 50, 
       X2 = 200, Y2 = 100,
       X3 = 225, Y3 = 300;              //coords of squares
-int   W = 30;                          //width of squares     
+int   W = 30;                          //width of squares
 
 void init (void)
 {
@@ -57,6 +58,7 @@ void display (void)
   glutSwapBuffers();
 }
 
+void check_squares (int x, int y);
 void mouse (int button, int state, int x, int y)
 {
     switch(button)
@@ -64,11 +66,57 @@ void mouse (int button, int state, int x, int y)
         case GLUT_LEFT_BUTTON:
             if(state == GLUT_DOWN)
             {
+                check_squares(x, y);
                 glutPostRedisplay();
             }
             break;
         default:
             break;
+    }
+}
+
+void keyboard (unsigned char key, int x, int y)
+{
+    switch(key)
+    {
+        case 'e':
+            check_squares(x, y);
+            glutPostRedisplay();
+            break;
+        case 'E':
+            check_squares(x, y);
+            glutPostRedisplay();
+            break;
+        default:
+            break;
+    }
+}
+
+void check_squares (int x, int y)
+{
+    if(X1 < x && x < (X1 + W) && (400 - Y1 - W) < y && y < (400 - Y1))
+    {
+        printf("Red:\n");
+        printf("x: %d - y: %d\n", x, y);
+        R1 = BGR;
+        G1 = BGG;
+        B1 = BGB;
+    }
+    if(X2 < x && x < (X2 + W) && (400 - Y2 - W) < y && y < (400 - Y2))
+    {
+        printf("Green:\n");
+        printf("x: %d - y: %d\n", x, y);
+        R2 = BGR;
+        G2 = BGG;
+        B2 = BGB;
+    }
+    if(X3 < x && x < (X3 + W) && (400 - Y3 - W) < y && y < (400 - Y3))
+    {
+        printf("Blue:\n");
+        printf("x: %d - y: %d\n", x, y);
+        R3 = BGR;
+        G3 = BGG;
+        B3 = BGB;
     }
 }
 
@@ -82,6 +130,7 @@ int main (int argc, char** argv)
   init ();
   glutDisplayFunc (display);
   glutMouseFunc (mouse);
+  glutKeyboardFunc (keyboard);
   glutMainLoop ();
   return 0;
 }
