@@ -97,6 +97,10 @@ void draw_shadows (void)
         74.00, 379.0, 0.0, 0.22, 0.08, 0.08,    //20
         108.0, 526.0, 0.0, 0.22, 0.08, 0.08,    //21
         240.0, 426.0, 0.0, 0.22, 0.08, 0.08,    //22
+        113.0, 538.0, 0.0, 0.22, 0.08, 0.08,    //23
+        195.0, 478.0, 0.0, 0.22, 0.08, 0.08,    //24
+        229.0, 559.0, 0.0, 0.22, 0.08, 0.08,    //25
+        167.0, 642.0, 0.0, 0.22, 0.08, 0.08,    //26
     };
 
     glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
@@ -107,9 +111,11 @@ void draw_shadows (void)
     static GLubyte belowkeypent[] = {5, 6, 7, 8, 9};
     static GLubyte belowkeyline[] = {5, 10};
     static GLubyte base[] = {11, 12, 13, 14, 15};
-    static GLubyte lbase[] = {16, 17};
+    static GLubyte lbaseline[] = {16, 17};
     static GLubyte smlefttri[] = {18, 19, 20};
     static GLubyte lglefttri[] = {20, 21, 22};
+    static GLubyte ltopl[] = {23, 24, 25, 26};
+    static GLubyte ltoppent[] = {25, 26, 27, 28, 29};
 
 
     glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, key);
@@ -119,10 +125,11 @@ void draw_shadows (void)
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, belowkeyline);
     
     glDrawElements(GL_POLYGON, 5, GL_UNSIGNED_BYTE, base);
-    glLineWidth(11.0);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, lbase);
+    glLineWidth(13.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, lbaseline);
     glDrawElements(GL_POLYGON, 3, GL_UNSIGNED_BYTE, smlefttri);
     glDrawElements(GL_POLYGON, 3, GL_UNSIGNED_BYTE, lglefttri);
+    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ltopl);
 }
 
 void display (void)
