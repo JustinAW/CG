@@ -99,7 +99,7 @@ void draw_shadows (void)
         240.0, 426.0, 0.0, 0.22, 0.08, 0.08,    //22
         113.0, 538.0, 0.0, 0.22, 0.08, 0.08,    //23
         195.0, 478.0, 0.0, 0.22, 0.08, 0.08,    //24
-        229.0, 559.0, 0.0, 0.22, 0.08, 0.08,    //25
+        229.0, 551.0, 0.0, 0.22, 0.08, 0.08,    //25
         167.0, 642.0, 0.0, 0.22, 0.08, 0.08,    //26
         232.0, 758.0, 0.0, 0.22, 0.08, 0.08,    //27
         419.0, 756.0, 0.0, 0.22, 0.08, 0.08,    //28
@@ -122,6 +122,17 @@ void draw_shadows (void)
         714.0, 499.0, 0.0, 0.22, 0.08, 0.08,    //45
         829.0, 378.0, 0.0, 0.22, 0.08, 0.08,    //46
         806.0, 537.0, 0.0, 0.22, 0.08, 0.08,    //47
+        166.0, 643.0, 0.0, 0.15, 0.08, 0.08,    //48
+        240.0, 551.0, 0.0, 0.15, 0.08, 0.08,    //49
+        426.0, 630.0, 0.0, 0.15, 0.08, 0.08,    //50
+        418.0, 758.0, 0.0, 0.15, 0.08, 0.08,    //51
+        284.0, 443.0, 0.0, 0.15, 0.08, 0.08,    //52
+        454.0, 621.0, 0.0, 0.15, 0.08, 0.08,    //53
+        568.0, 756.0, 0.0, 0.15, 0.08, 0.08,    //54
+        560.0, 603.0, 0.0, 0.15, 0.08, 0.08,    //55
+        676.0, 551.0, 0.0, 0.15, 0.08, 0.08,    //56
+        536.0, 552.0, 0.0, 0.15, 0.08, 0.08,    //57
+        540.0, 505.0, 0.0, 0.15, 0.08, 0.08,    //58
     };
 
     glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
@@ -143,6 +154,11 @@ void draw_shadows (void)
     static GLubyte rtoptri[] = {38, 39, 40};
     static GLubyte rquad[] = {41, 42, 43, 44};
     static GLubyte rpent[] = {43, 44, 45, 46, 47};
+    static GLubyte tl3lines[] = {48, 49, 50, 51};
+    static GLubyte tllinel[] = {49, 52};
+    static GLubyte tlliner[] = {50, 53};
+    static GLubyte tr2lines[] = {54, 55, 56};
+    static GLubyte trlineb[] = {57, 58};
 
     glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, key);
     glDrawElements(GL_POLYGON, 3, GL_UNSIGNED_BYTE, belowkeytri);
@@ -163,6 +179,13 @@ void draw_shadows (void)
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, belowkeyline);
     glLineWidth(13.0);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, lbaseline);
+    glLineWidth(11.0);
+    glDrawElements(GL_LINE_STRIP, 4, GL_UNSIGNED_BYTE, tl3lines);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, tllinel);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, tlliner);
+    glLineWidth(13.0);
+    glDrawElements(GL_LINE_STRIP, 3, GL_UNSIGNED_BYTE, tr2lines);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, trlineb);
 }
 
 void display (void)
@@ -181,6 +204,15 @@ void display (void)
 
     // Draw the shadows
     draw_shadows();
+
+    // Draw the dodecahedron
+    //draw_dodecahedron();
+
+    // Draw the key
+    //draw_key();
+
+    // Draw the title
+    //draw_title();
 
     glFlush ();
 }
