@@ -68,11 +68,11 @@ void draw_shadows (void)
     static GLfloat vertexValues[] = {
         459.0, 549.0, 0.0, 0.27, 0.06, 0.06,    //0
         612.0, 443.0, 0.0, 0.30, 0.05, 0.05,    //1
-        458.0, 332.0, 0.0, 0.25, 0.05, 0.05,    //2
+        454.0, 328.0, 0.0, 0.25, 0.05, 0.05,    //2
         300.0, 442.0, 0.0, 0.27, 0.06, 0.06,    //3
-        319.0, 400.0, 0.0, 0.30, 0.05, 0.05,    //4
+        319.0, 420.0, 0.0, 0.30, 0.05, 0.05,    //4
         340.0, 352.0, 0.0, 0.30, 0.05, 0.05,    //5
-        445.0, 310.0, 0.0, 0.30, 0.05, 0.05,    //6
+        445.0, 315.0, 0.0, 0.30, 0.05, 0.05,    //6
         445.0, 198.0, 0.0, 0.20, 0.05, 0.05,    //7
         334.0, 198.0, 0.0, 0.20, 0.05, 0.05,    //8
         310.0, 272.0, 0.0, 0.30, 0.05, 0.05,    //9
@@ -81,8 +81,8 @@ void draw_shadows (void)
         582.0, 191.0, 0.0, 0.55, 0.09, 0.08,    //12
         676.0, 138.0, 0.0, 0.34, 0.09, 0.08,    //13
         459.0, 97.00, 0.0, 0.20, 0.08, 0.08,    //14
-        231.0, 134.0, 0.0, 0.20, 0.08, 0.08,    //15
-        218.0, 150.0, 0.0, 0.20, 0.06, 0.06,    //16
+        229.0, 134.0, 0.0, 0.20, 0.08, 0.08,    //15
+        220.0, 147.0, 0.0, 0.20, 0.06, 0.06,    //16
         283.0, 325.0, 0.0, 0.22, 0.08, 0.08,    //17
         139.0, 276.0, 0.0, 0.12, 0.08, 0.08,    //18
         128.0, 395.0, 0.0, 0.16, 0.08, 0.08,    //19
@@ -163,9 +163,9 @@ void draw_shadows (void)
     
     glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 14);
 
-    glLineWidth(7.0);
+    glLineWidth(9.0);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, belowkeyline);
-    glLineWidth(13.0);
+    glLineWidth(15.0);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, lbaseline);
     glLineWidth(11.0);
     glDrawElements(GL_LINE_STRIP, 4, GL_UNSIGNED_BYTE, tl3lines);
@@ -176,6 +176,50 @@ void draw_shadows (void)
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, trlineb);
     glLineWidth(9.0);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ground);
+}
+
+void draw_highlights()
+{
+    static GLfloat vertexValues[] = {
+        630.0, 428.0, 0.0, 0.75, 0.13, 0.12,    //0
+        654.0, 415.0, 0.0, 0.70, 0.12, 0.11,    //1
+        579.0, 197.0, 0.0, 0.50, 0.09, 0.08,    //2
+        463.0, 197.0, 0.0, 0.47, 0.08, 0.08,    //3
+        463.0, 315.0, 0.0, 0.75, 0.13, 0.12,    //4
+        279.0, 428.0, 0.0, 0.81, 0.20, 0.16,    //5
+        325.0, 400.0, 0.0, 0.85, 0.21, 0.17,    //6
+        346.0, 351.0, 0.0, 0.83, 0.20, 0.17,    //7
+        270.0, 390.0, 0.0, 0.83, 0.21, 0.17,    //8
+        262.0, 415.0, 0.0, 0.86, 0.22, 0.18,    //9
+        273.0, 384.0, 0.0, 0.68, 0.15, 0.12,    //10
+        342.0, 348.0, 0.0, 0.71, 0.15, 0.13,    //11
+        312.0, 260.0, 0.0, 0.61, 0.13, 0.11,    //12
+        285.0, 314.0, 0.0, 0.84, 0.25, 0.20,    //13
+        327.0, 190.0, 0.0, 0.82, 0.29, 0.23,    //14
+        222.0, 136.0, 0.0, 0.44, 0.17, 0.14,    //15
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //16
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //17
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //18
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //19
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //20
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //BLANK
+    };
+
+    glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
+    glColorPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
+
+    static GLubyte centpent[] = {0, 1, 2, 3, 4};
+    static GLubyte smcentpent[] = {5, 6, 7, 8, 9};
+    static GLubyte centtri[] = {10, 11, 12};
+    static GLubyte lefttri[] = {13, 14, 15};
+    static GLubyte leftpent[] = {16, 17, 18, 19, 20};
+
+    static GLsizei count[] = {5, 5, 3, 3, 5};
+    static GLvoid * indices[5] = {
+        centpent, smcentpent, centtri, lefttri, leftpent,
+    };
+
+    glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 5);
 }
 
 void display (void)
@@ -190,7 +234,7 @@ void display (void)
     draw_bg();
 
     // Draw the highlights
-    //draw_highlights();
+    draw_highlights();
 
     // Draw the shadows
     draw_shadows();
