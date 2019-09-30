@@ -2,7 +2,7 @@
 /********************************************************
  *                    Project 1                         *
  * Author: Justin Weigle                                *
- * Edited: 27 Sep, 2019                                 *
+ * Edited: 29 Sep, 2019                                 *
  * Submitted:                                           *
  ********************************************************/
 
@@ -127,6 +127,18 @@ void draw_shadows (void)
         540.0, 505.0, 0.0, 0.26, 0.08, 0.08,    //58
         228.0, 130.0, 0.0, 0.12, 0.05, 0.05,    //59
         000.0, 142.0, 0.0, 0.07, 0.05, 0.05,    //60
+        115.0, 310.0, 0.0, 0.22, 0.09, 0.08,    //61
+        125.0, 382.0, 0.0, 0.18, 0.09, 0.07,    //62
+        425.0, 624.0, 0.0, 0.47, 0.09, 0.08,    //63
+        452.0, 559.0, 0.0, 0.54, 0.11, 0.11,    //64
+        482.0, 635.0, 0.0, 0.76, 0.17, 0.14,    //65
+        672.0, 549.0, 0.0, 0.53, 0.10, 0.09,    //66
+        485.0, 635.0, 0.0, 0.70, 0.17, 0.14,    //67
+        466.0, 556.0, 0.0, 0.32, 0.09, 0.09,    //68
+        462.0, 625.0, 0.0, 0.41, 0.12, 0.11,    //69
+        621.0, 450.0, 0.0, 0.56, 0.11, 0.11,    //70
+        744.0, 645.0, 0.0, 0.31, 0.09, 0.09,    //70
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //
     };
 
     glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
@@ -176,6 +188,26 @@ void draw_shadows (void)
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, trlineb);
     glLineWidth(9.0);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ground);
+
+    // lines tacked on due to highlight/shadow overlap
+    static GLubyte lvertl[] = {61, 62};
+    static GLubyte tll[] = {63, 64};
+    static GLubyte trlhor[] = {65, 66};
+    static GLubyte trlvert[] = {67, 68};
+    static GLubyte trlsm[] = {67, 69};
+    static GLubyte rldown[] = {66, 70};
+    static GLubyte rlup[] = {66, 71};
+
+    glLineWidth(7.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, lvertl);
+    glLineWidth(5.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, tll);
+    glLineWidth(7.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, trlhor);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, trlvert);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, trlsm);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, rldown);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, rlup);
 }
 
 /*
@@ -224,6 +256,13 @@ void draw_highlights()
         828.0, 355.0, 0.0, 0.46, 0.10, 0.09,    //37
         719.0, 191.0, 0.0, 0.30, 0.09, 0.08,    //38
         589.0, 191.0, 0.0, 0.40, 0.09, 0.08,    //39
+        124.0, 382.0, 0.0, 0.36, 0.11, 0.11,    //40
+        256.0, 420.0, 0.0, 0.93, 0.32, 0.23,    //41
+        491.0, 756.0, 0.0, 0.54, 0.12, 0.11,    //42
+        485.0, 630.0, 0.0, 0.86, 0.17, 0.14,    //43
+        660.0, 415.0, 0.0, 0.78, 0.12, 0.10,    //44
+        805.0, 379.0, 0.0, 0.45, 0.10, 0.08,    //45
+        807.0, 326.0, 0.0, 0.44, 0.10, 0.09,    //46
         000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //
     };
 
@@ -241,6 +280,10 @@ void draw_highlights()
     static GLubyte trtrilg[] = {30, 31, 32};
     static GLubyte rquad[] = {33, 34, 35, 36};
     static GLubyte rpent[] = {35, 37, 38, 39, 36};
+    static GLubyte lhorl[] = {40, 41};
+    static GLubyte trhorl[] = {42, 43};
+    static GLubyte brhor[] = {44, 45};
+    static GLubyte brvert[] = {45, 46};
 
     static GLsizei count[] = {5, 5, 3, 3, 5, 4, 4, 3, 3, 4, 5};
     static GLvoid * indices[11] = {
@@ -249,6 +292,15 @@ void draw_highlights()
     };
 
     glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 11);
+
+    glLineWidth(5.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, lhorl);
+    glLineWidth(7.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, trhorl);
+    glLineWidth(1.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, brhor);
+    glLineWidth(7.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, brvert);
 }
 
 void display (void)
