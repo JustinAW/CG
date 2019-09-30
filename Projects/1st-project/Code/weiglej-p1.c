@@ -178,31 +178,53 @@ void draw_shadows (void)
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ground);
 }
 
+/*
+ * Draws the parts that are brighter
+ */
 void draw_highlights()
 {
     static GLfloat vertexValues[] = {
-        630.0, 428.0, 0.0, 0.75, 0.13, 0.12,    //0
+        628.0, 432.0, 0.0, 0.75, 0.13, 0.12,    //0
         654.0, 415.0, 0.0, 0.70, 0.12, 0.11,    //1
         579.0, 197.0, 0.0, 0.50, 0.09, 0.08,    //2
         463.0, 197.0, 0.0, 0.47, 0.08, 0.08,    //3
         463.0, 315.0, 0.0, 0.75, 0.13, 0.12,    //4
-        279.0, 428.0, 0.0, 0.81, 0.20, 0.16,    //5
-        325.0, 400.0, 0.0, 0.85, 0.21, 0.17,    //6
+        282.0, 437.0, 0.0, 0.81, 0.20, 0.16,    //5
+        320.0, 420.0, 0.0, 0.85, 0.21, 0.17,    //6
         346.0, 351.0, 0.0, 0.83, 0.20, 0.17,    //7
         270.0, 390.0, 0.0, 0.83, 0.21, 0.17,    //8
-        262.0, 415.0, 0.0, 0.86, 0.22, 0.18,    //9
+        260.0, 420.0, 0.0, 0.86, 0.22, 0.18,    //9
         273.0, 384.0, 0.0, 0.68, 0.15, 0.12,    //10
         342.0, 348.0, 0.0, 0.71, 0.15, 0.13,    //11
         312.0, 260.0, 0.0, 0.61, 0.13, 0.11,    //12
         285.0, 314.0, 0.0, 0.84, 0.25, 0.20,    //13
         327.0, 190.0, 0.0, 0.82, 0.29, 0.23,    //14
         222.0, 136.0, 0.0, 0.44, 0.17, 0.14,    //15
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //16
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //17
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //18
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //19
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //20
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //BLANK
+        252.0, 429.0, 0.0, 0.67, 0.16, 0.13,    //16
+        282.0, 329.0, 0.0, 0.66, 0.16, 0.13,    //17
+        219.0, 152.0, 0.0, 0.43, 0.16, 0.14,    //18
+        131.0, 284.0, 0.0, 0.25, 0.10, 0.09,    //19
+        125.0, 398.0, 0.0, 0.28, 0.09, 0.08,    //20
+        232.0, 558.0, 0.0, 0.40, 0.10, 0.09,    //21
+        280.0, 443.0, 0.0, 0.56, 0.11, 0.10,    //22
+        256.0, 425.0, 0.0, 0.56, 0.11, 0.10,    //23
+        186.0, 479.0, 0.0, 0.42, 0.11, 0.09,    //24
+        244.0, 548.0, 0.0, 0.36, 0.09, 0.09,    //25
+        453.0, 638.0, 0.0, 0.46, 0.09, 0.08,    //26
+        458.0, 556.0, 0.0, 0.51, 0.09, 0.08,    //27
+        286.0, 443.0, 0.0, 0.40, 0.09, 0.09,    //28
+        485.0, 756.0, 0.0, 0.50, 0.11, 0.09,    //29
+        609.0, 756.0, 0.0, 0.42, 0.11, 0.09,    //30
+        483.0, 633.0, 0.0, 0.63, 0.13, 0.11,    //31
+        681.0, 551.0, 0.0, 0.61, 0.13, 0.10,    //32
+        634.0, 435.0, 0.0, 0.75, 0.14, 0.12,    //33
+        708.0, 483.0, 0.0, 0.81, 0.17, 0.14,    //34
+        723.0, 466.0, 0.0, 0.75, 0.17, 0.14,    //35
+        659.0, 414.0, 0.0, 0.70, 0.14, 0.12,    //36
+        828.0, 355.0, 0.0, 0.46, 0.10, 0.09,    //37
+        719.0, 191.0, 0.0, 0.30, 0.09, 0.08,    //38
+        589.0, 191.0, 0.0, 0.40, 0.09, 0.08,    //39
+        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //
     };
 
     glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
@@ -213,13 +235,20 @@ void draw_highlights()
     static GLubyte centtri[] = {10, 11, 12};
     static GLubyte lefttri[] = {13, 14, 15};
     static GLubyte leftpent[] = {16, 17, 18, 19, 20};
+    static GLubyte tlquadsm[] = {21, 22, 23, 24};
+    static GLubyte tlquadlg[] = {25, 26, 27, 28};
+    static GLubyte trtrism[] = {29, 30, 31};
+    static GLubyte trtrilg[] = {30, 31, 32};
+    static GLubyte rquad[] = {33, 34, 35, 36};
+    static GLubyte rpent[] = {35, 37, 38, 39, 36};
 
-    static GLsizei count[] = {5, 5, 3, 3, 5};
-    static GLvoid * indices[5] = {
-        centpent, smcentpent, centtri, lefttri, leftpent,
+    static GLsizei count[] = {5, 5, 3, 3, 5, 4, 4, 3, 3, 4, 5};
+    static GLvoid * indices[11] = {
+        centpent, smcentpent, centtri, lefttri, leftpent, tlquadsm, tlquadlg,
+        trtrism, trtrilg, rquad, rpent,
     };
 
-    glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 5);
+    glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 11);
 }
 
 void display (void)
@@ -267,28 +296,3 @@ int main (int argc, char** argv)
     glutMainLoop ();
     return 0;
 }
-    /*
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ind1);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ind2);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ind3);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ind4);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ind5);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ind6);
-    */
-
-    /*
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, key);
-    glDrawElements(GL_POLYGON, 3, GL_UNSIGNED_BYTE, belowkeytri);
-    glDrawElements(GL_POLYGON, 5, GL_UNSIGNED_BYTE, belowkeypent);
-    glDrawElements(GL_POLYGON, 5, GL_UNSIGNED_BYTE, base);
-    glDrawElements(GL_POLYGON, 3, GL_UNSIGNED_BYTE, smlefttri);
-    glDrawElements(GL_POLYGON, 3, GL_UNSIGNED_BYTE, lglefttri);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, ltopl);
-    glDrawElements(GL_POLYGON, 5, GL_UNSIGNED_BYTE, ltoppent);
-    glDrawElements(GL_POLYGON, 5, GL_UNSIGNED_BYTE, topcent);
-    glDrawElements(GL_POLYGON, 5, GL_UNSIGNED_BYTE, rtoppent);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, rtopquad);
-    glDrawElements(GL_POLYGON, 3, GL_UNSIGNED_BYTE, rtoptri);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, rquad);
-    glDrawElements(GL_POLYGON, 5, GL_UNSIGNED_BYTE, rpent);
-    */
