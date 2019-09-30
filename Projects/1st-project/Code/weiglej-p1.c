@@ -2,7 +2,7 @@
 /********************************************************
  *                    Project 1                         *
  * Author: Justin Weigle                                *
- * Edited: 29 Sep, 2019                                 *
+ * Edited: 30 Sep, 2019                                 *
  * Submitted:                                           *
  ********************************************************
  *      Draws the album art for Asking Alexandria's     *
@@ -383,22 +383,23 @@ void draw_dodecahedron()
     static GLubyte bkrbot1[] = {26, 28};
     static GLubyte bkrbot2[] = {28, 10};
 
-    static GLubyte ftlbot1[] = {};
-    static GLubyte ftlbot2[] = {};
-    static GLubyte ftlbot3[] = {};
+    static GLubyte ftlbot1[] = {14, 17};
+    static GLubyte ftlbot2[] = {16, 32};
+    static GLubyte ftlbot3[] = {32, 30};
+    static GLubyte ftlbot4[] = {30, 13};
 
-    static GLubyte ftltop[] = {};
+    static GLubyte ftltop[] = {33, 34};
 
-    static GLubyte ftrtop1[] = {};
-    static GLubyte ftrtop2[] = {};
+    static GLubyte ftrtop1[] = {36, 38};
+    static GLubyte ftrtop2[] = {38, 29};
 
-    static GLubyte ftrbot[] = {};
+    static GLubyte ftrbot[] = {38, 30};
 
-    static GLubyte front1[] = {};
-    static GLubyte front2[] = {};
-    static GLubyte front3[] = {};
-    static GLubyte front4[] = {};
-    static GLubyte front5[] = {};
+    static GLubyte front1[] = {31, 33};
+    static GLubyte front2[] = {33, 35};
+    static GLubyte front3[] = {35, 37};
+    static GLubyte front4[] = {37, 39};
+    static GLubyte front5[] = {39, 31};
 
     glLineWidth(10.0);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back1);
@@ -426,6 +427,25 @@ void draw_dodecahedron()
 
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot1);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot2);
+
+    glLineWidth(15.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot2);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot3);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot4);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftltop);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftrtop1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftrtop2);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftrbot);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front2);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front3);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front4);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front5);
 }
 
 void display (void)
