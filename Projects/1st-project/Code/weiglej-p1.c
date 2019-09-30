@@ -4,6 +4,9 @@
  * Author: Justin Weigle                                *
  * Edited: 29 Sep, 2019                                 *
  * Submitted:                                           *
+ ********************************************************
+ *      Draws the album art for Asking Alexandria's     *
+ *      self titled album                               *
  ********************************************************/
 
 #include <GL/glut.h>
@@ -138,7 +141,6 @@ void draw_shadows (void)
         462.0, 625.0, 0.0, 0.41, 0.12, 0.11,    //69
         621.0, 450.0, 0.0, 0.56, 0.11, 0.11,    //70
         744.0, 645.0, 0.0, 0.31, 0.09, 0.09,    //70
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //
     };
 
     glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
@@ -263,7 +265,6 @@ void draw_highlights()
         660.0, 415.0, 0.0, 0.78, 0.12, 0.10,    //44
         805.0, 379.0, 0.0, 0.45, 0.10, 0.08,    //45
         807.0, 326.0, 0.0, 0.44, 0.10, 0.09,    //46
-        000.0, 000.0, 0.0, 0.00, 0.00, 0.00,    //
     };
 
     glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
@@ -303,6 +304,130 @@ void draw_highlights()
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, brvert);
 }
 
+/*
+ * Draws the dodecahedron on the album cover
+ */
+void draw_dodecahedron()
+{
+    //vertices repeated once for texturing purposes
+    static GLfloat vertexValues[] = {
+        458.0, 555.0, 0.0, 0.00, 1.00, 1.00,    //0
+        458.0, 555.0, 0.0, 0.00, 1.00, 1.00,    //1 ]
+        659.0, 417.0, 0.0, 0.00, 1.00, 1.00,    //2
+        659.0, 417.0, 0.0, 0.00, 1.00, 1.00,    //3 ]
+        584.0, 193.0, 0.0, 0.00, 1.00, 1.00,    //4
+        584.0, 193.0, 0.0, 0.00, 1.00, 1.00,    //5 ]
+        331.0, 193.0, 0.0, 0.00, 1.00, 1.00,    //6
+        331.0, 193.0, 0.0, 0.00, 1.00, 1.00,    //7 ]
+        257.0, 420.0, 0.0, 0.00, 1.00, 1.00,    //8
+        257.0, 420.0, 0.0, 0.00, 1.00, 1.00,    //9 ]
+        682.0, 137.0, 0.0, 0.00, 1.00, 1.00,    //10
+        682.0, 137.0, 0.0, 0.00, 1.00, 1.00,    //11]
+        459.0, 92.00, 0.0, 0.00, 1.00, 1.00,    //12
+        459.0, 92.00, 0.0, 0.00, 1.00, 1.00,    //13]
+        224.0, 133.0, 0.0, 0.00, 1.00, 1.00,    //14
+        224.0, 133.0, 0.0, 0.00, 1.00, 1.00,    //15]
+        76.00, 368.0, 0.0, 0.00, 1.00, 1.00,    //16
+        76.00, 368.0, 0.0, 0.00, 1.00, 1.00,    //17]
+        106.0, 535.0, 0.0, 0.00, 1.00, 1.00,    //18
+        106.0, 535.0, 0.0, 0.00, 1.00, 1.00,    //19]
+        230.0, 762.0, 0.0, 0.00, 1.00, 1.00,    //20
+        230.0, 762.0, 0.0, 0.00, 1.00, 1.00,    //21]
+        458.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //22
+        458.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //23]
+        682.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //24
+        682.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //25]
+        807.0, 537.0, 0.0, 0.00, 1.00, 1.00,    //26
+        807.0, 537.0, 0.0, 0.00, 1.00, 1.00,    //27]
+        832.0, 363.0, 0.0, 0.00, 1.00, 1.00,    //28
+        832.0, 363.0, 0.0, 0.00, 1.00, 1.00,    //29]
+        457.0, 322.0, 0.0, 0.00, 1.00, 1.00,    //30
+        457.0, 322.0, 0.0, 0.00, 1.00, 1.00,    //31]
+        200.0, 495.0, 0.0, 0.00, 1.00, 1.00,    //32
+        200.0, 495.0, 0.0, 0.00, 1.00, 1.00,    //33]
+        303.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //34
+        303.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //35]
+        607.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //36
+        607.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //37
+        705.0, 491.0, 0.0, 0.00, 1.00, 1.00,    //38
+        705.0, 491.0, 0.0, 0.00, 1.00, 1.00,    //39]
+        000.0, 000.0, 0.0, 0.00, 1.00, 1.00,    //
+    };
+
+    glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
+    glColorPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
+
+    static GLubyte back1[] = {0, 2};
+    static GLubyte back2[] = {2, 4};
+    static GLubyte back3[] = {4, 6};
+    static GLubyte back4[] = {6, 8};
+    static GLubyte back5[] = {8, 0};
+
+    static GLubyte base1[] = {5, 10};
+    static GLubyte base2[] = {11, 12};
+    static GLubyte base3[] = {12, 14};
+    static GLubyte base4[] = {15, 7};
+
+    static GLubyte bklbot1[] = {15, 16};
+    static GLubyte bklbot2[] = {16, 18};
+    static GLubyte bklbot3[] = {19, 8};
+
+    static GLubyte bkltop1[] = {18, 20};
+    static GLubyte bkltop2[] = {20, 22};
+    static GLubyte bkltop3[] = {22, 1};
+
+    static GLubyte bkrtop1[] = {23, 24};
+    static GLubyte bkrtop2[] = {24, 26};
+    static GLubyte bkrtop3[] = {26, 3};
+
+    static GLubyte bkrbot1[] = {26, 28};
+    static GLubyte bkrbot2[] = {28, 10};
+
+    static GLubyte ftlbot1[] = {};
+    static GLubyte ftlbot2[] = {};
+    static GLubyte ftlbot3[] = {};
+
+    static GLubyte ftltop[] = {};
+
+    static GLubyte ftrtop1[] = {};
+    static GLubyte ftrtop2[] = {};
+
+    static GLubyte ftrbot[] = {};
+
+    static GLubyte front1[] = {};
+    static GLubyte front2[] = {};
+    static GLubyte front3[] = {};
+    static GLubyte front4[] = {};
+    static GLubyte front5[] = {};
+
+    glLineWidth(10.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back2);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back3);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back4);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back5);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base2);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base3);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base4);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bklbot1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bklbot2);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bklbot3);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkltop1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkltop2);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkltop3);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrtop1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrtop2);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrtop3);
+
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot1);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot2);
+}
+
 void display (void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -321,7 +446,7 @@ void display (void)
     draw_shadows();
 
     // Draw the dodecahedron
-    //draw_dodecahedron();
+    draw_dodecahedron();
 
     // Draw the key
     //draw_key();
