@@ -311,7 +311,6 @@ void draw_highlights()
  */
 void draw_dodecahedron()
 {
-    //vertices repeated once for texturing purposes
     static GLfloat vertexValues[] = {
         459.6, 565.2, 0.0, 0.40, 0.17, 0.12,    //0     back
         664.9, 422.8, 0.0, 0.43, 0.12, 0.10,    //1
@@ -431,6 +430,14 @@ void draw_dodecahedron()
         456.0, 334.0, 0.0, 0.99, 0.90, 0.74,    //115
         202.4, 498.8, 0.0, 0.35, 0.13, 0.11,    //116
         210.8, 502.6, 0.0, 0.67, 0.23, 0.19,    //117_  endfront
+        614.4, 761.6, 0.0, 0.89, 0.57, 0.50,    //118   frontol1
+        712.3, 496.8, 0.0, 0.99, 0.84, 0.72,    //119_
+        712.7, 487.4, 0.0, 0.98, 0.86, 0.69,    //120   frontol2
+        463.7, 315.4, 0.0, 0.98, 0.62, 0.45,    //121_
+        197.2, 506.7, 0.0, 0.76, 0.36, 0.29,    //122   frontol3
+        299.8, 764.1, 0.0, 0.70, 0.41, 0.32,    //123_
+        458.6, 313.1, 0.0, 0.08, 0.05, 0.06,    //124   frontshdw
+        459.3, 87.30, 0.0, 0.08, 0.06, 0.04,    //125_
         0, 0, 0.0, 0.00, 0.00, 0.00,    //
     };
 
@@ -480,6 +487,12 @@ void draw_dodecahedron()
     static GLubyte front4[] = {114, 116, 117, 115};
     static GLubyte front5[] = {116, 108, 111, 117};
 
+    static GLubyte frontol1[] = {118, 119};
+    static GLubyte frontol2[] = {120, 121};
+    static GLubyte frontol3[] = {122, 123};
+
+    static GLubyte frontshdw[] = {124, 125};
+
     static GLsizei count[] = {
         4, 4, 4, 4, 4, 
         4, 4, 4, 4, 
@@ -509,97 +522,14 @@ void draw_dodecahedron()
 
     glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 32);
 
-    /*
-     * LINES
-    static GLubyte back1[] = {0, 1};
-    static GLubyte back2[] = {1, 2};
-    static GLubyte back3[] = {2, 3};
-    static GLubyte back4[] = {3, 4};
-    static GLubyte back5[] = {4, 0};
-
-    static GLubyte base1[] = {2, 5};
-    static GLubyte base2[] = {5, 6};
-    static GLubyte base3[] = {6, 7};
-    static GLubyte base4[] = {7, 3};
-
-    static GLubyte bklbot1[] = {7, 8};
-    static GLubyte bklbot2[] = {8, 9};
-    static GLubyte bklbot3[] = {9, 4};
-
-    static GLubyte bkltop1[] = {9, 10};
-    static GLubyte bkltop2[] = {10, 11};
-    static GLubyte bkltop3[] = {11, 0};
-
-    static GLubyte bkrtop1[] = {11, 12};
-    static GLubyte bkrtop2[] = {12, 13};
-    static GLubyte bkrtop3[] = {13, 1};
-
-    static GLubyte bkrbot1[] = {13, 14};
-    static GLubyte bkrbot2[] = {14, 5};
-
-    static GLubyte ftlbot1[] = {8, 15};
-    static GLubyte ftlbot2[] = {15, 16};
-    static GLubyte ftlbot3[] = {16, 6};
-
-    static GLubyte ftltop[] = {15, 17};
-
-    static GLubyte ftrtop1[] = {18, 19};
-    static GLubyte ftrtop2[] = {19, 14};
-
-    static GLubyte ftrbot[] = {19, 16};
-
-    static GLubyte front1[] = {31, 33};
-    static GLubyte front2[] = {33, 35};
-    static GLubyte front3[] = {35, 37};
-    static GLubyte front4[] = {37, 39};
-    static GLubyte front5[] = {39, 31};
-    */
-
-    /*
-    glLineWidth(10.0);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back2);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back3);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back4);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back5);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base2);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base3);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, base4);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bklbot1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bklbot2);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bklbot3);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkltop1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkltop2);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkltop3);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrtop1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrtop2);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrtop3);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot2);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot2);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot3);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftltop);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftrtop1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftrtop2);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftrbot);
-
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front1);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front2);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front3);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front4);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front5);
-    */
+    glLineWidth(2.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, frontol1);
+    glLineWidth(3.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, frontol2);
+    glLineWidth(2.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, frontol3);
+    glLineWidth(7.0);
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, frontshdw);
 }
 
 void draw_key()
@@ -659,7 +589,10 @@ void draw_key()
     glColorPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
     static GLubyte shaft[] = {0, 1, 2, 3};
-    static GLubyte bow[] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
+    static GLubyte bow[] = {
+        4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 
+        23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+    };
     static GLubyte bit1[] = {41, 42, 43};
     static GLubyte bit2[] = {44, 45, 46};
 
@@ -742,27 +675,3 @@ int main (int argc, char** argv)
     glutMainLoop ();
     return 0;
 }
-
-
-/*
-        458.0, 555.0, 0.0, 0.00, 0.00, 0.00,    //20    ]0
-        659.0, 417.0, 0.0, 0.00, 0.00, 0.00,    //21    ]1
-        584.0, 193.0, 0.0, 0.00, 0.00, 0.00,    //22    ]2
-        331.0, 193.0, 0.0, 0.00, 0.00, 0.00,    //23    ]3
-        257.0, 420.0, 0.0, 0.00, 0.00, 0.00,    //24    ]4
-        682.0, 137.0, 0.0, 0.00, 0.00, 0.00,    //25    ]5
-        459.0, 92.00, 0.0, 0.00, 0.00, 0.00,    //26    ]6
-        224.0, 133.0, 0.0, 0.00, 0.00, 0.00,    //27    ]7
-        76.00, 368.0, 0.0, 0.00, 0.00, 0.00,    //28    ]8
-        106.0, 535.0, 0.0, 0.00, 0.00, 0.00,    //29    ]9
-        230.0, 762.0, 0.0, 0.00, 0.00, 0.00,    //30    ]10
-        458.0, 760.0, 0.0, 0.00, 0.00, 0.00,    //31    ]11
-        682.0, 761.0, 0.0, 0.00, 0.00, 0.00,    //32    ]12
-        807.0, 537.0, 0.0, 0.00, 0.00, 0.00,    //33    ]13
-        832.0, 363.0, 0.0, 0.00, 0.00, 0.00,    //34    ]14
-        200.0, 495.0, 0.0, 0.00, 0.00, 0.00,    //35    ]15
-        457.0, 322.0, 0.0, 0.00, 0.00, 0.00,    //36    ]16
-        303.0, 761.0, 0.0, 0.00, 0.00, 0.00,    //37    ]17
-        607.0, 760.0, 0.0, 0.00, 0.00, 0.00,    //38    ]18
-        705.0, 491.0, 0.0, 0.00, 0.00, 0.00,    //39    ]19
-*/
