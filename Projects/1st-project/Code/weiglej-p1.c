@@ -17,7 +17,9 @@ void glMultiDrawElements(GLenum, const GLsizei *, GLenum, const GLvoid *, GLsize
 
 void init (void)
 {
-	glClearColor (1.0, 1.0, 1.0, 0.0);
+    glEnable(GL_LINE_SMOOTH);
+
+	glClearColor (0.0, 0.0, 0.0, 0.0);
 	glShadeModel (GL_SMOOTH);
 }
 
@@ -311,96 +313,119 @@ void draw_dodecahedron()
 {
     //vertices repeated once for texturing purposes
     static GLfloat vertexValues[] = {
-        458.0, 555.0, 0.0, 0.98, 0.63, 0.46,    //0
-        458.0, 555.0, 0.0, 0.00, 1.00, 1.00,    //1 ]
-        659.0, 417.0, 0.0, 0.66, 0.24, 0.18,    //2
-        659.0, 417.0, 0.0, 0.00, 1.00, 1.00,    //3 ]
-        584.0, 193.0, 0.0, 0.57, 0.18, 0.13,    //4
-        584.0, 193.0, 0.0, 0.27, 0.08, 0.08,    //5 ]
-        331.0, 193.0, 0.0, 0.89, 0.38, 0.27,    //6
-        331.0, 193.0, 0.0, 0.80, 0.27, 0.20,    //7 ]
-        257.0, 420.0, 0.0, 0.96, 0.47, 0.33,    //8
-        257.0, 420.0, 0.0, 0.00, 1.00, 1.00,    //9 ]
-        682.0, 137.0, 0.0, 0.27, 0.08, 0.08,    //10
-        682.0, 137.0, 0.0, 0.67, 0.17, 0.16,    //11]
-        459.0, 92.00, 0.0, 0.53, 0.12, 0.11,    //12
-        459.0, 92.00, 0.0, 0.11, 0.05, 0.05,    //13]
-        224.0, 133.0, 0.0, 0.11, 0.05, 0.05,    //14
-        224.0, 133.0, 0.0, 0.13, 0.08, 0.07,    //15]
-        76.00, 368.0, 0.0, 0.00, 1.00, 0.00,    //16
-        76.00, 368.0, 0.0, 0.00, 1.00, 1.00,    //17]
-        106.0, 535.0, 0.0, 0.00, 1.00, 0.00,    //18
-        106.0, 535.0, 0.0, 0.00, 1.00, 0.00,    //19]
-        230.0, 762.0, 0.0, 0.00, 1.00, 1.00,    //20
-        230.0, 762.0, 0.0, 0.00, 1.00, 1.00,    //21]
-        458.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //22
-        458.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //23]
-        682.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //24
-        682.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //25]
-        807.0, 537.0, 0.0, 0.00, 1.00, 1.00,    //26
-        807.0, 537.0, 0.0, 0.00, 1.00, 1.00,    //27]
-        832.0, 363.0, 0.0, 0.00, 1.00, 1.00,    //28
-        832.0, 363.0, 0.0, 0.00, 1.00, 1.00,    //29]
-        457.0, 322.0, 0.0, 0.00, 1.00, 1.00,    //30
-        457.0, 322.0, 0.0, 0.00, 1.00, 1.00,    //31]
-        200.0, 495.0, 0.0, 0.00, 1.00, 1.00,    //32
-        200.0, 495.0, 0.0, 0.00, 1.00, 1.00,    //33]
-        303.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //34
-        303.0, 761.0, 0.0, 0.00, 1.00, 1.00,    //35]
-        607.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //36
-        607.0, 760.0, 0.0, 0.00, 1.00, 1.00,    //37
-        705.0, 491.0, 0.0, 0.00, 1.00, 1.00,    //38
-        705.0, 491.0, 0.0, 0.00, 1.00, 1.00,    //39]
-        000.0, 000.0, 0.0, 0.00, 1.00, 1.00,    //
+        459.6, 565.2, 0.0, 0.00, 0.00, 0.00,    //0     back
+        664.9, 422.8, 0.0, 0.00, 0.00, 0.00,    //1
+        658.8, 411.9, 0.0, 0.00, 0.00, 0.00,    //2
+        453.0, 552.9, 0.0, 0.00, 0.00, 0.00,    //3_1
+        654.0, 419.7, 0.0, 0.00, 0.00, 0.00,    //4
+        665.7, 415.7, 0.0, 0.00, 0.00, 0.00,    //5
+        590.6, 191.7, 0.0, 0.00, 0.00, 0.00,    //6
+        577.4, 195.0, 0.0, 0.00, 0.00, 0.00,    //7_2
+        583.8, 197.3, 0.0, 0.00, 0.00, 0.00,    //8
+        586.8, 189.4, 0.0, 0.00, 0.00, 0.00,    //9
+        330.6, 191.5, 0.0, 0.00, 0.00, 0.00,    //10
+        330.4, 198.1, 0.0, 0.00, 0.00, 0.00,    //11_3
+        326.7, 190.1, 0.0, 0.00, 0.00, 0.00,    //12
+        251.3, 419.6, 0.0, 0.00, 0.00, 0.00,    //13
+        261.1, 421.6, 0.0, 0.00, 0.00, 0.00,    //14
+        334.8, 194.0, 0.0, 0.00, 0.00, 0.00,    //15_4
+        253.8, 425.9, 0.0, 0.00, 0.00, 0.00,    //16
+        455.1, 563.1, 0.0, 0.00, 0.00, 0.00,    //17
+        461.9, 551.5, 0.0, 0.00, 0.00, 0.00,    //18
+        259.3, 414.1, 0.0, 0.00, 0.00, 0.00,    //19_5  endback
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //20    base
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //21
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //22
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //23_1
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //24
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //25
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //26
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //27_2
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //28
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //29
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //30
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //31_3
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //32
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //33
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //34
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //35_4
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //36
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //37
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //38
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //39_5  endbase
+        0, 0, 0.0, 0.00, 0.00, 0.00,    //
     };
 
     glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
     glColorPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
-    static GLubyte back1[] = {0, 2};
-    static GLubyte back2[] = {2, 4};
-    static GLubyte back3[] = {4, 6};
-    static GLubyte back4[] = {6, 8};
-    static GLubyte back5[] = {8, 0};
+    static GLubyte back1[] = {0, 1, 2, 3};
+    static GLubyte back2[] = {4, 5, 6, 7};
+    static GLubyte back3[] = {8, 9, 10, 11};
+    static GLubyte back4[] = {12, 13, 14, 15};
+    static GLubyte back5[] = {16, 17, 18, 19};
 
-    static GLubyte base1[] = {5, 10};
-    static GLubyte base2[] = {11, 12};
-    static GLubyte base3[] = {13, 14};
-    static GLubyte base4[] = {15, 7};
+    static GLubyte base1[] = {20, 21, 22, 23};
+    static GLubyte base2[] = {24, 25, 26, 27};
+    static GLubyte base3[] = {28, 29, 30, 31};
+    static GLubyte base4[] = {32, 33, 34, 35};
+    static GLubyte base5[] = {36, 37, 38, 39};
 
-    static GLubyte bklbot1[] = {15, 16};
-    static GLubyte bklbot2[] = {16, 18};
-    static GLubyte bklbot3[] = {19, 8};
+    static GLsizei count[] = {4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
+    static GLvoid * indices[10] = {
+        back1, back2, back3, back4, back5,
+        base1, base2, base3, base4, base5,
+    };
 
-    static GLubyte bkltop1[] = {18, 20};
-    static GLubyte bkltop2[] = {20, 22};
-    static GLubyte bkltop3[] = {22, 1};
+    glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 10);
 
-    static GLubyte bkrtop1[] = {23, 24};
-    static GLubyte bkrtop2[] = {24, 26};
-    static GLubyte bkrtop3[] = {26, 3};
+    /*
+     * LINES
+    static GLubyte back1[] = {0, 1};
+    static GLubyte back2[] = {1, 2};
+    static GLubyte back3[] = {2, 3};
+    static GLubyte back4[] = {3, 4};
+    static GLubyte back5[] = {4, 0};
 
-    static GLubyte bkrbot1[] = {26, 28};
-    static GLubyte bkrbot2[] = {28, 10};
+    static GLubyte base1[] = {2, 5};
+    static GLubyte base2[] = {5, 6};
+    static GLubyte base3[] = {6, 7};
+    static GLubyte base4[] = {7, 3};
 
-    static GLubyte ftlbot1[] = {14, 17};
-    static GLubyte ftlbot2[] = {16, 32};
-    static GLubyte ftlbot3[] = {32, 30};
-    static GLubyte ftlbot4[] = {30, 12};
+    static GLubyte bklbot1[] = {7, 8};
+    static GLubyte bklbot2[] = {8, 9};
+    static GLubyte bklbot3[] = {9, 4};
 
-    static GLubyte ftltop[] = {33, 34};
+    static GLubyte bkltop1[] = {9, 10};
+    static GLubyte bkltop2[] = {10, 11};
+    static GLubyte bkltop3[] = {11, 0};
 
-    static GLubyte ftrtop1[] = {36, 38};
-    static GLubyte ftrtop2[] = {38, 29};
+    static GLubyte bkrtop1[] = {11, 12};
+    static GLubyte bkrtop2[] = {12, 13};
+    static GLubyte bkrtop3[] = {13, 1};
 
-    static GLubyte ftrbot[] = {38, 30};
+    static GLubyte bkrbot1[] = {13, 14};
+    static GLubyte bkrbot2[] = {14, 5};
+
+    static GLubyte ftlbot1[] = {8, 15};
+    static GLubyte ftlbot2[] = {15, 16};
+    static GLubyte ftlbot3[] = {16, 6};
+
+    static GLubyte ftltop[] = {15, 17};
+
+    static GLubyte ftrtop1[] = {18, 19};
+    static GLubyte ftrtop2[] = {19, 14};
+
+    static GLubyte ftrbot[] = {19, 16};
 
     static GLubyte front1[] = {31, 33};
     static GLubyte front2[] = {33, 35};
     static GLubyte front3[] = {35, 37};
     static GLubyte front4[] = {37, 39};
     static GLubyte front5[] = {39, 31};
+    */
 
+    /*
     glLineWidth(10.0);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back1);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, back2);
@@ -428,13 +453,9 @@ void draw_dodecahedron()
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot1);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, bkrbot2);
 
-    glLineWidth(15.0);
-    /*
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot1);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot2);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot3);
-    glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftlbot4);
-    */
 
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, ftltop);
 
@@ -448,6 +469,7 @@ void draw_dodecahedron()
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front3);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front4);
     glDrawElements(GL_LINES, 2, GL_UNSIGNED_BYTE, front5);
+    */
 }
 
 void display (void)
@@ -495,3 +517,27 @@ int main (int argc, char** argv)
     glutMainLoop ();
     return 0;
 }
+
+
+/*
+        458.0, 555.0, 0.0, 0.00, 0.00, 0.00,    //20    ]0
+        659.0, 417.0, 0.0, 0.00, 0.00, 0.00,    //21    ]1
+        584.0, 193.0, 0.0, 0.00, 0.00, 0.00,    //22    ]2
+        331.0, 193.0, 0.0, 0.00, 0.00, 0.00,    //23    ]3
+        257.0, 420.0, 0.0, 0.00, 0.00, 0.00,    //24    ]4
+        682.0, 137.0, 0.0, 0.00, 0.00, 0.00,    //25    ]5
+        459.0, 92.00, 0.0, 0.00, 0.00, 0.00,    //26    ]6
+        224.0, 133.0, 0.0, 0.00, 0.00, 0.00,    //27    ]7
+        76.00, 368.0, 0.0, 0.00, 0.00, 0.00,    //28    ]8
+        106.0, 535.0, 0.0, 0.00, 0.00, 0.00,    //29    ]9
+        230.0, 762.0, 0.0, 0.00, 0.00, 0.00,    //30    ]10
+        458.0, 760.0, 0.0, 0.00, 0.00, 0.00,    //31    ]11
+        682.0, 761.0, 0.0, 0.00, 0.00, 0.00,    //32    ]12
+        807.0, 537.0, 0.0, 0.00, 0.00, 0.00,    //33    ]13
+        832.0, 363.0, 0.0, 0.00, 0.00, 0.00,    //34    ]14
+        200.0, 495.0, 0.0, 0.00, 0.00, 0.00,    //35    ]15
+        457.0, 322.0, 0.0, 0.00, 0.00, 0.00,    //36    ]16
+        303.0, 761.0, 0.0, 0.00, 0.00, 0.00,    //37    ]17
+        607.0, 760.0, 0.0, 0.00, 0.00, 0.00,    //38    ]18
+        705.0, 491.0, 0.0, 0.00, 0.00, 0.00,    //39    ]19
+*/
