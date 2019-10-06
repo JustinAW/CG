@@ -12,6 +12,12 @@
 #include <GL/glut.h>
 #include <stdio.h>
 
+struct {
+    GLfloat pixel[4];
+    char * name;
+    GLint vertices[4][2];
+}squares[3];
+
 void init (void)
 {
 	glClearColor (1.0, 1.0, 1.0, 0.0);
@@ -38,11 +44,20 @@ void mouse (int button, int state, GLint x, GLint y)
 	wHt = glutGet(GLUT_WINDOW_HEIGHT);
 	y = wHt - y;
 	glReadBuffer(GL_BACK);
-	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN)) {
+	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN)) 
+    {
 		glReadPixels(x, y, 1.0, 1.0, GL_RGBA, GL_FLOAT, &pixel);
 		r = pixel[0]; g = pixel[1]; b = pixel[2];
-		printf("x = %d, y = %d\n", x, y);
-		printf("r = %f, g = %f, b = %f\n", r, g, b);
+
+        for(int sq = 0; sq < 3; sq++)
+        {
+            if (squares[sq].pixel[0] == r
+                && squares[sq].pixel[1] == g
+                && squares[sq].pixel[2] == b)
+            {
+                printf("Name of clicked square: %s\n", squares[sq].name);
+            }
+        }
 	}
 }
 
@@ -92,12 +107,39 @@ void display (void)
 
 int main (int argc, char** argv)
 {
-	glutInit (&argc, argv);
+    glutInit (&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE|GLUT_RGB);
 	glutInitWindowSize (200, 200);
 	glutInitWindowPosition (100, 100);
 	glutCreateWindow (argv[0]);
 	init ();
+
+    squares[0].pixel[0] = 0.0;
+    squares[0].pixel[1] = 1.0;
+    squares[0].pixel[2] = 0.0;
+    squares[0].name = "Charlie";
+    squares[0].vertices[0][0] = 1;
+    squares[0].vertices[0][1] = 1;
+    squares[0].vertices[1][0] = 2;
+    squares[0].vertices[1][1] = 1;
+    squares[0].vertices[2][0] = 2;
+    squares[0].vertices[2][1] = 2;
+    squares[0].vertices[3][0] = 1;
+    squares[0].vertices[3][1] = 2;
+
+    squares[1].pixel[0] = 0.0;
+    squares[1].pixel[1] = 0.0;
+    squares[1].pixel[2] = 1.0;
+    squares[1].name = "Dexter";
+    squares[1].vertices[0][0] = 8;
+    squares[1].vertices[0][1] = 8;
+    squares[1].vertices[1][0] = 9;
+    squares[1].vertices[1][1] = 8;
+    squares[1].vertices[2][0] = 9;
+    squares[1].vertices[2][1] = 9;
+    squares[1].vertices[3][0] = 8;
+    squares[1].vertices[3][1] = 9;
+
 	glutReshapeFunc (reshape);
 	glutMouseFunc (mouse);
 	glutDisplayFunc (display);

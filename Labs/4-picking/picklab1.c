@@ -26,7 +26,16 @@ void init (void)
 
 void reshape (int w, int h)
 {
-    glViewport (0, 0, 400, 400);
+    //glViewport (0, 0, 400, 400);
+    if (w > h)
+    {
+        glViewport(0, 0, h, h);
+    }
+    else
+    {
+        glViewport(0, 0, w, w);
+    }
+    //glViewport(0, 0, h, h);
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity ();
 	gluOrtho2D (0.0, ppw, 0.0, pph);
@@ -36,10 +45,35 @@ void reshape (int w, int h)
 
 void mouse (int button, int state, GLint x, GLint y)
 {
-	y = 400 - y;
+//	y = 400 - y;
+    GLint viewport[4];
+    GLdouble mvmatrix[16], projmatrix[16];
+    GLint ry, wh, ww;
+    GLdouble wx, wy, wz;
+
 	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN)) {
-		printf("x = %d, y = %d\n", x, y);
-	//***** picking code goes here *****
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
+        glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
+        wh = glutGet(GLUT_WINDOW_HEIGHT);
+        printf("Window height: %4d\n", wh);
+        ww = glutGet(GLUT_WINDOW_WIDTH);
+        printf("Window width: %4d\n", ww);
+
+        //ry = viewport[3] - (GLint) y - 1;
+        ry = wh - (GLint) y;
+		printf("x = %4d, ry = %4d\n", x, ry);
+        gluUnProject((GLdouble) x, (GLdouble) ry, 0.0, mvmatrix, projmatrix, viewport, &wx, &wy, &wz);
+        printf("World coords at z = 0.0 are (%f, %f, %f)\n", wx, wy, wz);
+
+        if (x1 < wx && wx < x2 && y1 < wy && wy < y2)
+        {
+            printf("red rectangle clicked\n");
+        }
+        if (a1 < wx && wx < a2 && b1 < wy && wy < b2)
+        {
+            printf("blue rectangle clicked\n");
+        }
 	}
 }
 
@@ -82,3 +116,15 @@ int main (int argc, char** argv)
 	glutMainLoop ();
 	return 0;
 }
+/*
+ *
+	//***** picking code goes here *****
+        if(x1 < x && x < x2 && y1 < y && y < y2)
+        {
+            printf("red rectangle clicked\n");
+        }
+        if(a1 < x && x < a2 && b1 < y && y < b2)
+        {
+            printf("blue rectangle clicked\n");
+        }
+        */
