@@ -48,8 +48,9 @@ void display (void)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glColor3f (1.0, 0.0, 0.0);
-	glRotatef (30.0, 0.0, 0.0, 1.0);
-	glTranslatef (3.0, 2.0, 0.0);
+//	glTranslatef (3.0, 2.0, 0.0);
+    glRotatef (30.0, 0.0, 0.0, 1.0);
+    glScalef(2.0, 1.0, 1.0);
 	unitTriangle ();
 	glFlush ();
 }

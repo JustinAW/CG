@@ -10,4 +10,14 @@ Q3:
     the triangle starts the rotation out to the right where it was translated
     to. But when it is rotated first, it just translates upwards.
 Q4:
+    No, scaling first leads to the triangle being moved farther. Translating
+    first and then scaling moves the triangle the expected amount and then
+    scales it.
+Q5:
+    No, scaling first makes it rotate farther
+Q6:
+    Same as Q5, scaling first makes it rotate farther
+
+
+Q7:
 
