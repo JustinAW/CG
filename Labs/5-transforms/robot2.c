@@ -10,7 +10,7 @@
    Right way to do it.
 */
 
-#include <GL\glut.h>
+#include <GL/glut.h>
 #include <stdio.h>
 
 void unitSquare ()
@@ -107,7 +107,7 @@ void display (void)
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
 	glColor3f(1.0, 0.0, 0.0);
-        //call to glTranslate
+    glTranslatef(5.0, 3.0, 0.0);
 	drawRobot();
 	glFlush ();
 }

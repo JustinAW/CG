@@ -9,7 +9,7 @@
 /* Instance modeling lab: Push and Pop.
 */
 
-#include <GL\glut.h>
+#include <GL/glut.h>
 #include <stdio.h>
 
 void unitTriangle ()
@@ -62,12 +62,15 @@ void display (void)
 
 	glColor3f (1.0, 0.0, 0.0);  //red square
 	unitSquare();
-	//glPushMatrix();
-	glTranslatef (3.0, 2.0, 0.0);
-	glColor3f (0.0, 1.0, 0.0);  //green triangle
-	unitTriangle();
-	glTranslatef (3.0, 2.0, 0.0);
-	//glPopMatrix();
+	glPushMatrix();
+        glTranslatef (3.0, 2.0, 0.0);
+        glColor3f (0.0, 1.0, 0.0);  //green triangle
+        unitTriangle();
+        glTranslatef (3.0, 2.0, 0.0);
+        glPushMatrix();
+            //other stuff here
+        glPopMatrix();
+	glPopMatrix();
 	glColor3f (0.0, 0.0, 1.0);  //blue square
 	glScalef(0.5, 0.5, 1.0);
 	unitSquare ();

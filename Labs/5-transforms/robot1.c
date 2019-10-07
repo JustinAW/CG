@@ -10,7 +10,7 @@
    Wrong way to do it.
 */
 
-#include <GL\glut.h>
+#include <GL/glut.h>
 #include <stdio.h>
 
 void unitSquare ()
@@ -30,6 +30,7 @@ void init (void)
 
 void drawHead()
 {
+    glTranslatef(5.0, 5.0, 0.0);
 	glLoadIdentity();
 	glTranslatef(4.0, 26.0, 0.0);   //head  
 	glScalef(6.0, 6.0, 1.0);
