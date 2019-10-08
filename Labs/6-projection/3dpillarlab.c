@@ -13,7 +13,7 @@
   All wireframes.  See pillar.c for original.
 */
 
-#include <GL\glut.h>
+#include <GL/glut.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -98,7 +98,7 @@ void reshape (int w, int h)
 	//projection calls go here.  Be sure that view volume encompasses
 	//scene.  View plane 5 units in front of camera
 	//glOrtho (-50.0, 50.0, -50.0, 50.0, 5.0, 30.0);
-	glFrustum (-50.0, 50.0, -50.0, 50.0, 5.0, 30.0);
+	glFrustum (-5.0, 5.0, -5.0, 5.0, 5.0, 100.0);
 
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
@@ -111,7 +111,8 @@ void display (void)
 	//Needs to be modified as move away from scene
 	//Looking at the center of the pillar from 15 units in front of pillar
 	//(20 units from its axis)
-	gluLookAt(0.0, 46.0, 20.0, 0.0, 46.0, 0.0, 0.0, 1.0, 0.0);
+    // (eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz)
+	gluLookAt(0.0, 46.0, 100.0, 0.0, 46.0, 0.0, 0.0, 1.0, 0.0);
 	glTranslatef (0.0, 0.5 * BASEHT, 0.0);
 	glPushMatrix ();
 	glScalef (BASEL, BASEHT, BASEL);
