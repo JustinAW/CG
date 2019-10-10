@@ -24,12 +24,13 @@ const GLfloat PLATL = 20.0;
 const GLfloat BASEHT = 2.0;
 const GLfloat BASEL = 20.0;
 const GLfloat SPHR = 5.0;
-const float TWOPI = 2 * 3.1417f;
+const float TWOPI = 2 * 3.1415926535897932384626433832795f;
 
 void CreateCylinder (GLfloat, GLfloat, GLint);
 void init (void);
 void reshape (int, int);
 void display (void);
+void mouse (int, int, int, int);
 
 int main (int argc, char** argv)
 {
@@ -41,8 +42,24 @@ int main (int argc, char** argv)
 	glutReshapeFunc(reshape);
 	init ();
 	glutDisplayFunc (display);
+    glutMouseFunc(mouse);
 	glutMainLoop ();
 	return 0;
+}
+
+void mouse (int button, int state, int x, int y)
+{
+    switch(button)
+    {
+        case GLUT_LEFT_BUTTON:
+            if(state == GLUT_DOWN)
+            {
+                glutPostRedisplay();
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 // Creates a wireframe cylinder centered on origin and Z axis.  Ends not capped.
@@ -98,7 +115,7 @@ void reshape (int w, int h)
 	//projection calls go here.  Be sure that view volume encompasses
 	//scene.  View plane 5 units in front of camera
 	//glOrtho (-50.0, 50.0, -50.0, 50.0, 5.0, 30.0);
-	glFrustum (-50.0, 50.0, -50.0, 50.0, 5.0, 30.0);
+	glFrustum (-50.0, 50.0, -50.0, 50.0, 5.0, 130.0);
 
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
@@ -111,7 +128,8 @@ void display (void)
 	//Needs to be modified as move away from scene
 	//Looking at the center of the pillar from 15 units in front of pillar
 	//(20 units from its axis)
-	gluLookAt(0.0, 46.0, 20.0, 0.0, 46.0, 0.0, 0.0, 1.0, 0.0);
+    // (eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz)
+	//gluLookAt(50.0, 46.0, 50.0, 0.0, 46.0, 0.0, 0.0, 1.0, 0.0);
 	glTranslatef (0.0, 0.5 * BASEHT, 0.0);
 	glPushMatrix ();
 	glScalef (BASEL, BASEHT, BASEL);

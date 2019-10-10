@@ -114,7 +114,7 @@ void reshape (int w, int h)
 
     //projection calls go here.  Be sure that view volume encompasses
     //scene.  View plane 5 units in front of camera
-    glOrtho (-50.0, 50.0, -50.0, 50.0, 5.0, 110.0);
+    glOrtho (-50.0, 50.0, -50.0, 50.0, 80.0, 110.0);
     //glFrustum (-6.0, 6.0, -6.0, 6.0, 80.0, 110.0);
     //gluPerspective(8.55, 1.0, 80.0, 110.0);
 
