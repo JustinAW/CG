@@ -105,49 +105,52 @@ void init (void)
 
 void reshape (int w, int h)
 {
-	if (w > h)
-	  glViewport (0, 0, (GLsizei) h, (GLsizei) h);
-	else
-	  glViewport (0, 0, (GLsizei) w, (GLsizei) w);
-	glMatrixMode (GL_PROJECTION);
-	glLoadIdentity ();
+    if (w > h)
+        glViewport (0, 0, (GLsizei) h, (GLsizei) h);
+    else
+        glViewport (0, 0, (GLsizei) w, (GLsizei) w);
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
 
-	//projection calls go here.  Be sure that view volume encompasses
-	//scene.  View plane 5 units in front of camera
-	//glOrtho (-50.0, 50.0, -50.0, 50.0, 5.0, 30.0);
-	glFrustum (-50.0, 50.0, -50.0, 50.0, 5.0, 130.0);
+    //projection calls go here.  Be sure that view volume encompasses
+    //scene.  View plane 5 units in front of camera
+    //glOrtho (-50.0, 50.0, -50.0, 50.0, 5.0, 30.0);
+    glFrustum (-50.0, 50.0, -50.0, 50.0, 5.0, 130.0);
 
-	glMatrixMode (GL_MODELVIEW);
-	glLoadIdentity ();
+    glMatrixMode (GL_MODELVIEW);
+    glLoadIdentity ();
 }
 
 void display (void)
 {
-	glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glColor3f (1.0, 0.0, 0.0);
-	//Needs to be modified as move away from scene
-	//Looking at the center of the pillar from 15 units in front of pillar
-	//(20 units from its axis)
+    glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glColor3f (1.0, 0.0, 0.0);
+    //Needs to be modified as move away from scene
+    //Looking at the center of the pillar from 15 units in front of pillar
+    //(20 units from its axis)
     // (eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz)
-	//gluLookAt(50.0, 46.0, 50.0, 0.0, 46.0, 0.0, 0.0, 1.0, 0.0);
-	glTranslatef (0.0, 0.5 * BASEHT, 0.0);
-	glPushMatrix ();
-	glScalef (BASEL, BASEHT, BASEL);
-	glutWireCube (1.0);
-	glPopMatrix();
-	glTranslatef (0.0, 0.5 * BASEHT + CYLHT / 2.0, 0.0);
-	glPushMatrix();
-	glRotatef(90.0, 1.0, 0.0, 0.0);
-	CreateCylinder(CYLR, CYLHT, 10);
-	glPopMatrix();
-	glTranslatef (0.0, 0.5 * PLATHT + 0.5 * CYLHT, 0.0);
-	glPushMatrix();
-	glScalef (PLATL, PLATHT, PLATL);
-	glutWireCube (1.0);
-	glPopMatrix();
-	glTranslatef(0.0, 0.5 * PLATHT + SPHR, 0.0);
-	glRotatef(90, 1.0, 0.0, 0.0);
-	glutWireSphere(SPHR, 10, 10);
-	glFlush ();
-}
+    glLoadIdentity();
+//    gluLookAt(50.0, 46.0, 50.0, 0.0, 46.0, 0.0, 0.0, 1.0, 0.0);
+    
+    glTranslatef (-55.0, -46.0, -55.0);
 
+    glTranslatef (0.0, 0.5 * BASEHT, 0.0);
+    glPushMatrix ();
+        glScalef (BASEL, BASEHT, BASEL);
+        glutWireCube (1.0);
+    glPopMatrix();
+    glTranslatef (0.0, 0.5 * BASEHT + CYLHT / 2.0, 0.0);
+    glPushMatrix();
+        glRotatef(90.0, 1.0, 0.0, 0.0);
+        CreateCylinder(CYLR, CYLHT, 10);
+    glPopMatrix();
+    glTranslatef (0.0, 0.5 * PLATHT + 0.5 * CYLHT, 0.0);
+    glPushMatrix();
+        glScalef (PLATL, PLATHT, PLATL);
+        glutWireCube (1.0);
+    glPopMatrix();
+    glTranslatef(0.0, 0.5 * PLATHT + SPHR, 0.0);
+    glRotatef(90, 1.0, 0.0, 0.0);
+    glutWireSphere(SPHR, 10, 10);
+    glFlush ();
+}
