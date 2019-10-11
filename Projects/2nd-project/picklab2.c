@@ -11,6 +11,11 @@
 
 #include <GL/glut.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "hashtable.h"
+
+static ht_t *ht;
 
 struct {
     GLfloat pixel[4];
@@ -20,6 +25,7 @@ struct {
 
 void init (void)
 {
+    glDisable(GL_LIGHTING);
 	glClearColor (1.0, 1.0, 1.0, 0.0);
 	glShadeModel (GL_FLAT);
 }
@@ -49,21 +55,25 @@ void mouse (int button, int state, GLint x, GLint y)
 		glReadPixels(x, y, 1.0, 1.0, GL_RGBA, GL_FLOAT, &pixel);
 		r = pixel[0]; g = pixel[1]; b = pixel[2];
 
-        for(int sq = 0; sq < 3; sq++)
+        // combine pixel values to get single value for hash function
+        GLfloat combined = r + g + b;
+
+        // account for integer division inaccuracy of:
+        // int output = pixel_value * 255 
+        // float (r|g|b) = output / 255
+        int rounded_i = (int)(combined * 100 + 0.5);
+        GLfloat rounded = (float)rounded_i / 100;
+
+        char *picked_color = ht_get(ht, rounded);
+        if (picked_color != NULL)
         {
-            if (squares[sq].pixel[0] == r
-                && squares[sq].pixel[1] == g
-                && squares[sq].pixel[2] == b)
-            {
-                printf("Name of clicked square: %s\n", squares[sq].name);
-            }
+            printf("Name of clicked square: %s\n", picked_color);
         }
 	}
 }
 
 void display (void)
 {
-
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f (1.0, 0.0, 0.0);
 
@@ -86,7 +96,7 @@ void display (void)
 
 	glDrawBuffer (GL_BACK);
 	glClear (GL_COLOR_BUFFER_BIT);
-	glColor3f (0.0, 1.0, 0.0);
+	glColor3f (0.0, 0.0, 0.01);
 	glBegin (GL_POLYGON);
 	glVertex2s (1, 1);
 	glVertex2s (2, 1);
@@ -94,7 +104,7 @@ void display (void)
 	glVertex2s (1, 2);
 	glEnd ();
 
-	glColor3f (0.0, 0.0, 1.0);
+	glColor3f (0.0, 0.0, 0.02);
 	glBegin (GL_POLYGON);
 	glVertex2s (8, 8);
 	glVertex2s (9, 8);
@@ -107,38 +117,19 @@ void display (void)
 
 int main (int argc, char** argv)
 {
+    ht = ht_create();
+
+    ht_set(ht, (GLfloat)0.01, "Left");
+    ht_set(ht, (GLfloat)0.02, "Right");
+
+    ht_dump(ht);
+
     glutInit (&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE|GLUT_RGB);
 	glutInitWindowSize (200, 200);
 	glutInitWindowPosition (100, 100);
 	glutCreateWindow (argv[0]);
 	init ();
-
-    squares[0].pixel[0] = 0.0;
-    squares[0].pixel[1] = 1.0;
-    squares[0].pixel[2] = 0.0;
-    squares[0].name = "Charlie";
-    squares[0].vertices[0][0] = 1;
-    squares[0].vertices[0][1] = 1;
-    squares[0].vertices[1][0] = 2;
-    squares[0].vertices[1][1] = 1;
-    squares[0].vertices[2][0] = 2;
-    squares[0].vertices[2][1] = 2;
-    squares[0].vertices[3][0] = 1;
-    squares[0].vertices[3][1] = 2;
-
-    squares[1].pixel[0] = 0.0;
-    squares[1].pixel[1] = 0.0;
-    squares[1].pixel[2] = 1.0;
-    squares[1].name = "Dexter";
-    squares[1].vertices[0][0] = 8;
-    squares[1].vertices[0][1] = 8;
-    squares[1].vertices[1][0] = 9;
-    squares[1].vertices[1][1] = 8;
-    squares[1].vertices[2][0] = 9;
-    squares[1].vertices[2][1] = 9;
-    squares[1].vertices[3][0] = 8;
-    squares[1].vertices[3][1] = 9;
 
 	glutReshapeFunc (reshape);
 	glutMouseFunc (mouse);

@@ -2,7 +2,7 @@
 #define HASH_H
 
 typedef struct entry_t {
-    float key;
+    GLfloat key;
     char *value;
     struct entry_t *next;
 } entry_t;
