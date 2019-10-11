@@ -132,7 +132,8 @@ void display (void)
     glLoadIdentity();
 //    gluLookAt(50.0, 46.0, 50.0, 0.0, 46.0, 0.0, 0.0, 1.0, 0.0);
     
-    glTranslatef (-55.0, -46.0, -55.0);
+    glTranslatef (-50.0, -46.0, -50.0);
+    glRotatef (-45, 0.0, 1.0, 0.0);
 
     glTranslatef (0.0, 0.5 * BASEHT, 0.0);
     glPushMatrix ();

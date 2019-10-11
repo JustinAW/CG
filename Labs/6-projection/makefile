@@ -2,7 +2,7 @@
 	gcc -o pillar 3dpillarlab.c -lglut -lGL -lGLU -lm
 
 run: 3dpillarlab
-	./pillar
+	bspc rule -a \* -o state=floating && ./pillar
 
 .PHONY: clean
 
