@@ -49,7 +49,7 @@ void mouse (int button, int state, GLint x, GLint y)
 
 	wHt = glutGet(GLUT_WINDOW_HEIGHT);
 	y = wHt - y;
-	glReadBuffer(GL_BACK);
+	glReadBuffer(GL_AUX1);
 	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN)) 
     {
 		glReadPixels(x, y, 1.0, 1.0, GL_RGBA, GL_FLOAT, &pixel);
@@ -87,30 +87,57 @@ void display (void)
 	glEnd ();
 
 	glBegin (GL_POLYGON);
-	glVertex2s (8, 8);
-	glVertex2s (9, 8);
-	glVertex2s (9, 9);
-	glVertex2s (8, 9);
+        glVertex2s (8, 8);
+        glVertex2s (11, 8);
+        glVertex2s (11, 11);
+        glVertex2s (8, 11);
 	glEnd ();
+
+    glColor3f (1.0, 1.0, 0.0);
+    glBegin(GL_POLYGON);
+        glVertex2s (9, 9);
+        glVertex2s (10, 9);
+        glVertex2s (10, 10);
+        glVertex2s (9, 10);
+    glEnd();
+
    	glFlush ();
 
-	glDrawBuffer (GL_BACK);
+	glDrawBuffer (GL_AUX1);
 	glClear (GL_COLOR_BUFFER_BIT);
+
 	glColor3f (0.0, 0.0, 0.01);
 	glBegin (GL_POLYGON);
-	glVertex2s (1, 1);
-	glVertex2s (2, 1);
-	glVertex2s (2, 2);
-	glVertex2s (1, 2);
+        glVertex2s (1, 1);
+        glVertex2s (2, 1);
+        glVertex2s (2, 2);
+        glVertex2s (1, 2);
 	glEnd ();
 
 	glColor3f (0.0, 0.0, 0.02);
 	glBegin (GL_POLYGON);
-	glVertex2s (8, 8);
-	glVertex2s (9, 8);
-	glVertex2s (9, 9);
-	glVertex2s (8, 9);
+        glVertex2s (8, 8);
+        glVertex2s (11, 8);
+        glVertex2s (11, 11);
+        glVertex2s (8, 11);
 	glEnd ();
+
+    glColor3f (0.0, 0.0, 0.03);
+    glBegin(GL_POLYGON);
+        glVertex2s (9, 9);
+        glVertex2s (10, 9);
+        glVertex2s (10, 10);
+        glVertex2s (9, 10);
+    glEnd();
+
+    /*
+	glBegin (GL_POLYGON);
+        glVertex2s (8, 8);
+        glVertex2s (9, 8);
+        glVertex2s (9, 9);
+        glVertex2s (8, 9);
+	glEnd ();
+    */
 
    	glFlush ();
 }
@@ -121,6 +148,7 @@ int main (int argc, char** argv)
 
     ht_set(ht, (GLfloat)0.01, "Left");
     ht_set(ht, (GLfloat)0.02, "Right");
+    ht_set(ht, (GLfloat)0.03, "Small");
 
     ht_dump(ht);
 
