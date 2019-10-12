@@ -21,6 +21,11 @@ float FPS = 30.0;
 const int sides = 360;
 int RUN_ANIMATION = 0;
 
+void init (void)
+{
+	glClearColor (1.0, 1.0, 1.0, 0.0);
+}
+
 void unitCircle (void)
 {
     glBegin(GL_LINE_LOOP);
@@ -63,11 +68,6 @@ void drawSpoke (void)
         glVertex2f(0.0, 0.0);
         glVertex2f(0.0, 1.0);
     glEnd();
-}
-
-void init (void)
-{
-	glClearColor (1.0, 1.0, 1.0, 0.0);
 }
 
 void drawSpokes()

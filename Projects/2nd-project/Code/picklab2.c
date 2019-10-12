@@ -17,6 +17,9 @@
 
 static ht_t *ht;
 
+static GLint SLIDER_X = 300;
+int SLIDER_TOGGLE = 0;
+
 struct {
     GLfloat pixel[4];
     char * name;
@@ -25,7 +28,6 @@ struct {
 
 void init (void)
 {
-    glDisable(GL_LIGHTING);
 	glClearColor (1.0, 1.0, 1.0, 0.0);
 	glShadeModel (GL_FLAT);
 }
@@ -38,14 +40,14 @@ void reshape (int w, int h)
       glViewport (0, 0, (GLfloat) w, (GLfloat) w);
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity ();
-	gluOrtho2D (0.0, 10.0, 0.0, 10.0);
+	gluOrtho2D (0.0, 600.0, 0.0, 600.0);
 }
 
 void mouse (int button, int state, GLint x, GLint y)
 {
 	GLfloat pixel[4];
 	GLfloat r, g, b;
-	int wHt;
+	GLint wHt;
 
 	wHt = glutGet(GLUT_WINDOW_HEIGHT);
 	y = wHt - y;
@@ -68,8 +70,17 @@ void mouse (int button, int state, GLint x, GLint y)
         if (picked_color != NULL)
         {
             printf("Name of clicked square: %s\n", picked_color);
+            if (strcmp(picked_color, "Slider") == 0)
+            {
+                SLIDER_TOGGLE = 1;
+            }
         }
+
 	}
+    if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_UP))
+    {
+        SLIDER_TOGGLE = 0;
+    }
 }
 
 void display (void)
@@ -80,26 +91,45 @@ void display (void)
 	glDrawBuffer (GL_FRONT);
 	glClear (GL_COLOR_BUFFER_BIT);
 	glBegin (GL_POLYGON);
-	glVertex2s (1, 1);
-	glVertex2s (2, 1);
-	glVertex2s (2, 2);
-	glVertex2s (1, 2);
+        glVertex2s (10, 10);
+        glVertex2s (20, 10);
+        glVertex2s (20, 20);
+        glVertex2s (10, 20);
 	glEnd ();
 
 	glBegin (GL_POLYGON);
-        glVertex2s (8, 8);
-        glVertex2s (11, 8);
-        glVertex2s (11, 11);
-        glVertex2s (8, 11);
+        glVertex2s (80, 80);
+        glVertex2s (110, 80);
+        glVertex2s (110, 110);
+        glVertex2s (80, 110);
 	glEnd ();
 
     glColor3f (1.0, 1.0, 0.0);
     glBegin(GL_POLYGON);
-        glVertex2s (9, 9);
-        glVertex2s (10, 9);
-        glVertex2s (10, 10);
-        glVertex2s (9, 10);
+        glVertex2s (90, 90);
+        glVertex2s (100, 90);
+        glVertex2s (100, 100);
+        glVertex2s (90, 100);
     glEnd();
+    
+    glColor3f (0.0, 0.0, 0.0);
+    glPushMatrix();
+        glLineWidth(3.0);
+        glBegin(GL_LINES);
+            glVertex2s (300, 30);
+            glVertex2s (500, 30);
+        glEnd();
+    glPopMatrix();
+
+    glColor3f (0.0, 1.0, 0.0);
+    glPushMatrix();
+        glBegin(GL_POLYGON);
+            glVertex2s (SLIDER_X, 20);
+            glVertex2s (SLIDER_X+10, 20);
+            glVertex2s (SLIDER_X+10, 40);
+            glVertex2s (SLIDER_X, 40);
+        glEnd();
+    glPopMatrix();
 
    	glFlush ();
 
@@ -108,38 +138,51 @@ void display (void)
 
 	glColor3f (0.0, 0.0, 0.01);
 	glBegin (GL_POLYGON);
-        glVertex2s (1, 1);
-        glVertex2s (2, 1);
-        glVertex2s (2, 2);
-        glVertex2s (1, 2);
+        glVertex2s (10, 10);
+        glVertex2s (20, 10);
+        glVertex2s (20, 20);
+        glVertex2s (10, 20);
 	glEnd ();
 
 	glColor3f (0.0, 0.0, 0.02);
 	glBegin (GL_POLYGON);
-        glVertex2s (8, 8);
-        glVertex2s (11, 8);
-        glVertex2s (11, 11);
-        glVertex2s (8, 11);
+        glVertex2s (80, 80);
+        glVertex2s (110, 80);
+        glVertex2s (110, 110);
+        glVertex2s (80, 110);
 	glEnd ();
 
     glColor3f (0.0, 0.0, 0.03);
     glBegin(GL_POLYGON);
-        glVertex2s (9, 9);
-        glVertex2s (10, 9);
-        glVertex2s (10, 10);
-        glVertex2s (9, 10);
+        glVertex2s (90, 90);
+        glVertex2s (100, 90);
+        glVertex2s (100, 100);
+        glVertex2s (90, 100);
     glEnd();
 
-    /*
-	glBegin (GL_POLYGON);
-        glVertex2s (8, 8);
-        glVertex2s (9, 8);
-        glVertex2s (9, 9);
-        glVertex2s (8, 9);
-	glEnd ();
-    */
+    glColor3f (0.0, 0.0, 0.04);
+    glPushMatrix();
+        glBegin(GL_POLYGON);
+            glVertex2s (SLIDER_X, 20);
+            glVertex2s (SLIDER_X+10, 20);
+            glVertex2s (SLIDER_X+10, 40);
+            glVertex2s (SLIDER_X, 40);
+        glEnd();
+    glPopMatrix();
 
    	glFlush ();
+}
+
+void mouse_motion (int x, int y)
+{
+    if (SLIDER_TOGGLE == 1)
+    {
+        if (x >= 305 && x <= 495)
+        {
+            SLIDER_X = x - 5;
+            glutPostRedisplay();
+        }
+    }
 }
 
 int main (int argc, char** argv)
@@ -149,12 +192,13 @@ int main (int argc, char** argv)
     ht_set(ht, (GLfloat)0.01, "Left");
     ht_set(ht, (GLfloat)0.02, "Right");
     ht_set(ht, (GLfloat)0.03, "Small");
+    ht_set(ht, (GLfloat)0.04, "Slider");
 
     ht_dump(ht);
 
     glutInit (&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE|GLUT_RGB);
-	glutInitWindowSize (200, 200);
+	glutInitWindowSize (600, 600);
 	glutInitWindowPosition (100, 100);
 	glutCreateWindow (argv[0]);
 	init ();
@@ -162,6 +206,7 @@ int main (int argc, char** argv)
 	glutReshapeFunc (reshape);
 	glutMouseFunc (mouse);
 	glutDisplayFunc (display);
+    glutMotionFunc(mouse_motion);
 	glutMainLoop ();
 	return 0;
 }

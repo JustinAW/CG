@@ -40,7 +40,7 @@ typedef struct {
 ht_t *ht_create(void)
 {
     // allocate the table
-    ht_t *hashtable = malloc(sizeof(ht_t) * 1);
+    ht_t *hashtable = malloc(sizeof(ht_t) + 1);
 
     // allocate entries
     hashtable->entries = malloc(sizeof(entry_t*) * TABLE_SIZE);
