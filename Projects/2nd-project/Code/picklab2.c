@@ -13,12 +13,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "hashtable.h"
 
 static ht_t *ht;
 
+clock_t Time = 0;
+long MAX_REV_LIM_TIME = 10.0;
 static GLint SLIDER_X = 300;
 int SLIDER_TOGGLE = 0;
+int BANG_TOGGLE = 1;
 
 struct {
     GLfloat pixel[4];
@@ -182,6 +186,29 @@ void mouse_motion (int x, int y)
             SLIDER_X = x - 5;
             glutPostRedisplay();
         }
+        if (x >= 495)
+        {
+            Time = clock();
+        }
+    }
+}
+
+void idle (void)
+{
+    if (SLIDER_X == 490)
+    {
+        //long time = clock();
+        clock_t time_diff = clock() - Time;
+        double seconds_passed = ((double)time_diff)/CLOCKS_PER_SEC;
+        //printf("time_diff %ld\n", time_diff);
+        if (seconds_passed > MAX_REV_LIM_TIME)
+        {
+            if (BANG_TOGGLE == 1)
+            {
+                printf("BANGALANGA\n");
+                BANG_TOGGLE = 0;
+            }
+        }
     }
 }
 
@@ -207,6 +234,7 @@ int main (int argc, char** argv)
 	glutMouseFunc (mouse);
 	glutDisplayFunc (display);
     glutMotionFunc(mouse_motion);
+    glutIdleFunc(idle);
 	glutMainLoop ();
 	return 0;
 }

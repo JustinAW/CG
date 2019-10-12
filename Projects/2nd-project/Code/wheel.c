@@ -163,6 +163,7 @@ void toggle_animation (int selection)
     if (selection == 2)
     {
         RUN_ANIMATION = 0;
+        glutPostRedisplay();
     }
 }
 
