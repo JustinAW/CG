@@ -1,5 +1,5 @@
-#ifndef HASH_H
-#define HASH_H
+#ifndef HASHTABLE_H
+#define HASHTABLE_H
 
 typedef struct entry_t {
     GLfloat key;

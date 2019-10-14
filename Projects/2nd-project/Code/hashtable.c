@@ -3,7 +3,7 @@
  ****************************************************
  *  Author:     Justin Weigle                       *
  *  Created:    10 Oct 2019                         *
- *  Edited:     11 Oct 2019                         *
+ *  Edited:     14 Oct 2019                         *
  ****************************************************
  * Gives hash functionality using floating point    *
  * numbers for keys so that back buffer picking     *
@@ -67,7 +67,7 @@ unsigned int hash (float key)
     // "hashing" can be very simple as there
     // will be all unique key values since
     // back buffer will have all unique colors
-    // 0.00 can be used as background color
+    // 3.00 can be used as background color
     // so it can always return NULL
     unsigned int value = key * 100;
     return value;

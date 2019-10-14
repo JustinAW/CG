@@ -18,7 +18,7 @@
 long Time, ResetTime = 0;
 float SPEED = -1.0;
 float FPS = 30.0;
-const int sides = 360;
+const int SIDES = 360;
 int RUN_ANIMATION = 0;
 
 void init (void)
@@ -32,7 +32,7 @@ void unitCircle (void)
         double heading;
         int counter = 0;
         int toggle = 1;
-        for (int i = 0; i < 360; i += 360 / sides)
+        for (int i = 0; i < 360; i += 360 / SIDES)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
             if (toggle)
@@ -141,6 +141,7 @@ void idle (void)
             glClear (GL_COLOR_BUFFER_BIT);
             glRotatef(SPEED, 0.0, 0.0, 1.0);
             drawWheel();
+            glutSwapBuffers();
             glFlush();
         }
     }
@@ -149,6 +150,10 @@ void idle (void)
 void menu_choice (int selection)
 {
     if (selection == 1)
+    {
+        glutPostRedisplay();
+    }
+    if (selection == 2)
     {
         exit(0);
     }
@@ -183,7 +188,8 @@ int main (int argc, char** argv)
 
     glutCreateMenu(menu_choice);
     glutAddSubMenu("Toggle Animation", submenu);
-    glutAddMenuEntry("Exit", 1);
+    glutAddMenuEntry("Reset", 1);
+    glutAddMenuEntry("Exit", 2);
     glutAttachMenu (GLUT_RIGHT_BUTTON);
 
     glutIdleFunc (idle);
