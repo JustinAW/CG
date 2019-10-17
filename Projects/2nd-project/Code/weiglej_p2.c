@@ -17,9 +17,10 @@ float FPS = 30.0;
 int RUN_ANIMATION = 0;
 static GLfloat INTAKE_X = 198.0;
 static GLfloat EXHAUST_X = 198.0;
-static double ECC_SHFT_I = 320.0;
+static double ECC_SHFT_I = 45.0;
 static double ECC_SHFT_HEADING;
 static GLfloat ROTOR_ROTATION = 0;
+int ANIM_LOOPS = 0;
 
 // Interaction
 static GLint SLIDER_X = 300;
@@ -58,6 +59,8 @@ void reshape (int w, int h)
 void display (void)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glLoadIdentity();
+    gluOrtho2D(0.0, 900.0, 0.0, 900.0);
 
     // BACK BUFFER drawing
 	glColor3f(1.0, 0.0, 0.0);
@@ -93,10 +96,7 @@ void display (void)
     glColor3f(0.5, 0.5, 1.0);
     chambers();
 
-    glLoadIdentity();
-    gluOrtho2D(0.0, 900.0, 0.0, 900.0);
-
-    ECC_SHFT_HEADING = ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
+    ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
     glPushMatrix();
         glColor3f(0.0, 0.88, 0.88);
         glTranslatef((cos(ECC_SHFT_HEADING) * 41) + 402, (sin(ECC_SHFT_HEADING) * 41) + 418, 0.0);
@@ -239,27 +239,27 @@ void idle (void)
             if (EXHAUST_X < 166)
                 EXHAUST_X = 198;
             EXHAUST_X -= INTAKE_EXHAUST_SPEED;
-            ECC_SHFT_I -= 6.0;
-            if (ECC_SHFT_I < 0)
-                ECC_SHFT_I = 360;
-            ROTOR_ROTATION += 1.97;
+            ECC_SHFT_I += 18.0;
+            if (ECC_SHFT_I >= 360)
+                ECC_SHFT_I = 0;
+            ROTOR_ROTATION += 6.00;
             if (ROTOR_ROTATION > 360)
+            {
                 ROTOR_ROTATION = 0;
+            }
             glutPostRedisplay();
         }
     }
     if (SLIDER_X == 490)
     {
-        //long time = clock();
         clock_t time_diff = clock() - TIME;
         double seconds_passed = ((double)time_diff)/CLOCKS_PER_SEC;
-        //printf("time_diff %ld\n", time_diff);
         if (seconds_passed > MAX_REV_LIM_TIME)
         {
             if (BANG_TOGGLE == 1)
             {
                 RUN_ANIMATION = 0;
-                printf("BANGALANGA\n");
+                printf("BANG\n");
                 BANG_TOGGLE = 0;
             }
         }
@@ -277,6 +277,8 @@ void menu_choice (int selection)
         EXHAUST_X = 198.0;
         INTAKE_EXHAUST_SPEED = 2;
         BANG_TOGGLE = 1;
+        ECC_SHFT_I = 0;
+        ROTOR_ROTATION = 0;
         glutPostRedisplay();
     }
     if (selection == 2)
