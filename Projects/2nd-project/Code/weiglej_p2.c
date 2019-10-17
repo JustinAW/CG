@@ -93,7 +93,10 @@ void display (void)
     glColor3f(0.5, 0.5, 1.0);
     chambers();
 
-    ECC_SHFT_HEADING = ECC_SHFT_I * 3.1415926535897932384626433832795 / 180;
+    glLoadIdentity();
+    gluOrtho2D(0.0, 900.0, 0.0, 900.0);
+
+    ECC_SHFT_HEADING = ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
     glPushMatrix();
         glColor3f(0.0, 0.88, 0.88);
         glTranslatef((cos(ECC_SHFT_HEADING) * 41) + 402, (sin(ECC_SHFT_HEADING) * 41) + 418, 0.0);
@@ -236,10 +239,10 @@ void idle (void)
             if (EXHAUST_X < 166)
                 EXHAUST_X = 198;
             EXHAUST_X -= INTAKE_EXHAUST_SPEED;
-            ECC_SHFT_I -= 360 / 60;
+            ECC_SHFT_I -= 6.0;
             if (ECC_SHFT_I < 0)
                 ECC_SHFT_I = 360;
-            ROTOR_ROTATION += 2;
+            ROTOR_ROTATION += 1.97;
             if (ROTOR_ROTATION > 360)
                 ROTOR_ROTATION = 0;
             glutPostRedisplay();
