@@ -1,3 +1,11 @@
+/************************************
+ *      Projection Lab              *
+ *          Lab 6                   *
+ *  Author: Justin Weigle           *
+ *  Edited: 17 Oct 2019             *
+ *  Submitted: 17 Oct 2019          *
+ ************************************/
+
 Q2:
     The image gets smaller each added distance, but it is less distorted. This
     is due to the fact that the camera is getting farther away from the pillar.
@@ -15,8 +23,6 @@ Q7:
     The only thing visible is the center of the pillar. The second one, where
     the camera is 100 units from the origin, makes the pillar appear closer
     even though the near clip plane is still the same distance from the pillar.
-    The values used were camera: 50 ncp: 30, camera: 100 ncp: 80. Using these,
-    50 - 30 = 20 units from pillar center and 100 - 80 = 20 from center.
 
 Q9:
     fov: 8.55 aspect: 1.0
@@ -34,3 +40,5 @@ Q12:
     It has no effect.
 
 Q14:
+    glRotatef (-45.0, 0.0, 1.0, 0.0);
+    glTranslatef (-50.0, -46.0, -50.0);
