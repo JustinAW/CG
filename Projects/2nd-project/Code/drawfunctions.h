@@ -15,4 +15,6 @@ void chambers (void);
 
 void rotor (void);
 
+void housing (void);
+
 #endif

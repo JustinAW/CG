@@ -11,27 +11,27 @@
 static ht_t *HT;
 
 // Animation
-clock_t TIME, RESET_TIME, ANIM_TIME = 0;
-float SPEED = -1.0;
-float FPS = 30.0;
-int RUN_ANIMATION = 0;
+static clock_t TIME, RESET_TIME, ANIM_TIME = 0;
+static GLfloat SPEED = -1.0;
+static GLfloat FPS = 30.0;
+static GLint RUN_ANIMATION = 0;
 static GLfloat INTAKE_X = 198.0;
 static GLfloat EXHAUST_X = 198.0;
-static double ECC_SHFT_I = 45.0;
-static double ECC_SHFT_HEADING;
-static GLfloat ROTOR_ROTATION = 0;
-int ANIM_LOOPS = 0;
+static GLfloat ECC_SHFT_I = 0.0;
+static GLfloat ECC_SHFT_HEADING;
+static GLfloat ROTOR_ROTATION = -3.0 * 4.0;
+static GLint ROTATION_SPEED = 3;
 
 // Interaction
 static GLint SLIDER_X = 300;
-int SLIDER_G = 363;
-int SLIDER_Y = 426;
-int SLIDER_O = 489;
-int SLIDER_TOGGLE = 0;
-int INTAKE_EXHAUST_SPEED = 2;
+static GLint SLIDER_G = 363;
+static GLint SLIDER_Y = 426;
+static GLint SLIDER_O = 489;
+static GLint SLIDER_TOGGLE = 0;
+static GLint INTAKE_EXHAUST_SPEED = 2;
 
-long MAX_REV_LIM_TIME = 10.0;
-int BANG_TOGGLE = 1;
+static GLfloat MAX_REV_LIM_TIME = 10.0;
+static GLint BANG_TOGGLE = 1;
 
 
 void init (void)
@@ -93,22 +93,31 @@ void display (void)
         intake_exhaust();
     glPopMatrix();
 
-    glColor3f(0.5, 0.5, 1.0);
-    chambers();
+    //glColor3f(0.5, 0.5, 1.0);
+    //chambers();
 
     ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
     glPushMatrix();
         glColor3f(0.0, 0.88, 0.88);
-        glTranslatef((cos(ECC_SHFT_HEADING) * 41) + 402, (sin(ECC_SHFT_HEADING) * 41) + 418, 0.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 28) + 405, (sin(ECC_SHFT_HEADING) * 28) + 418, 0.0);
         glRotatef(-ROTOR_ROTATION, 0.0, 0.0, 1.0);
         rotor();
+    glPopMatrix();
+
+    glColor3f(0.0, 0.0, 0.0);
+    housing();
+
+    glPushMatrix();
+        glTranslatef(40.0, 40.0, 0.0);
+        glScalef(0.9, 0.9, 1.0);
+        housing();
     glPopMatrix();
 
     glutSwapBuffers();
    	glFlush ();
 
-    // AUX1 BUFFER picking
-	glDrawBuffer (GL_AUX1);
+    // AUX0 BUFFER picking
+	glDrawBuffer (GL_AUX0);
 	glClear (GL_COLOR_BUFFER_BIT);
 
     glColor3f(0.0, 0.0, 0.00);
@@ -129,10 +138,19 @@ void display (void)
     glColor3f(0.0, 0.0, 0.03);
     chambers();
 
+    ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
+    glPushMatrix();
+        glColor3f(0.0, 0.0, 0.04);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 28) + 403, (sin(ECC_SHFT_HEADING) * 28) + 416, 0.0);
+        glRotatef(-ROTOR_ROTATION, 0.0, 0.0, 1.0);
+        rotor();
+    glPopMatrix();
+    /*
     glPushMatrix();
         glColor3f(0.0, 0.0, 0.04);
         rotor();
     glPopMatrix();
+    */
 
    	glFlush ();
 }
@@ -167,7 +185,7 @@ void mouse (int button, int state, GLint x, GLint y)
 	wHt = glutGet(GLUT_WINDOW_HEIGHT);
 	y = wHt - y;
 
-	glReadBuffer(GL_AUX1);
+	glReadBuffer(GL_AUX0);
 
     switch (button)
     {
@@ -215,6 +233,23 @@ void mouse_motion (int x, int y)
         {
             SLIDER_X = x - 5;
             INTAKE_EXHAUST_SPEED = (int)(SLIDER_X / 50 + 0.2 - 4);
+
+            if (x >= 495)
+                ROTATION_SPEED = 13;
+            else if (x > 430)
+                FPS = 60;
+            else if (x > 400)
+            {
+                ROTATION_SPEED = 8;
+            }
+            else if (x > 320)
+            {
+                FPS = 30;
+                ROTATION_SPEED = 6;
+            }
+            else if (x < 320)
+                ROTATION_SPEED = 3;
+
             glutPostRedisplay();
         }
         if (x >= 495)
@@ -239,11 +274,11 @@ void idle (void)
             if (EXHAUST_X < 166)
                 EXHAUST_X = 198;
             EXHAUST_X -= INTAKE_EXHAUST_SPEED;
-            ECC_SHFT_I += 18.0;
-            if (ECC_SHFT_I >= 360)
+            ECC_SHFT_I += (ROTATION_SPEED * 3);
+            if (ECC_SHFT_I > (360 - ROTATION_SPEED * 3))
                 ECC_SHFT_I = 0;
-            ROTOR_ROTATION += 6.00;
-            if (ROTOR_ROTATION > 360)
+            ROTOR_ROTATION += ROTATION_SPEED;
+            if (ROTOR_ROTATION > (360 - ROTATION_SPEED))
             {
                 ROTOR_ROTATION = 0;
             }
@@ -271,6 +306,7 @@ void menu_choice (int selection)
 {
     if (selection == 1)
     {
+        FPS = 30.0;
         RUN_ANIMATION = 0;
         SLIDER_X = 300;
         INTAKE_X = 198.0;
@@ -278,7 +314,8 @@ void menu_choice (int selection)
         INTAKE_EXHAUST_SPEED = 2;
         BANG_TOGGLE = 1;
         ECC_SHFT_I = 0;
-        ROTOR_ROTATION = 0;
+        ROTOR_ROTATION = -3.0 * 4.0;
+        ROTATION_SPEED = 3;
         glutPostRedisplay();
     }
     if (selection == 2)
@@ -328,6 +365,8 @@ void draw_title()
 
 int main (int argc, char** argv)
 {
+    TIME, RESET_TIME, ANIM_TIME = clock();
+
     HT = ht_create();
 
     ht_set(HT, (GLfloat)0.00, "Slider");

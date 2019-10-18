@@ -92,14 +92,13 @@ void intake_exhaust (void)
         71.0, 27.0, 0.0,    //14
         60.0, 27.0, 0.0,    //15_ end
 
-        80.0, 00.0, 0.0,    //16
+        80.0, 00.0, 0.0,    //16 rect5
         91.0, 00.0, 0.0,    //17
         91.0, 27.0, 0.0,    //18
-        80.0, 27.0, 0.0,    //19
+        80.0, 27.0, 0.0,    //19_ end
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
-    //glColorPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
     //Define pieces here
     static GLubyte name[] = {0, 0, 0, 0};
@@ -109,12 +108,10 @@ void intake_exhaust (void)
     static GLubyte rect4[] = {12, 13, 14, 15};
     static GLubyte rect5[] = {16, 17, 18, 19};
 
-    // list of vertex counts for each part
     static GLsizei count[] = {
         4, 4, 4, 4, 4,
     };
 
-    // list of piece names
     static GLvoid *indices[] = {
         rect1, rect2, rect3, rect4, rect5
     };
@@ -139,18 +136,13 @@ void chambers (void)
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
-    //glColorPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
-    //Define pieces here
-    static GLubyte name[] = {0, 0, 0, 0};
     static GLubyte chamber[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    // list of vertex counts for each part
     static GLsizei count[] = {
         10,
     };
 
-    // list of piece names
     static GLvoid *indices[] = {
         chamber,
     };
@@ -177,21 +169,79 @@ void rotor (void)
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
-    //glColorPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
-    //Define pieces here
-    static GLubyte name[] = {0, 0, 0, 0};
     static GLubyte rotor_f[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0};
 
-    // list of vertex counts for each part
     static GLsizei count[] = {
         12,
     };
 
-    // list of piece names
     static GLvoid *indices[] = {
         rotor_f,
     };
 
     glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 1);
+}
+
+void housing (void)
+{
+    static GLfloat vertexValues[] = {
+        219, 540, 0,    //0
+        267, 540, 0,    //1
+        286, 560, 0,    //2
+        306, 577, 0,    //3
+        330, 590, 0,    //4
+        352, 599, 0,    //5
+        371, 603, 0,    //6
+        392, 606, 0,    //7
+        406, 606, 0,    //8     peak
+        422, 605, 0,    //9
+        439, 602, 0,    //10
+        463, 594, 0,    //11
+        485, 582, 0,    //12
+        502, 569, 0,    //13
+        516, 554, 0,    //14
+        529, 537, 0,    //15
+        539, 518, 0,    //16
+        547, 494, 0,    //17
+        551, 469, 0,    //18
+        551, 367, 0,    //19    right side
+        546, 339, 0,    //20
+        537, 314, 0,    //21
+        525, 293, 0,    //22
+        512, 277, 0,    //23
+        495, 261, 0,    //24
+        473, 247, 0,    //25
+        450, 237, 0,    //26
+        422, 231, 0,    //27
+        404, 230, 0,    //28    valley
+        378, 232, 0,    //29
+        353, 239, 0,    //30
+        331, 249, 0,    //31
+        311, 263, 0,    //32
+        295, 278, 0,    //33
+        283, 293, 0,    //34
+        274, 308, 0,    //35
+        267, 322, 0,    //36
+        219, 322, 0,    //37
+    };
+
+    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
+
+    static GLubyte outline[] = {
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+        10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+        20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        30, 31, 32, 33, 34, 35, 36, 37,
+    };
+
+    static GLsizei count[] = {
+        38,
+    };
+
+    static GLvoid *indices[] = {
+        outline,
+    };
+
+    glMultiDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_BYTE, indices, 1);
 }
