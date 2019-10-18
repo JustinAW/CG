@@ -59,8 +59,6 @@ void reshape (int w, int h)
 void display (void)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glLoadIdentity();
-    gluOrtho2D(0.0, 900.0, 0.0, 900.0);
 
     // BACK BUFFER drawing
 	glColor3f(1.0, 0.0, 0.0);
@@ -99,7 +97,7 @@ void display (void)
     ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
     glPushMatrix();
         glColor3f(0.0, 0.88, 0.88);
-        glTranslatef((cos(ECC_SHFT_HEADING) * 28) + 405, (sin(ECC_SHFT_HEADING) * 28) + 418, 0.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 405, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
         glRotatef(-ROTOR_ROTATION, 0.0, 0.0, 1.0);
         rotor();
     glPopMatrix();
@@ -107,11 +105,13 @@ void display (void)
     glColor3f(0.0, 0.0, 0.0);
     housing();
 
+    /*
     glPushMatrix();
         glTranslatef(40.0, 40.0, 0.0);
         glScalef(0.9, 0.9, 1.0);
         housing();
     glPopMatrix();
+    */
 
     glutSwapBuffers();
    	glFlush ();
@@ -145,12 +145,6 @@ void display (void)
         glRotatef(-ROTOR_ROTATION, 0.0, 0.0, 1.0);
         rotor();
     glPopMatrix();
-    /*
-    glPushMatrix();
-        glColor3f(0.0, 0.0, 0.04);
-        rotor();
-    glPopMatrix();
-    */
 
    	glFlush ();
 }
