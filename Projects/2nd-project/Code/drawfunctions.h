@@ -5,7 +5,9 @@ void glMultiDrawElements (GLenum, const GLsizei *, GLenum, const GLvoid *, GLsiz
 
 void gear (void);
 
-void unit_circle (int);
+void unit_circle (int, int);
+
+void unit_circle_fill (int, int);
 
 void slider (GLint, int);
 
@@ -15,6 +17,10 @@ void chambers (void);
 
 void rotor (void);
 
-void housing (void);
+void eccentric_shaft (void);
+
+void eccentric_shaft_fill (int);
+
+void housing (int);
 
 #endif

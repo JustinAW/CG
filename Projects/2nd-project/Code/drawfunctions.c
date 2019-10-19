@@ -32,11 +32,24 @@ void gear (void)
 }
 
 
-void unit_circle (int deg_rotation)
+void unit_circle (int i, int deg_rotation)
 {
     glBegin(GL_LINE_LOOP);
         double heading;
-        for (int i = 0; i < deg_rotation; i += 360 / SIDES)
+        for (; i < deg_rotation; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex2d(cos(heading), sin(heading));
+        }
+    glEnd();
+}
+
+
+void unit_circle_fill (int i, int deg_rotation)
+{
+    glBegin(GL_POLYGON);
+        double heading;
+        for (i = 0; i < deg_rotation; i += 360 / SIDES)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
             glVertex2d(cos(heading), sin(heading));
@@ -188,7 +201,22 @@ void rotor (void)
     glLineWidth(1.0);
 }
 
-void housing (void)
+
+void eccentric_shaft (void)
+{
+    unit_circle(0, 360);
+}
+
+
+void eccentric_shaft_fill (int rotation)
+{
+    unit_circle_fill(rotation, 360);
+    glColor3f(0.66, 0.66, 0.66);
+    unit_circle_fill(0, rotation);
+}
+
+
+void housing (int fill)
 {
     static GLfloat vertexValues[] = {
         219, 540, 0,    //0
@@ -271,6 +299,15 @@ void housing (void)
         297, 542, 0,    //77
         281, 521, 0,    //78
         219, 521, 0,    //79
+
+        219, 494, 0,    //80 betw_outline
+        276, 494, 0,    //81
+        276, 369, 0,    //82
+        219, 369, 0,    //83
+        219, 388, 0,    //84
+        257, 388, 0,    //85
+        257, 475, 0,    //86
+        219, 475, 0,    //87
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
@@ -291,13 +328,18 @@ void housing (void)
         0,
     };
 
+    static GLubyte betw_outline[] = {
+        80, 81, 82, 83, 84, 85, 86, 87,
+        80,
+    };
+
     static GLsizei count[] = {
-        38, 44,
+        38, 44, 9,
     };
 
     static GLvoid *indices[] = {
-        outline, inner_outline,
+        outline, inner_outline, betw_outline,
     };
 
-    glMultiDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_BYTE, indices, 2);
+    glMultiDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_BYTE, indices, 3);
 }
