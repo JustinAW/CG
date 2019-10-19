@@ -14,13 +14,12 @@ static ht_t *HT;
 // Animation
 static clock_t TIME, RESET_TIME, ANIM_TIME = 0;
 static GLfloat SPEED = -1.0;
-static GLfloat FPS = 30.0;
+static GLfloat FPS = 60.0;
 static GLint RUN_ANIMATION = 0;
 static GLfloat INTAKE_X = 178.0;
 static GLfloat EXHAUST_X = 198.0;
 static GLfloat ECC_SHFT_I = 0.0;
 static GLfloat ECC_SHFT_HEADING;
-static GLfloat ROTOR_ROTATION = -3.0 * 4.0;
 static GLint ROTATION_SPEED = 3;
 
 // Interaction
@@ -99,14 +98,15 @@ void display (void)
     ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
     glPushMatrix();
         glColor3f(0.0, 0.88, 0.88);
-        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 405, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
-        glRotatef(-ROTOR_ROTATION, 0.0, 0.0, 1.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 401, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
+        glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
+        glScalef(1.65, 1.65, 1.0);
         rotor();
     glPopMatrix();
 
     // ECCENTRIC SHAFT
     glPushMatrix();
-        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 405, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 401, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
         glScalef(52.0, 52.0, 1.0);
         glRotatef(-ECC_SHFT_I, 0.0, 0.0, 1.0);
         glColor3f(0.79, 0.79, 0.79);
@@ -118,30 +118,31 @@ void display (void)
     // PINION
     glLineWidth(2.0);
     glPushMatrix();
-        glTranslatef(405, 417, 0.0);
+        glColor3f(0.87, 0.0, 0.0);
+        glTranslatef(401, 417, 0.0);
         glScalef(30.0, 30.0, 1.0);
-        gear();
-        glScalef(0.7, 0.7, 1.0);
-        unit_circle(0, 360);
+        outer_gear(10);
+        glColor3f(0.0, 0.0, 0.0);
+        outer_gear_outline();
+        gear_teeth_outline(10);
     glPopMatrix();
 
     // CROWN GEAR
     glPushMatrix();
-        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 405, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
-        glRotatef(-ECC_SHFT_I, 0.0, 0.0, 1.0);
-        glScalef(58.0, 58.0, 1.0);
-        gear();
-        glScalef(1.3, 1.3, 1.0);
-        unit_circle(0, 360);
+        glColor3f(0.0, 0.88, 0.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 401, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
+        glRotatef((-ECC_SHFT_I/3), 0.0, 0.0, 1.0);
+        glScalef(60.0, 60.0, 1.0);
+        inner_gear(5);
+        glColor3f(0.0, 0.0, 0.0);
+        inner_gear_outline();
+        gear_teeth_outline(5);
     glPopMatrix();
     glLineWidth(1.0);
 
-    // HOUSING OUTLINE
-    glColor3f(0.0, 0.0, 0.0);
-    housing(0);
-
     // HOUSING
-    // TODO
+    glColor3f(0.88, 0.88, 0.48);
+    housing();
 
     // INFO DRAWING
     if (INFO_SELECTION != 0)
@@ -183,21 +184,42 @@ void display (void)
     ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
     glPushMatrix();
         glColor3f(0.0, 0.0, 0.04);
-        glTranslatef((cos(ECC_SHFT_HEADING) * 28) + 403, (sin(ECC_SHFT_HEADING) * 28) + 416, 0.0);
-        glRotatef(-ROTOR_ROTATION, 0.0, 0.0, 1.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 401, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
+        glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
+        glScalef(1.65, 1.65, 1.0);
         rotor();
     glPopMatrix();
 
     // ECCENTRIC SHAFT
     glPushMatrix();
-        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 405, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 401, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
         glScalef(52.0, 52.0, 1.0);
         glColor3f(0.0, 0.0, 0.05);
         eccentric_shaft_fill(0);
     glPopMatrix();
 
+    // PINION
+    glLineWidth(2.0);
+    glPushMatrix();
+        glColor3f(0.0, 0.0, 0.06);
+        glTranslatef(401, 417, 0.0);
+        glScalef(30.0, 30.0, 1.0);
+        outer_gear(10);
+    glPopMatrix();
+
+    // CROWN GEAR
+    glPushMatrix();
+        glColor3f(0.0, 0.0, 0.07);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 401, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
+        glRotatef((-ECC_SHFT_I/3), 0.0, 0.0, 1.0);
+        glScalef(60.0, 60.0, 1.0);
+        inner_gear(5);
+    glPopMatrix();
+    glLineWidth(1.0);
+
     // HOUSING
-    // TODO
+    glColor3f(0.0, 0.0, 0.08);
+    housing();
 
    	glFlush ();
 }
@@ -271,6 +293,12 @@ void mouse (int button, int state, GLint x, GLint y)
                         INFO_SELECTION = 4;
                     if (strcmp(picked_color, "Eccentric Shaft") == 0)
                         INFO_SELECTION = 5;
+                    if (strcmp(picked_color, "Pinion") == 0)
+                        INFO_SELECTION = 6;
+                    if (strcmp(picked_color, "Crown Gear") == 0)
+                        INFO_SELECTION = 7;
+                    if (strcmp(picked_color, "Stator Housing") == 0)
+                        INFO_SELECTION = 8;
                     glutPostRedisplay();
                 }
                 else
@@ -297,20 +325,22 @@ void mouse_motion (int x, int y)
             INTAKE_EXHAUST_SPEED = (int)(SLIDER_X / 50 + 0.2 - 4);
 
             if (x >= 495)
-                ROTATION_SPEED = 20;
-            else if (x > 430)
-            {
-                FPS = 60;
-                ROTATION_SPEED = 7;
-            }
+                ROTATION_SPEED = 21;
+            else if (x > 475)
+                ROTATION_SPEED = 18;
+            else if (x > 450)
+                ROTATION_SPEED = 15;
+            else if (x > 425)
+                ROTATION_SPEED = 12;
             else if (x > 400)
-            {
-                FPS = 30;
-                ROTATION_SPEED = 7;
-            }
-            else if (x > 320)
+                ROTATION_SPEED = 9;
+            else if (x > 375)
                 ROTATION_SPEED = 6;
-            else if (x < 320)
+            else if (x > 350)
+                ROTATION_SPEED = 5;
+            else if (x > 325)
+                ROTATION_SPEED = 4;
+            else if (x < 325)
                 ROTATION_SPEED = 3;
 
             glutPostRedisplay();
@@ -331,20 +361,19 @@ void idle (void)
         if (ANIM_TIME > RESET_TIME)
         {
             RESET_TIME = RESET_TIME + (1.0/FPS) * CLOCKS_PER_SEC;
+
+            INTAKE_X += INTAKE_EXHAUST_SPEED;
             if (INTAKE_X > 210)
                 INTAKE_X = 178;
-            INTAKE_X += INTAKE_EXHAUST_SPEED;
+
+            EXHAUST_X -= INTAKE_EXHAUST_SPEED;
             if (EXHAUST_X < 166)
                 EXHAUST_X = 198;
-            EXHAUST_X -= INTAKE_EXHAUST_SPEED;
+
             ECC_SHFT_I += (ROTATION_SPEED * 3);
             if (ECC_SHFT_I > (360 - ROTATION_SPEED * 3))
                 ECC_SHFT_I = 0;
-            ROTOR_ROTATION += ROTATION_SPEED;
-            if (ROTOR_ROTATION > (360 - ROTATION_SPEED))
-            {
-                ROTOR_ROTATION = 0;
-            }
+
             glutPostRedisplay();
         }
     }
@@ -369,7 +398,6 @@ void menu_choice (int selection)
 {
     if (selection == 1)
     {
-        FPS = 30.0;
         RUN_ANIMATION = 0;
         SLIDER_X = 300;
         INTAKE_X = 178.0;
@@ -377,7 +405,6 @@ void menu_choice (int selection)
         INTAKE_EXHAUST_SPEED = 2;
         BANG_TOGGLE = 1;
         ECC_SHFT_I = 0;
-        ROTOR_ROTATION = -3.0 * 4.0;
         ROTATION_SPEED = 3;
         glutPostRedisplay();
     }

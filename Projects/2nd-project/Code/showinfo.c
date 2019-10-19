@@ -66,4 +66,37 @@ void draw_info (GLint selection)
                 "This shaft sends the power generated to the flywheel"
         );
     }
+
+    if (selection == 6)
+    {
+        render_bitmap_string(x, y, (void *)header, "PINION:");
+        render_bitmap_string(x, y-30, (void *)font,
+                "A stationary gear that the crown gear rides on."
+        );
+    }
+
+    if (selection == 7)
+    {
+        render_bitmap_string(x, y, (void *)header, "CROWN GEAR:");
+        render_bitmap_string(x, y-30, (void *)font,
+                "This gear, guided by the pinion, is what ensures that the"
+        );
+        render_bitmap_string(x, y-50, (void *)font,
+                "rotor turns exactly 1/3 of a turn for each turn of the"
+        );
+        render_bitmap_string(x, y-70, (void *)font,
+                "eccentric shaft"
+        );
+    }
+
+    if (selection == 8)
+    {
+        render_bitmap_string(x, y, (void *)header, "STATOR HOUSING:");
+        render_bitmap_string(x, y-30, (void *)font,
+                "The stationary epitrochoid-shaped housing that allows the"
+        );
+        render_bitmap_string(x, y-50, (void *)font,
+                "intake->compression->ignition->exhaust cycle to take place."
+        );
+    }
 }

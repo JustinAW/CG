@@ -3,7 +3,15 @@
 
 void glMultiDrawElements (GLenum, const GLsizei *, GLenum, const GLvoid *, GLsizei);
 
-void gear (void);
+void inner_gear (int);
+
+void inner_gear_outline (void);
+
+void outer_gear (int);
+
+void outer_gear_outline (void);
+
+void gear_teeth_outline (int);
 
 void unit_circle (int, int);
 
@@ -21,6 +29,6 @@ void eccentric_shaft (void);
 
 void eccentric_shaft_fill (int);
 
-void housing (int);
+void housing (void);
 
 #endif

@@ -4,13 +4,101 @@
 
 const int SIDES = 360;
 
-void gear (void)
+void inner_gear (int gear_spacing)
+{
+    glBegin(GL_QUAD_STRIP);
+        double heading;
+        int counter = 0;
+        int toggle = 1;
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex2d(cos(heading) * 1.3, sin(heading) * 1.3);
+            if (toggle)
+                glVertex2d(cos(heading), sin(heading));
+            else
+                glVertex2d(cos(heading) * 0.9, sin(heading) * 0.9);
+
+            counter += 1;
+            if (counter == gear_spacing)
+            {
+                counter = 0;
+                if (toggle == 1)
+                    toggle = 0;
+                else
+                    toggle = 1;
+            }
+        }
+    glEnd();
+}
+
+
+void inner_gear_outline (void)
 {
     glBegin(GL_LINE_LOOP);
         double heading;
         int counter = 0;
         int toggle = 1;
-        for (int i = 0; i < 360; i += 360 / SIDES)
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex2d(cos(heading) * 1.3, sin(heading) * 1.3);
+        }
+    glEnd();
+}
+
+
+void outer_gear (int gear_spacing)
+{
+    glBegin(GL_QUAD_STRIP);
+        double heading;
+        int counter = 0;
+        int toggle = 1;
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex2d(cos(heading) * 0.7, sin(heading) * 0.7);
+            if (toggle)
+                glVertex2d(cos(heading), sin(heading));
+            else
+                glVertex2d(cos(heading) * 0.9, sin(heading) * 0.9);
+
+            counter += 1;
+            if (counter == gear_spacing)
+            {
+                counter = 0;
+                if (toggle == 1)
+                    toggle = 0;
+                else
+                    toggle = 1;
+            }
+        }
+    glEnd();
+}
+
+
+void outer_gear_outline (void)
+{
+    glBegin(GL_LINE_LOOP);
+        double heading;
+        int counter = 0;
+        int toggle = 1;
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex2d(cos(heading) * 0.7, sin(heading) * 0.7);
+        }
+    glEnd();
+}
+
+
+void gear_teeth_outline (int gear_spacing)
+{
+    glBegin(GL_LINE_LOOP);
+        double heading;
+        int counter = 0;
+        int toggle = 1;
+        for (int i = 0; i <= 360; i += 360 / SIDES)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
             if (toggle)
@@ -19,7 +107,7 @@ void gear (void)
                 glVertex2d(cos(heading) * 0.9, sin(heading) * 0.9);
 
             counter += 1;
-            if (counter == 10)
+            if (counter == gear_spacing)
             {
                 counter = 0;
                 if (toggle == 1)
@@ -167,37 +255,47 @@ void chambers (void)
 void rotor (void)
 {
     static GLfloat vertexValues[] = {
-        -146.0, 28.0, 0.0,  //0 side | end
-        -99.0, 64.0, 0.0,  //1
-        -35.0, 97.0, 0.0,  //2
-        34.0, 114.0, 0.0,  //3
-        94.0, 115.0, 0.0,  //4_ end | side
-        102.0, 60.0, 0.0,  //5
-        98.0, -10.0, 0.0,  //6
-        79.0, -79.0, 0.0,  //7
-        50.0, -135.0, 0.0,  //8_ end | side
-        -11.0, -111.0, 0.0,  //9
-        -65.0, -73.0, 0.0,  //10
-        -110.0, -26.0, 0.0,  //11
+        -76.0, 44.0, 0.0,   //0
+        -51.0, 53.0, 0.0,   //1
+        -26.0, 58.0, 0.0,   //2
+        0.0, 60.0, 0.0,     //3
+        26.0, 58.0, 0.0,    //4
+        51.0, 53.0, 0.0,    //5
+        76.0, 44.0, 0.0,    //6
+        72.0, 20.0, 0.0,    //7
+        65.0, -2.0, 0.0,    //8
+        55.0, -25.0, 0.0,   //9
+        41.0, -46.0, 0.0,   //10
+        24.0, -67.0, 0.0,   //11
+        0.0, -88.0, 0.0,    //12
+        -24.0, -67.0, 0.0,  //13
+        -41.0, -46.0, 0.0,  //14
+        -55.0, -25.0, 0.0,  //15
+        -65.0, -2.0, 0.0,   //16
+        -72.0, 20.0, 0.0,   //17
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
 
-    static GLubyte rotor_f[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0};
+    static GLubyte rotor[] = {
+        0, 1, 2, 3, 4, 5, 6, 
+        7, 8, 9, 10, 11, 12, 
+        13, 14, 15, 16, 17,
+    };
 
     static GLsizei count[] = {
-        12,
+        18,
     };
 
     static GLvoid *indices[] = {
-        rotor_f,
+        rotor,
     };
 
     glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 1);
     
     glColor3f(0.0, 0.0, 0.0);
     glLineWidth(2.0);
-    glDrawElements(GL_LINE_LOOP, 12, GL_UNSIGNED_BYTE, rotor_f);
+    glDrawElements(GL_LINE_LOOP, 18, GL_UNSIGNED_BYTE, rotor);
     glLineWidth(1.0);
 }
 
@@ -216,10 +314,10 @@ void eccentric_shaft_fill (int rotation)
 }
 
 
-void housing (int fill)
+void housing (void)
 {
     static GLfloat vertexValues[] = {
-        219, 540, 0,    //0
+        219, 540, 0,    //0     outer_outline
         267, 540, 0,    //1
         286, 560, 0,    //2
         306, 577, 0,    //3
@@ -256,7 +354,8 @@ void housing (int fill)
         283, 293, 0,    //34
         274, 308, 0,    //35
         267, 322, 0,    //36
-        219, 322, 0,    //37
+        219, 322, 0,    //37 end    outer_outline
+
         219, 341, 0,    //38
         281, 341, 0,    //39
         287, 324, 0,    //40
@@ -311,6 +410,27 @@ void housing (int fill)
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
+
+    static GLubyte main_fill[] = {
+        0, 79, 1, 78, 2, 77, 3, 76, 4, 75,
+        5, 74, 6, 73, 7, 72, 8, 71, 9, 70,
+        10, 69, 11, 68, 12, 67, 13, 66, 14, 65,
+        15, 64, 16, 63, 17, 62, 18, 61, 19, 60,
+        20, 59, 21, 58, 22, 57, 23, 56, 24, 55,
+        25, 54, 26, 53, 27, 52, 28, 51, 29, 50,
+        30, 49, 31, 48, 32, 47, 33, 46, 34, 45,
+        35, 44, 36, 43, 39, 40, 38, 37,
+    };
+
+    static GLubyte betw_fill[] = {
+        80, 81, 86, 87,
+        81, 82, 85, 86,
+        82, 83, 84, 85,
+    };
+
+    glDrawElements(GL_QUAD_STRIP, 78, GL_UNSIGNED_BYTE, main_fill);
+    glDrawElements(GL_QUADS, 12, GL_UNSIGNED_BYTE, betw_fill);
+    glColor3f(0.0, 0.0, 0.0);
 
     static GLubyte outline[] = {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
