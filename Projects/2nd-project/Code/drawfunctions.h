@@ -31,4 +31,8 @@ void eccentric_shaft_fill (int);
 
 void housing (void);
 
+void spark_plug (int);
+
+void sparks (void);
+
 #endif

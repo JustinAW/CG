@@ -1,9 +1,24 @@
+/****************************************************
+ *                drawfunctions.c                   *
+ ****************************************************
+ *  Author:     Justin Weigle                       *
+ *  Edited:     20 Oct 2019                         *
+ ****************************************************
+ * Contains the functions for drawing the parts of  *
+ * a Wankel rotary engine                           *
+ ****************************************************/
+
 #include <GL/glut.h>
 #include <math.h>
 #include "drawfunctions.h"
 
 const int SIDES = 360;
 
+/****************************************************
+ *                   inner_gear                     *
+ ****************************************************
+ * Draws a gear with the teeth facing inwards       *
+ ****************************************************/
 void inner_gear (int gear_spacing)
 {
     glBegin(GL_QUAD_STRIP);
@@ -33,6 +48,12 @@ void inner_gear (int gear_spacing)
 }
 
 
+/****************************************************
+ *              inner_gear_outline                  *
+ ****************************************************
+ * Draws the circular portion of the outline of an  *
+ * inward facing gear                               *
+ ****************************************************/
 void inner_gear_outline (void)
 {
     glBegin(GL_LINE_LOOP);
@@ -48,6 +69,11 @@ void inner_gear_outline (void)
 }
 
 
+/****************************************************
+ *                   outer_gear                     *
+ ****************************************************
+ * Draws a gear with the teeth facing outwards      *
+ ****************************************************/
 void outer_gear (int gear_spacing)
 {
     glBegin(GL_QUAD_STRIP);
@@ -77,6 +103,12 @@ void outer_gear (int gear_spacing)
 }
 
 
+/****************************************************
+ *               outer_gear_outline                 *
+ ****************************************************
+ * Draws the circular portion of the outline of an  *
+ * outward facing gear                              *
+ ****************************************************/
 void outer_gear_outline (void)
 {
     glBegin(GL_LINE_LOOP);
@@ -92,6 +124,11 @@ void outer_gear_outline (void)
 }
 
 
+/****************************************************
+ *                gear_teeth_outline                *
+ ****************************************************
+ * Draws the outline of the teeth of a gear         *
+ ****************************************************/
 void gear_teeth_outline (int gear_spacing)
 {
     glBegin(GL_LINE_LOOP);
@@ -120,6 +157,13 @@ void gear_teeth_outline (int gear_spacing)
 }
 
 
+/****************************************************
+ *                  unit_circle                     *
+ ****************************************************
+ * Draws a circle, where the starting point can be  *
+ * set by i, and the degrees of the circle that are *
+ * drawn are set by deg_rotation                    *
+ ****************************************************/
 void unit_circle (int i, int deg_rotation)
 {
     glBegin(GL_LINE_LOOP);
@@ -133,6 +177,12 @@ void unit_circle (int i, int deg_rotation)
 }
 
 
+/****************************************************
+ *              unit_circle_fill                    *
+ ****************************************************
+ * Draws a circle using polygon mode so that it is  *
+ * filled with color                                *
+ ****************************************************/
 void unit_circle_fill (int i, int deg_rotation)
 {
     glBegin(GL_POLYGON);
@@ -146,6 +196,13 @@ void unit_circle_fill (int i, int deg_rotation)
 }
 
 
+/****************************************************
+ *                      slider                      *
+ ****************************************************
+ * Draws the slider at the provided SLIDER_X coord  *
+ * Pick the part to be drawn (the line or the quad) *
+ * based on part                                    *
+ ****************************************************/
 void slider (GLint SLIDER_X, int part)
 {
     int bar = 1;
@@ -170,6 +227,11 @@ void slider (GLint SLIDER_X, int part)
 }
 
 
+/****************************************************
+ *                  intake_exhaust                  *
+ ****************************************************
+ * Draws the intake/exhaust                         *
+ ****************************************************/
 void intake_exhaust (void)
 {
     static GLfloat vertexValues[] = {
@@ -221,6 +283,12 @@ void intake_exhaust (void)
 }
 
 
+/****************************************************
+ *                    chambers                      *
+ ****************************************************
+ * Draws the chambers (only drawn on the AUX0       *
+ * buffer                                           *
+ ****************************************************/
 void chambers (void)
 {
     static GLfloat vertexValues[] = {
@@ -252,6 +320,11 @@ void chambers (void)
 }
 
 
+/****************************************************
+ *                      rotor                       *
+ ****************************************************
+ * Draws the rotor and its outline                  *
+ ****************************************************/
 void rotor (void)
 {
     static GLfloat vertexValues[] = {
@@ -300,12 +373,22 @@ void rotor (void)
 }
 
 
+/****************************************************
+ *              eccentric_shaft                     *
+ ****************************************************
+ * Draws the outline of the eccentric shaft         *
+ ****************************************************/
 void eccentric_shaft (void)
 {
     unit_circle(0, 360);
 }
 
 
+/****************************************************
+ *            eccentric_shaft_fill                  *
+ ****************************************************
+ * Fills in the eccentric shaft                     *
+ ****************************************************/
 void eccentric_shaft_fill (int rotation)
 {
     unit_circle_fill(rotation, 360);
@@ -314,6 +397,11 @@ void eccentric_shaft_fill (int rotation)
 }
 
 
+/****************************************************
+ *                      housing                     *
+ ****************************************************
+ * Draws the stator housing and its outline         *
+ ****************************************************/
 void housing (void)
 {
     static GLfloat vertexValues[] = {
@@ -462,4 +550,121 @@ void housing (void)
     };
 
     glMultiDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_BYTE, indices, 3);
+}
+
+
+/****************************************************
+ *                  spark_plug                      *
+ ****************************************************
+ * Draws the spark plug and its outline. Can choose *
+ * not to use the preset colors so that picking cam *
+ * be done
+ ****************************************************/
+void spark_plug (int use_preset_colors)
+{
+    static GLfloat vertexValues[] = {
+        0.0, 0.0, 0.0,      //0
+        0.0, 10.0, 0.0,     //1
+        17.0, 10.0, 0.0,    //2
+        17.0, 0.0, 0.0,     //3
+
+        17.0, 12.0, 0.0,    //4
+        23.0, 12.0, 0.0,    //5
+        23.0, 10.0, 0.0,    //6
+        44.0, 10.0, 0.0,    //7
+        44.0, 0.0, 0.0,     //8
+        23.0, 0.0, 0.0,     //9
+        23.0, -2.0, 0.0,    //10
+        17.0, -2.0, 0.0,    //11
+
+        44.0, 8.0, 0.0,     //12
+        60.0, 8.0, 0.0,     //13
+        60.0, 2.0, 0.0,     //14
+        44.0, 2.0, 0.0,     //15
+    };
+
+    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
+
+    static GLubyte leftquad[] = {
+        0, 1, 2, 3,
+    };
+    static GLubyte vertquad[] = {
+        4, 5, 10, 11,
+    };
+
+    static GLubyte horzquad[] = {
+        6, 7, 8, 9,
+    };
+
+    static GLubyte center[] = {
+        4, 5, 6, 7, 8, 9, 10, 11,
+    };
+
+    static GLubyte rightquad[] = {
+        12, 13, 14, 15,
+    };
+
+    if (use_preset_colors == 1)
+        glColor3f(0.66, 0.66, 0.66);
+    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, leftquad);
+    if (use_preset_colors == 1)
+        glColor3f(0.9, 0.9, 0.9);
+    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, vertquad);
+    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, horzquad);
+    if (use_preset_colors == 1)
+        glColor3f(0.0, 0.0, 0.0);
+    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, rightquad);
+
+    glColor3f(0.0, 0.0, 0.0);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_BYTE, leftquad);
+    glDrawElements(GL_LINE_LOOP, 8, GL_UNSIGNED_BYTE, center);
+}
+
+
+/****************************************************
+ *                    sparks                        *
+ ****************************************************
+ * Draws the sparks produced by the spark plugs     *
+ ****************************************************/
+void sparks (void)
+{
+    static GLfloat vertexValues[] = {
+        2.0, 1.0, 0.0,      //0
+        0.0, -13.0, 0.0,    //1
+        -1.0, 4.0, 0.0,     //2
+        -7.0, -11.0, 0.0,   //3
+        -3.0, -3.0, 0.0,    //4
+        -11.0, -6.0, 0.0,   //5
+        -5.0, 1.0, 0.0,     //6
+        -14.0, 2.0, 0.0,    //7
+        -6.0, 6.0, 0.0,     //8
+        -13.0, 9.0, 0.0,    //9
+        -6.0, 10.0, 0.0,    //10
+        -11.0, 17.0, 0.0,   //11
+        -3.0, 13.0, 0.0,    //12
+        -5.0, 22.0, 0.0,    //13
+        0.0, 15.0, 0.0,     //14
+        0.0, 24.0, 0.0,     //15
+        2.0, 10.0, 0.0,     //16
+    };
+
+    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
+
+    static GLubyte spark_tips[] = {
+        0, 1, 2,
+        2, 3, 4,
+        4, 5, 6,
+        6, 7, 8,
+        8, 9, 10,
+        10, 11, 12,
+        12, 13, 14,
+        14, 15, 16,
+    };
+
+    static GLubyte spark_body[] = {
+        0, 2, 4, 6, 8, 10, 12, 14, 16,
+    };
+
+    glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_BYTE, spark_tips);
+    glDrawElements(GL_POLYGON, 9, GL_UNSIGNED_BYTE, spark_body);
 }

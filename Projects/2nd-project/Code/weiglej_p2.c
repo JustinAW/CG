@@ -1,3 +1,15 @@
+/****************************************************
+ *                  Project 2                       *
+ ****************************************************
+ *  Author:     Justin Weigle                       *
+ *  Edited:     20 Oct 2019                         *
+ *  Submitted:  20 Oct 2019                         *
+ ****************************************************
+ * Draws the animation of a Wankel rotary engine.   *
+ * Allows adjustment of the animation speed and     *
+ * information about the parts to be displayed.     *
+ ****************************************************/
+
 #include <GL/glut.h>
 #include <stdio.h>
 #include <math.h>
@@ -12,34 +24,27 @@
 static ht_t *HT;
 
 // Animation
-static clock_t TIME, RESET_TIME, ANIM_TIME = 0;
-static GLfloat SPEED = -1.0;
+static clock_t RESET_TIME, ANIM_TIME = 0;
 static GLfloat FPS = 60.0;
-static GLint RUN_ANIMATION = 0;
 static GLfloat INTAKE_X = 178.0;
 static GLfloat EXHAUST_X = 198.0;
 static GLfloat ECC_SHFT_I = 0.0;
 static GLfloat ECC_SHFT_HEADING;
 static GLint ROTATION_SPEED = 3;
+static GLint INTAKE_EXHAUST_SPEED = 1;
 
 // Interaction
+static GLint RUN_ANIMATION = 0;
 static GLint SLIDER_X = 300;
 static GLint SLIDER_G = 363;
 static GLint SLIDER_Y = 426;
 static GLint SLIDER_O = 489;
 static GLint SLIDER_TOGGLE = 0;
-static GLint INTAKE_EXHAUST_SPEED = 2;
 static GLint INFO_SELECTION = 0;
-
-static GLfloat MAX_REV_LIM_TIME = 5.0;
-static GLint BANG_TOGGLE = 1;
-
 
 void init (void)
 {
     glEnableClientState(GL_VERTEX_ARRAY);
-    //glEnableClientState(GL_COLOR_ARRAY);
-
 	glClearColor (1.0, 1.0, 1.0, 0.0);
 	glShadeModel (GL_FLAT);
 }
@@ -61,7 +66,7 @@ void display (void)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    // BACK BUFFER drawing
+// BACK BUFFER drawing ========================================================
 	glDrawBuffer(GL_BACK);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -144,17 +149,37 @@ void display (void)
     glColor3f(0.88, 0.88, 0.48);
     housing();
 
+    // SPARK PLUGS
+    glPushMatrix();
+        glTranslatef(530.0, 445.0, 0.0);
+        spark_plug(1);
+        if (RUN_ANIMATION == 1)
+            if (0 < ECC_SHFT_I/3 && ECC_SHFT_I/3 < 10)
+            {
+                glColor3f(1.0, 0.89, 0.19);
+                sparks();
+            }
+        glTranslatef(0.0, -64.0, 0.0);
+        spark_plug(1);
+        if (RUN_ANIMATION == 1)
+            if (0 < ECC_SHFT_I/3 && ECC_SHFT_I/3 < 10)
+            {
+                glColor3f(1.0, 0.89, 0.19);
+                sparks();
+            }
+    glPopMatrix();
+
     // INFO DRAWING
     if (INFO_SELECTION != 0)
     {
+        glColor3f(0.0, 0.0, 0.0);
         draw_info(INFO_SELECTION);
     }
 
     glutSwapBuffers();
-   	glFlush ();
 
 
-    // AUX0 BUFFER picking ====================================================
+// AUX0 BUFFER picking ========================================================
 	glDrawBuffer (GL_AUX0);
 	glClear (GL_COLOR_BUFFER_BIT);
 
@@ -192,9 +217,9 @@ void display (void)
 
     // ECCENTRIC SHAFT
     glPushMatrix();
+        glColor3f(0.0, 0.0, 0.05);
         glTranslatef((cos(ECC_SHFT_HEADING) * 26) + 401, (sin(ECC_SHFT_HEADING) * 26) + 417, 0.0);
         glScalef(52.0, 52.0, 1.0);
-        glColor3f(0.0, 0.0, 0.05);
         eccentric_shaft_fill(0);
     glPopMatrix();
 
@@ -221,10 +246,28 @@ void display (void)
     glColor3f(0.0, 0.0, 0.08);
     housing();
 
+    // SPARK PLUGS
+    glPushMatrix();
+        glColor3f(0.0, 0.0, 0.09);
+        glTranslatef(530.0, 445.0, 0.0);
+        spark_plug(0);
+        glTranslatef(0.0, -64.0, 0.0);
+        spark_plug(0);
+    glPopMatrix();
+
    	glFlush ();
 }
 
 
+/****************************************************
+ *                  check_pixel                     *
+ ****************************************************
+ * Uses the pixel colors gotten to query a hash     *
+ * table to determine the name of the clicked       *
+ * object                                           *
+ * - returns: pointer to character string in hash   *
+ *   table at given pixel, or NULL                  *
+ ****************************************************/
 char *check_pixel (GLint x, GLint y)
 {
 	GLfloat pixel[4];
@@ -248,6 +291,11 @@ char *check_pixel (GLint x, GLint y)
 }
 
 
+/****************************************************
+ *                     mouse                        *
+ ****************************************************
+ * Used for aux buffer picking                      *
+ ****************************************************/
 void mouse (int button, int state, GLint x, GLint y)
 {
 	GLint wHt;
@@ -258,6 +306,7 @@ void mouse (int button, int state, GLint x, GLint y)
 
     switch (button)
     {
+        // SLIDER CONTROL
         case GLUT_LEFT_BUTTON:
             if (state == GLUT_DOWN)
             {
@@ -266,7 +315,7 @@ void mouse (int button, int state, GLint x, GLint y)
                 {
                     if (strcmp(picked_color, "Slider") == 0)
                     {
-                        printf("Name of clicked object: %s\n", picked_color);
+                        //printf("Name of clicked object: %s\n", picked_color);
                         SLIDER_TOGGLE = 1;
                     }
                 }
@@ -276,13 +325,14 @@ void mouse (int button, int state, GLint x, GLint y)
                 SLIDER_TOGGLE = 0;
             }
             break;
+        // INFO SELECTION
         case GLUT_MIDDLE_BUTTON:
             if (state == GLUT_DOWN)
             {
                 char *picked_color = check_pixel(x, y);
                 if (picked_color != NULL)
                 {
-                    printf("Name of clicked object: %s\n", picked_color);
+                    //printf("Name of clicked object: %s\n", picked_color);
                     if (strcmp(picked_color, "Intake") == 0)
                         INFO_SELECTION = 1;
                     if (strcmp(picked_color, "Exhaust") == 0)
@@ -299,6 +349,8 @@ void mouse (int button, int state, GLint x, GLint y)
                         INFO_SELECTION = 7;
                     if (strcmp(picked_color, "Stator Housing") == 0)
                         INFO_SELECTION = 8;
+                    if (strcmp(picked_color, "Spark Plug") == 0)
+                        INFO_SELECTION = 9;
                     glutPostRedisplay();
                 }
                 else
@@ -315,6 +367,11 @@ void mouse (int button, int state, GLint x, GLint y)
 }
 
 
+/****************************************************
+ *                  mouse_motion                    *
+ ****************************************************
+ * Allows the control of the animation speed        *
+ ****************************************************/
 void mouse_motion (int x, int y)
 {
     if (SLIDER_TOGGLE == 1)
@@ -322,8 +379,11 @@ void mouse_motion (int x, int y)
         if (x >= 305 && x <= 495)
         {
             SLIDER_X = x - 5;
-            INTAKE_EXHAUST_SPEED = (int)(SLIDER_X / 50 + 0.2 - 4);
+            
+            // EXHAUST ANIMATION SPEED CONTROL
+            INTAKE_EXHAUST_SPEED = (int)(SLIDER_X / 50 + 0.2 - 5);
 
+            // ALL ROTATIONAL OBJECTS SPEED CONTROL
             if (x >= 495)
                 ROTATION_SPEED = 21;
             else if (x > 475)
@@ -345,14 +405,19 @@ void mouse_motion (int x, int y)
 
             glutPostRedisplay();
         }
-        if (x >= 495)
-        {
-            TIME = clock();
-        }
+        if (x > 495)
+            SLIDER_X = 495;
+        if (x < 305)
+            SLIDER_X = 300;
     }
 }
 
 
+/****************************************************
+ *                    idle                          *
+ ****************************************************
+ * Used for non-blocking animation                  *
+ ****************************************************/
 void idle (void)
 {
     if (RUN_ANIMATION == 1)
@@ -362,14 +427,17 @@ void idle (void)
         {
             RESET_TIME = RESET_TIME + (1.0/FPS) * CLOCKS_PER_SEC;
 
+            // INTAKE
             INTAKE_X += INTAKE_EXHAUST_SPEED;
             if (INTAKE_X > 210)
                 INTAKE_X = 178;
 
+            // EXHAUST
             EXHAUST_X -= INTAKE_EXHAUST_SPEED;
             if (EXHAUST_X < 166)
                 EXHAUST_X = 198;
 
+            // ROTOR, CROWN GEAR, ECCENTRIC SHAFT, SPARK
             ECC_SHFT_I += (ROTATION_SPEED * 3);
             if (ECC_SHFT_I > (360 - ROTATION_SPEED * 3))
                 ECC_SHFT_I = 0;
@@ -377,25 +445,17 @@ void idle (void)
             glutPostRedisplay();
         }
     }
-    if (SLIDER_X == 490)
-    {
-        clock_t time_diff = clock() - TIME;
-        double seconds_passed = ((double)time_diff)/CLOCKS_PER_SEC;
-        if (seconds_passed > MAX_REV_LIM_TIME)
-        {
-            if (BANG_TOGGLE == 1)
-            {
-                RUN_ANIMATION = 0;
-                printf("BANG\n");
-                BANG_TOGGLE = 0;
-            }
-        }
-    }
 }
 
 
+/****************************************************
+ *                  menu_choice                     *
+ ****************************************************
+ * Menu options to reset or exit the program        *
+ ****************************************************/
 void menu_choice (int selection)
 {
+    // RESET
     if (selection == 1)
     {
         RUN_ANIMATION = 0;
@@ -403,11 +463,12 @@ void menu_choice (int selection)
         INTAKE_X = 178.0;
         EXHAUST_X = 198.0;
         INTAKE_EXHAUST_SPEED = 2;
-        BANG_TOGGLE = 1;
         ECC_SHFT_I = 0;
         ROTATION_SPEED = 3;
+        INFO_SELECTION = 0;
         glutPostRedisplay();
     }
+    // EXIT
     if (selection == 2)
     {
         exit(0);
@@ -415,12 +476,19 @@ void menu_choice (int selection)
 }
 
 
+/****************************************************
+ *              toggle_animation                    *
+ ****************************************************
+ * Submenu options for turning animation on and off *
+ ****************************************************/
 void toggle_animation (int selection)
 {
+    // START ANIMATION
     if (selection == 1)
     {
         RUN_ANIMATION = 1;
     }
+    // STOP ANIMATION
     if (selection == 2)
     {
         RUN_ANIMATION = 0;
@@ -431,10 +499,8 @@ void toggle_animation (int selection)
 
 int main (int argc, char** argv)
 {
-    TIME, RESET_TIME, ANIM_TIME = clock();
-
+    // HASH TABLE GENERATION
     HT = ht_create();
-
     ht_set(HT, (GLfloat)0.00, "Slider");
     ht_set(HT, (GLfloat)0.01, "Intake");
     ht_set(HT, (GLfloat)0.02, "Exhaust");
@@ -445,7 +511,7 @@ int main (int argc, char** argv)
     ht_set(HT, (GLfloat)0.07, "Crown Gear");
     ht_set(HT, (GLfloat)0.08, "Stator Housing");
     ht_set(HT, (GLfloat)0.09, "Spark Plug");
-
+    // output everything in hash table
     ht_dump(HT);
 
     glutInit (&argc, argv);
@@ -455,10 +521,10 @@ int main (int argc, char** argv)
 	glutCreateWindow (argv[0]);
 	init ();
 
+    // MENU CREATION
     int submenu = glutCreateMenu(toggle_animation);
     glutAddMenuEntry("Start Animation", 1);
     glutAddMenuEntry("Stop Animation", 2);
-
     glutCreateMenu(menu_choice);
     glutAddSubMenu("Toggle Animation", submenu);
     glutAddMenuEntry("Reset", 1);

@@ -1,9 +1,26 @@
+/****************************************************
+ *                 showinfo.c                       *
+ ****************************************************
+ *  Author:     Justin Weigle                       *
+ *  Edited:     20 Oct 2019                         *
+ ****************************************************
+ * Contains the information and functionality to    *
+ * draw the information about the Wankel rotary     *
+ * engine to the screen                             *
+ ****************************************************/
+
 #include <GL/glut.h>
 #include "showinfo.h"
 
 const void *header = GLUT_BITMAP_TIMES_ROMAN_24;
 const void *font = GLUT_BITMAP_HELVETICA_18;
 
+/****************************************************
+ *              render_bitmap_string                *
+ ****************************************************
+ * Renders a given string to the screen at the      *
+ * provided x,y coordinates                         *
+ ****************************************************/
 void render_bitmap_string (GLfloat x, GLfloat y, void *font, const char *string)
 {
     const char *c;
@@ -14,6 +31,13 @@ void render_bitmap_string (GLfloat x, GLfloat y, void *font, const char *string)
     }
 }
 
+
+/****************************************************
+ *                   draw_info                      *
+ ****************************************************
+ * Using the selection, draws information about the *
+ * various parts of the Wankel engine               *
+ ****************************************************/
 void draw_info (GLint selection)
 {
     if (selection == 0) return;
@@ -63,7 +87,7 @@ void draw_info (GLint selection)
                 "The equivalent to a crankshaft in a piston engine."
         );
         render_bitmap_string(x, y-50, (void *)font,
-                "This shaft sends the power generated to the flywheel"
+                "This shaft sends the power generated to the flywheel."
         );
     }
 
@@ -85,7 +109,7 @@ void draw_info (GLint selection)
                 "rotor turns exactly 1/3 of a turn for each turn of the"
         );
         render_bitmap_string(x, y-70, (void *)font,
-                "eccentric shaft"
+                "eccentric shaft."
         );
     }
 
@@ -97,6 +121,14 @@ void draw_info (GLint selection)
         );
         render_bitmap_string(x, y-50, (void *)font,
                 "intake->compression->ignition->exhaust cycle to take place."
+        );
+    }
+
+    if (selection == 9)
+    {
+        render_bitmap_string(x, y, (void *)header, "SPARK PLUG:");
+        render_bitmap_string(x, y-30, (void *)font,
+                "Creates an spark that ignites the compressed fuel."
         );
     }
 }

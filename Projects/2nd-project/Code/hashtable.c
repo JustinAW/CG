@@ -2,7 +2,6 @@
  *                  hashtable.c                     *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Created:    10 Oct 2019                         *
  *  Edited:     14 Oct 2019                         *
  ****************************************************
  * Gives hash functionality using floating point    *
@@ -35,7 +34,7 @@ typedef struct {
  ****************************************************
  * Generates a hash table using entry_t and ht_t    *
  * structs                                          *
- * - returns: pointer to hash table                   *
+ * - returns: pointer to hash table                 *
  ****************************************************/
 ht_t *ht_create(void)
 {
