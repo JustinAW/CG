@@ -251,6 +251,7 @@ void display (void)
         glColor3f(0.0, 0.0, 0.09);
         glTranslatef(530.0, 445.0, 0.0);
         spark_plug(0);
+        glColor3f(0.0, 0.0, 0.09);
         glTranslatef(0.0, -64.0, 0.0);
         spark_plug(0);
     glPopMatrix();
@@ -520,6 +521,9 @@ int main (int argc, char** argv)
 	glutInitWindowPosition (100, 100);
 	glutCreateWindow (argv[0]);
 	init ();
+
+    // make cursor visible during recording
+    glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
 
     // MENU CREATION
     int submenu = glutCreateMenu(toggle_animation);

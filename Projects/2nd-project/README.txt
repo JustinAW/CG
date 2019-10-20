@@ -19,3 +19,7 @@ MAKEFILE FUNCTIONALITY
     make            -compiles (outputs executable named "rotary")
     make run        -compiles and runs
     make clean      -deletes executable
+
+CLICKABLE OBJECTS
+    All objects will display information when clicked, including the white
+    space within the housing.
