@@ -1,3 +1,11 @@
+/************************************
+ *         Viewing Lab              *
+ *          Lab 7                   *
+ *  Author: Justin Weigle           *
+ *  Edited: 21 Oct 2019             *
+ *  Submitted: 21 Oct 2019          *
+ ************************************/
+
 Q1:
     Part of the arrow is displayed, or to be exact, half. I set the x to 20.
 
@@ -23,9 +31,31 @@ Q6:
 Q7:
     for (int i = 0; i < 4; i++)
     {
-        glViewport(i*50, 0, i*50 + 50, 50);
+        glViewport(i*100, 0, 100, 100);
         arrow();
     }
 
 Q8:
+    First is normal, the second is facing up and to the left, third is 
+    facing down and to the right, fourth is facing down and to the left.
 
+Q9:
+    for (int j = 0; j < 4; j++)
+    {
+        for (int k = 0; k < 4; k++)
+        {
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            if ((j + k) % 2 == 0)
+            {
+                gluOrtho2D(0.0, 40.0, 0.0, 40.0);
+            }
+            else
+                gluOrtho2D(40.0, 0.0, 0.0, 40.0);
+
+            glViewport(j*100, k*100, 100, 100);
+
+            for (i = 0; i < nPolys; i++)
+                regPoly(rInit + i * rInc, 20, 20, i * offset);
+        }
+    }

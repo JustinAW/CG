@@ -37,7 +37,6 @@ void display (void)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3f (1.0, 0.0, 0.0);
 
-
     for (int i = 0; i < 4; i++)
     {
         glMatrixMode (GL_PROJECTION);
@@ -51,7 +50,7 @@ void display (void)
         if (i == 3)
             gluOrtho2D (40.0, 0.0, 40.0, 0.0);
 
-        glViewport(i*50, 0, i*50 + 50, 50);
+        glViewport(i*100, 0, 100, 100);
         arrow();
     }
 

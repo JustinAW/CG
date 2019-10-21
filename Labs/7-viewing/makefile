@@ -1,10 +1,10 @@
-arrow: arrow.c
-	gcc -o rrow arrow.c -lglut -lGL -lGLU -lm
+swirl: swirllab.c
+	gcc -o tile swirllab.c -lglut -lGL -lGLU -lm
 
-run: arrow
-	./rrow
+run: swirl
+	./tile
 
 .PHONY: clean
 
 clean:
-	rm rrow
+	rm tile
