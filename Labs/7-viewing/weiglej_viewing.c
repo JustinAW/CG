@@ -21,4 +21,11 @@ Q6:
     This distorts the image by squashing/stretching.
 
 Q7:
+    for (int i = 0; i < 4; i++)
+    {
+        glViewport(i*50, 0, i*50 + 50, 50);
+        arrow();
+    }
+
+Q8:
 
