@@ -40,7 +40,7 @@ void display (void)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3f (1.0, 0.0, 0.0);
 
-	//glViewport(0, 0, 40, 40);
+	glViewport(0, 0, 40, 60);
 	arrow();
 
    	glFlush ();
@@ -52,7 +52,7 @@ int main (int argc, char** argv)
 	glutInit (&argc, argv);
 	glutInitDisplayMode (GLUT_SINGLE|GLUT_RGB);
 	glutInitWindowSize (400, 400);
-	glutInitWindowPosition (100, 100);
+	glutInitWindowPosition (0, 0);
 	glutCreateWindow (argv[0]);
 	init ();
 	glutDisplayFunc (display);
