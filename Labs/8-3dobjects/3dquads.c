@@ -9,7 +9,7 @@
 /* Skeleton for displaying quadrics
 */
 
-#include <GL\glut.h>
+#include <GL/glut.h>
 #include <stdio.h>
 
 GLUquadricObj* quad;
@@ -19,21 +19,21 @@ GLUquadricObj* quad;
  *************************************/
 void drawAxes (void)
 {
-	glColor3f(0.0, 0.0, 0.0);
-	glBegin(GL_LINES);
-	  glVertex3f(0.0, 0.0, 0.0);
-	  glVertex3f(2.0, 0.0, 0.0);
-	  glVertex3f(0.0, 0.0, 0.0);
-	  glVertex3f(0.0, 2.0, 0.0);
-	  glVertex3f(0.0, 0.0, 0.0);
-	  glVertex3f(0.0, 0.0, 2.0);
-	glEnd();
-	glRasterPos3f(2.1, 0.1, 0.0);
-	glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'x');
-	glRasterPos3f(0.1, 2.1, 0.0);
-	glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'y');
-	glRasterPos3f(0.1, 0.1, 2.0);
-	glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'z');
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(2.0, 0.0, 0.0);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, 2.0, 0.0);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, 0.0, 2.0);
+    glEnd();
+    glRasterPos3f(2.1, 0.1, 0.0);
+    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'x');
+    glRasterPos3f(0.1, 2.1, 0.0);
+    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'y');
+    glRasterPos3f(0.1, 0.1, 2.0);
+    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'z');
 }
 
 /*************************************
@@ -41,32 +41,39 @@ void drawAxes (void)
  *************************************/
 void display (void)
 {
-	glClear (GL_COLOR_BUFFER_BIT);
+    glClear (GL_COLOR_BUFFER_BIT);
 
-	//isometric view in upper left corner
-	gluLookAt(10.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	glViewport(20, 300, 250, 250);
-	drawAxes();
+    glPushMatrix();
+        //isometric view in upper left corner
+        gluLookAt(10.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glViewport(20, 300, 250, 250);
+        drawAxes();
 
-	//**** Call to glu quadric drawing function
+        //**** Call to glu quadric drawing function
+        gluCylinder(quad, 1.0, 0.5, 2.0, 10.0, 5.0);
+    glPopMatrix();
 
-	//side elevation in upper right corner
-	glLoadIdentity();
-	gluLookAt(10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	glViewport(300, 300, 250, 250);
-	drawAxes();
+    glPushMatrix();
+        //side elevation in upper right corner
+        gluLookAt(10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glViewport(300, 300, 250, 250);
+        drawAxes();
 
-	//**** Call to glu quadric drawing function
+        //**** Call to glu quadric drawing function
+        gluCylinder(quad, 1.0, 0.5, 2.0, 10.0, 5.0);
+    glPopMatrix();
 
-	//front elevation in lower left corner
-	glLoadIdentity();
-	gluLookAt(0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	glViewport(20, 20, 250, 250);
-	drawAxes();
+    glPushMatrix();
+        //front elevation in lower left corner
+        gluLookAt(0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glViewport(20, 20, 250, 250);
+        drawAxes();
 
-	//**** Call to glu quadric drawing function
+        //**** Call to glu quadric drawing function
+        gluCylinder(quad, 1.0, 0.5, 2.0, 10.0, 5.0);
+    glPopMatrix();
 
-	glFlush ();
+    glFlush ();
 }
 
 /*************************************
@@ -74,6 +81,7 @@ void display (void)
  *************************************/
 void init (void)
 {
+    glLoadIdentity();
 	glClearColor (1.0, 1.0, 1.0, 0.0);
 	quad = gluNewQuadric();
 

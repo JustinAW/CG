@@ -1,7 +1,7 @@
-3dglut: 3dglut.c
-	gcc -o td 3dglut.c -lglut -lGL -lGLU -lm
+3dquads: 3dquads.c
+	gcc -o td 3dquads.c -lglut -lGL -lGLU -lm
 
-run: 3dglut
+run: 3dquads
 	./td
 
 .PHONY: clean

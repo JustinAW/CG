@@ -41,41 +41,48 @@ void drawAxes (void)
 void display (void)
 {
     glClear (GL_COLOR_BUFFER_BIT);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     //glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
     //isometric view in upper left corner
-//    glLoadIdentity();
     glPushMatrix();
-    gluLookAt(10.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glViewport(20, 300, 250, 250);
-    drawAxes();
+        gluLookAt(10.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glViewport(20, 300, 250, 250);
+        drawAxes();
 
-    //**** Call to glut 3D functions go here
-    // radius, slices, stacks
-    // slices: # divs around z axis (latitudinal)
-    // stacks: # divs along z axis (longitudinal)
-    glutWireSphere(1.0, 10.0, 5.0);
+        //**** Call to glut 3D functions go here
+        // radius, slices, stacks
+        // slices: # divs around z axis (latitudinal)
+        // stacks: # divs around x axis (longitudinal)
+//        glutWireSphere(1.0, 10.0, 5.0);
+//        glutWireCone(1.0, 2.0, 10.0, 5.0);
+//        glutWireTorus(1.0, 2.0, 10.0, 5.0);
+//        glutWireCube(1.0);
+        glutWireDodecahedron();
     glPopMatrix();
 
     //side elevation in upper right corner
     glPushMatrix();
-    gluLookAt(10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glViewport(300, 300, 250, 250);
-    drawAxes();
+        gluLookAt(10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glViewport(300, 300, 250, 250);
+        drawAxes();
 
-    //**** Call to glut 3D functions go here
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glutWireSphere(1.0, 10.0, 5.0);
+        //**** Call to glut 3D functions go here
+//        glutWireSphere(1.0, 10.0, 5.0);
+//        glutWireTorus(1.0, 2.0, 10.0, 5.0);
+        glutWireDodecahedron();
     glPopMatrix();
 
     //front elevation in lower left corner
     glPushMatrix();
-    gluLookAt(0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glViewport(20, 20, 250, 250);
-    drawAxes();
+        gluLookAt(0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glViewport(20, 20, 250, 250);
+        drawAxes();
 
-    //**** Call to glut 3D functions go here
-    glutWireSphere(1.0, 10.0, 5.0);
+        //**** Call to glut 3D functions go here
+//        glutWireSphere(1.0, 10.0, 5.0);
+//        glutWireTorus(1.0, 2.0, 10.0, 5.0);
+        glutWireDodecahedron();
     glPopMatrix();
 
     glFlush ();
