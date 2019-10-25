@@ -1,3 +1,11 @@
+/************************************
+ *        3d Objects Lab            *
+ *          Lab 8                   *
+ *  Author: Justin Weigle           *
+ *  Edited: 25 Oct 2019             *
+ *  Submitted: 25 Oct 2019          *
+ ************************************/
+
 Q1:
     Slices are divisions around the z axis; latitudinal divisions.
 
