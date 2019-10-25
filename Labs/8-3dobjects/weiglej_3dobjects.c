@@ -90,3 +90,20 @@ Q24:
     If there were coplanar edges, it would not draw them.
 
 Q25:
+    The slices are divisions around the z axis.
+
+Q26:
+    The stacks are divisions along the z axis.
+
+Q27:
+    The base of the cylinder is at the origin, and the cylinder runs along
+    the z axis (it's wrapped around the z axis)
+
+Q28:
+    Yes, just make the top radius 0
+
+Q29:
+    The disk wraps around the z axis and is in line with the x and y axes.
+
+Q30:
+    Yes, the torus is a 3 dimensional disk and the disk is 2 dimensional.

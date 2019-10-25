@@ -50,7 +50,7 @@ void display (void)
         drawAxes();
 
         //**** Call to glu quadric drawing function
-        gluCylinder(quad, 1.0, 0.5, 2.0, 10.0, 5.0);
+        gluDisk(quad, 1.0, 2.0, 10.0, 5.0);
     glPopMatrix();
 
     glPushMatrix();
@@ -60,7 +60,7 @@ void display (void)
         drawAxes();
 
         //**** Call to glu quadric drawing function
-        gluCylinder(quad, 1.0, 0.5, 2.0, 10.0, 5.0);
+        gluDisk(quad, 1.0, 2.0, 10.0, 5.0);
     glPopMatrix();
 
     glPushMatrix();
@@ -70,7 +70,7 @@ void display (void)
         drawAxes();
 
         //**** Call to glu quadric drawing function
-        gluCylinder(quad, 1.0, 0.5, 2.0, 10.0, 5.0);
+        gluDisk(quad, 1.0, 2.0, 10.0, 5.0);
     glPopMatrix();
 
     glFlush ();
