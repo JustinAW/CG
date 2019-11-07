@@ -11,17 +11,17 @@ void gear_teeth_outline (int, GLfloat);
 
 void unit_circle (GLfloat);
 
-void disk_perim_surface (GLfloat, GLfloat, GLfloat);
+void x_unit_circle (GLfloat);
+
+void z_disk_surface (GLfloat, GLfloat, GLfloat);
+
+void x_disk_surface (GLfloat, GLfloat, GLfloat, GLfloat);
 
 void intake_exhaust (void);
 
 void chambers (void);
 
 void rotor (void);
-
-void eccentric_shaft (void);
-
-void eccentric_shaft_fill (int);
 
 void housing (void);
 

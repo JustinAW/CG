@@ -2,10 +2,10 @@
  *                drawfunctions.c                   *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     05 Nov 2019                         *
+ *  Edited:     07 Nov 2019                         *
  ****************************************************
  * Contains the functions for drawing the parts of  *
- * a Wankel rotary engine                           *
+ * a Wankel rotary engine in 3d                     *
  ****************************************************/
 
 #include <GL/glut.h>
@@ -93,9 +93,8 @@ void gear_teeth_outline (int gear_spacing, GLfloat depth)
 /****************************************************
  *                  unit_circle                     *
  ****************************************************
- * Draws a circle, where the starting point can be  *
- * set by i, and the degrees of the circle that are *
- * drawn are set by deg_rotation                    *
+ * Draws a circle where the z location is set by    *
+ * depth                                            *
  ****************************************************/
 void unit_circle (GLfloat depth)
 {
@@ -110,7 +109,33 @@ void unit_circle (GLfloat depth)
 }
 
 
-void disk_perim_surface (GLfloat divisions, GLfloat z, GLfloat scale)
+/****************************************************
+ *                x_unit_circle                     *
+ ****************************************************
+ * Draws a circle where the x location is set by    *
+ * depth and the circle is drawn parallel to the z  *
+ * axis                                             *
+ ****************************************************/
+void x_unit_circle (GLfloat x)
+{
+    glBegin(GL_LINE_LOOP);
+        double heading;
+        for (int i = 0; i < 360; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex3d(x, cos(heading), sin(heading));
+        }
+    glEnd();
+}
+
+
+/****************************************************
+ *               vert_disk_surface                  *
+ ****************************************************
+ * Draws lines on the surface of a disk's perimeter *
+ * that is parallel to the z axis                   *
+ ****************************************************/
+void z_disk_surface (GLfloat divisions, GLfloat z, GLfloat scale)
 {
     glBegin(GL_LINES);
         double heading;
@@ -119,6 +144,26 @@ void disk_perim_surface (GLfloat divisions, GLfloat z, GLfloat scale)
             heading = i * M_PI / 180;
             glVertex3d(cos(heading) * scale, sin(heading) * scale, 0.0);
             glVertex3d(cos(heading) * scale, sin(heading) * scale, z);
+        }
+    glEnd();
+}
+
+
+/****************************************************
+ *                horz_disk_surface                 *
+ ****************************************************
+ * Draws lines on the surface of a disk's perimeter *
+ * that is parallel to the x axis
+ ****************************************************/
+void x_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
+{
+    glBegin(GL_LINES);
+        double heading;
+        for (int i = 0; i < 360; i += 360 / divisions)
+        {
+            heading = i * M_PI / 180;
+            glVertex3d(x1, cos(heading) * scale, sin(heading) * scale);
+            glVertex3d(x2, cos(heading) * scale, sin(heading) * scale);
         }
     glEnd();
 }
@@ -229,7 +274,7 @@ void intake_exhaust (void)
 /****************************************************
  *                      rotor                       *
  ****************************************************
- * Draws the rotor and its outline                  *
+ * Draws the rotor                                  *
  ****************************************************/
 void rotor (void)
 {
@@ -332,20 +377,9 @@ void rotor (void)
 
 
 /****************************************************
- *              eccentric_shaft                     *
- ****************************************************
- * Draws the outline of the eccentric shaft         *
- ****************************************************/
-void eccentric_shaft (void)
-{
-    unit_circle(0.0);
-}
-
-
-/****************************************************
  *                      housing                     *
  ****************************************************
- * Draws the stator housing and its outline         *
+ * Draws the stator housing                         *
  ****************************************************/
 void housing (void)
 {
@@ -642,61 +676,34 @@ void housing (void)
 /****************************************************
  *                  spark_plug                      *
  ****************************************************
- * Draws the spark plug and its outline. Can choose *
- * not to use the preset colors so that picking cam *
- * be done
+ * Draws the spark plug and its surface             *
  ****************************************************/
 void spark_plug (void)
 {
-    static GLfloat vertexValues[] = {
-        0.0, 0.0, -10.0,      //0
-        0.0, 10.0, -10.0,     //1
-        17.0, 10.0, -10.0,    //2
-        17.0, 0.0, -10.0,     //3
-
-        17.0, 12.0, -10.0,    //4
-        23.0, 12.0, -10.0,    //5
-        23.0, 10.0, -10.0,    //6
-        44.0, 10.0, -10.0,    //7
-        44.0, 0.0, -10.0,     //8
-        23.0, 0.0, -10.0,     //9
-        23.0, -2.0, -10.0,    //10
-        17.0, -2.0, -10.0,    //11
-
-        44.0, 8.0, -10.0,     //12
-        60.0, 8.0, -10.0,     //13
-        60.0, 2.0, -10.0,     //14
-        44.0, 2.0, -10.0,     //15
-    };
-
-    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
-
-    static GLubyte leftquad[] = {
-        0, 1, 2, 3,
-    };
-    static GLubyte vertquad[] = {
-        4, 5, 10, 11,
-    };
-
-    static GLubyte horzquad[] = {
-        6, 7, 8, 9,
-    };
-
-    static GLubyte center[] = {
-        4, 5, 6, 7, 8, 9, 10, 11,
-    };
-
-    static GLubyte rightquad[] = {
-        12, 13, 14, 15,
-    };
-
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, leftquad);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, vertquad);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, horzquad);
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, rightquad);
-
-    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_BYTE, leftquad);
-    glDrawElements(GL_LINE_LOOP, 8, GL_UNSIGNED_BYTE, center);
+    x_disk_surface(10.0, 0.0, 17.0, 5.0);
+    glPushMatrix();
+        glScalef(1.0, 5.0, 5.0);
+        x_unit_circle(0.0);
+        x_unit_circle(17.0);
+    glPopMatrix();
+    x_disk_surface(12.0, 17.0, 23.0, 6.0);
+    glPushMatrix();
+        glScalef(1.0, 6.0, 6.0);
+        x_unit_circle(17.0);
+        x_unit_circle(23.0);
+    glPopMatrix();
+    x_disk_surface(10.0, 23.0, 44.0, 5.0);
+    glPushMatrix();
+        glScalef(1.0, 5.0, 5.0);
+        x_unit_circle(23.0);
+        x_unit_circle(44.0);
+    glPopMatrix();
+    x_disk_surface(8.0, 44.0, 60.0, 3.0);
+    glPushMatrix();
+        glScalef(1.0, 3.0, 3.0);
+        x_unit_circle(44.0);
+        x_unit_circle(60.0);
+    glPopMatrix();
 }
 
 
@@ -708,23 +715,23 @@ void spark_plug (void)
 void sparks (void)
 {
     static GLfloat vertexValues[] = {
-        2.0, 1.0, -10.0,      //0
-        0.0, -13.0, -10.0,    //1
-        -1.0, 4.0, -10.0,     //2
-        -7.0, -11.0, -10.0,   //3
-        -3.0, -3.0, -10.0,    //4
-        -11.0, -6.0, -10.0,   //5
-        -5.0, 1.0, -10.0,     //6
-        -14.0, 2.0, -10.0,    //7
-        -6.0, 6.0, -10.0,     //8
-        -13.0, 9.0, -10.0,    //9
-        -6.0, 10.0, -10.0,    //10
-        -11.0, 17.0, -10.0,   //11
-        -3.0, 13.0, -10.0,    //12
-        -5.0, 22.0, -10.0,    //13
-        0.0, 15.0, -10.0,     //14
-        0.0, 24.0, -10.0,     //15
-        2.0, 10.0, -10.0,     //16
+        2.0, 1.0, 0.0,      //0
+        0.0, -13.0, 0.0,    //1
+        -1.0, 4.0, 0.0,     //2
+        -7.0, -11.0, 0.0,   //3
+        -3.0, -3.0, 0.0,    //4
+        -11.0, -6.0, 0.0,   //5
+        -5.0, 1.0, 0.0,     //6
+        -14.0, 2.0, 0.0,    //7
+        -6.0, 6.0, 0.0,     //8
+        -13.0, 9.0, 0.0,    //9
+        -6.0, 10.0, 0.0,    //10
+        -11.0, 17.0, 0.0,   //11
+        -3.0, 13.0, 0.0,    //12
+        -5.0, 22.0, 0.0,    //13
+        0.0, 15.0, 0.0,     //14
+        0.0, 24.0, 0.0,     //15
+        2.0, 10.0, 0.0,     //16
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);

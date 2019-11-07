@@ -2,10 +2,10 @@
  *                  Project 3                       *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     05 Nov 2019                         *
+ *  Edited:     07 Nov 2019                         *
  ****************************************************
- * Draws the animation of a Wankel rotary engine.   *
- * Allows viewing from all different directions.    *
+ * Draws the 3d animation of a Wankel rotary engine *
+ * Allows viewing from all different directions     *
  ****************************************************/
 
 #include <GL/glut.h>
@@ -63,10 +63,16 @@ void reshape (int w, int h)
 }
 
 
+/****************************************************
+ *                  draw_wankel                     *
+ ****************************************************
+ * Draws the wankel engine internals in 3d with     *
+ * animation                                        *
+ ****************************************************/
 void draw_wankel (void)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glLineWidth(2.0);
+    //glLineWidth(2.0);
     glColor3f(0.0, 0.0, 0.0);
 
 // BACK BUFFER drawing ========================================================
@@ -94,18 +100,10 @@ void draw_wankel (void)
         rotor();
     glPopMatrix();
 
-    // ECCENTRIC SHAFT
-    glPushMatrix();
-        glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
-        glScalef(52.0, 52.0, 1.0);
-        glRotatef(-ECC_SHFT_I, 0.0, 0.0, 1.0);
-        //eccentric_shaft();
-    glPopMatrix();
-
     // PINION
     glPushMatrix();
         glScalef(30.0, 30.0, 1.0);
-        disk_perim_surface(30.0, -20.0, 0.9);
+        z_disk_surface(30.0, -20.0, 0.9);
         outer_gear_outline(0.0);
         outer_gear_outline(-20.0);
         gear_teeth_outline(10, 0.0);
@@ -117,7 +115,7 @@ void draw_wankel (void)
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3), 0.0, 0.0, 1.0);
         glScalef(60.0, 60.0, 1.0);
-        disk_perim_surface(60.0, -20.0, 1.3);
+        z_disk_surface(60.0, -20.0, 1.3);
         inner_gear_outline(0.0);
         inner_gear_outline(-20.0);
         gear_teeth_outline(5, 0.0);
@@ -129,13 +127,16 @@ void draw_wankel (void)
 
     // SPARK PLUGS
     glPushMatrix();
-        glTranslatef(129.0, 28.0, 0.0);
+        // top plug
+        glTranslatef(129.0, 28.0, -10.0);
         spark_plug();
         if (RUN_ANIMATION == 1)
             if (0 < ECC_SHFT_I/3 && ECC_SHFT_I/3 < 10)
             {
                 sparks();
             }
+
+        // bottom plug
         glTranslatef(0.0, -64.0, 0.0);
         spark_plug();
         if (RUN_ANIMATION == 1)
@@ -150,7 +151,6 @@ void draw_wankel (void)
 void display (void)
 {
     glPushMatrix();
-        //gluLookAt(CAM_X - 300, CAM_Y, CAM_Z - 750, 450.0, 450.0, 0.0, 0.0, 1.0, 0.0);
         gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
         draw_wankel();
     glPopMatrix();
@@ -242,6 +242,11 @@ void toggle_animation (int selection)
 }
 
 
+/****************************************************
+ *                  keyboard                        *
+ ****************************************************
+ * Used to control the camera                       *
+ ****************************************************/
 void keyboard (unsigned char key, int x, int y)
 {
     switch (key)

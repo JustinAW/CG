@@ -1,8 +1,8 @@
 Justin Weigle
-CG
-Project 3
+CG Project 3
+Wankel Rotary Engine
 
-Camera controls have been implemented using the keyboard rather than the menu.
+CAMERA CONTROLS have been implemented using the keyboard rather than the menu.
 Camera controls are as follows:
     A/a -> Rotate camera left / clockwise around the Y axis
     D/d -> Rotate camera right / counter clockwise around the Y axis
@@ -11,3 +11,8 @@ Camera controls are as follows:
 
     E/e -> Zoom in
     Q/q -> Zoom out
+
+MAKEFILE FUNCTIONALITY
+    make            -compiles (outputs executable named "rotary")
+    make run        -compiles and runs
+    make clean      -deletes executable
