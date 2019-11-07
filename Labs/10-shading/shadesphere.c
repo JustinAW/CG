@@ -28,6 +28,7 @@ void init (void)
     GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
     GLfloat light_specular[] = {0.0, 0.0, 0.0, 1.0};
     GLfloat light_position[] = {100.0, 100.0, 100.0};
+    GLfloat light_direction[] = {0.0, 0.0, -1.0};
 
     glClearColor (1.0, 1.0, 1.0, 0.0);
     glShadeModel (GL_SMOOTH);
@@ -35,7 +36,7 @@ void init (void)
 
     //enable lighting factors here
     glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+    //glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
 
     //Set light properties here
@@ -47,14 +48,14 @@ void init (void)
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
+    //glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light_direction);
+
     //Set sphere properties here
     glMaterialfv(GL_FRONT, GL_AMBIENT, sph_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, sph_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, sph_specular);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-
 }
 	
 
