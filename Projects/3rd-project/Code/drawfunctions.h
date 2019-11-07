@@ -11,6 +11,8 @@ void gear_teeth_outline (int, GLfloat);
 
 void unit_circle (GLfloat);
 
+void disk_perim_surface (GLfloat, GLfloat, GLfloat);
+
 void intake_exhaust (void);
 
 void chambers (void);

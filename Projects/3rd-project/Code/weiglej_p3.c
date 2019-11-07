@@ -105,6 +105,7 @@ void draw_wankel (void)
     // PINION
     glPushMatrix();
         glScalef(30.0, 30.0, 1.0);
+        disk_perim_surface(30.0, -20.0, 0.9);
         outer_gear_outline(0.0);
         outer_gear_outline(-20.0);
         gear_teeth_outline(10, 0.0);
@@ -116,6 +117,7 @@ void draw_wankel (void)
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3), 0.0, 0.0, 1.0);
         glScalef(60.0, 60.0, 1.0);
+        disk_perim_surface(60.0, -20.0, 1.3);
         inner_gear_outline(0.0);
         inner_gear_outline(-20.0);
         gear_teeth_outline(5, 0.0);

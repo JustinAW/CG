@@ -110,6 +110,20 @@ void unit_circle (GLfloat depth)
 }
 
 
+void disk_perim_surface (GLfloat divisions, GLfloat z, GLfloat scale)
+{
+    glBegin(GL_LINES);
+        double heading;
+        for (int i = 0; i < 360; i += 360 / divisions)
+        {
+            heading = i * M_PI / 180;
+            glVertex3d(cos(heading) * scale, sin(heading) * scale, 0.0);
+            glVertex3d(cos(heading) * scale, sin(heading) * scale, z);
+        }
+    glEnd();
+}
+
+
 /****************************************************
  *                  intake_exhaust                  *
  ****************************************************
@@ -144,30 +158,30 @@ void intake_exhaust (void)
         80.0, 27.0, 0.0,    //19_ end
     };
     static GLfloat vertexValues2[] = {
-        0.00, 0.00, 0.0,    //0  rect1
-        11.0, 0.00, 0.0,    //1
-        11.0, 27.0, 0.0,    //2
-        0.00, 27.0, 0.0,    //3_  end
+        0.00, 0.00, -20.0,    //0  rect1
+        11.0, 0.00, -20.0,    //1
+        11.0, 27.0, -20.0,    //2
+        0.00, 27.0, -20.0,    //3_  end
 
-        20.0, 0.00, 0.0,    //4  rect2
-        31.0, 0.00, 0.0,    //5
-        31.0, 27.0, 0.0,    //6
-        20.0, 27.0, 0.0,    //7_  end
+        20.0, 0.00, -20.0,    //4  rect2
+        31.0, 0.00, -20.0,    //5
+        31.0, 27.0, -20.0,    //6
+        20.0, 27.0, -20.0,    //7_  end
 
-        40.0, 0.00, 0.0,    //8  rect3
-        51.0, 0.00, 0.0,    //9
-        51.0, 27.0, 0.0,    //10
-        40.0, 27.0, 0.0,    //11_ end
+        40.0, 0.00, -20.0,    //8  rect3
+        51.0, 0.00, -20.0,    //9
+        51.0, 27.0, -20.0,    //10
+        40.0, 27.0, -20.0,    //11_ end
 
-        60.0, 0.00, 0.0,    //12 rect4
-        71.0, 0.00, 0.0,    //13
-        71.0, 27.0, 0.0,    //14
-        60.0, 27.0, 0.0,    //15_ end
+        60.0, 0.00, -20.0,    //12 rect4
+        71.0, 0.00, -20.0,    //13
+        71.0, 27.0, -20.0,    //14
+        60.0, 27.0, -20.0,    //15_ end
 
-        80.0, 00.0, 0.0,    //16 rect5
-        91.0, 00.0, 0.0,    //17
-        91.0, 27.0, 0.0,    //18
-        80.0, 27.0, 0.0,    //19_ end
+        80.0, 00.0, -20.0,    //16 rect5
+        91.0, 00.0, -20.0,    //17
+        91.0, 27.0, -20.0,    //18
+        80.0, 27.0, -20.0,    //19_ end
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
@@ -189,6 +203,26 @@ void intake_exhaust (void)
     };
 
     glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 5);
+
+    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues2[0]);
+
+    //Define pieces here
+    static GLubyte name2[] = {0, 0, 0, 0};
+    static GLubyte rect12[] = {0, 1, 2, 3};
+    static GLubyte rect22[] = {4, 5, 6, 7};
+    static GLubyte rect32[] = {8, 9, 10, 11};
+    static GLubyte rect42[] = {12, 13, 14, 15};
+    static GLubyte rect52[] = {16, 17, 18, 19};
+
+    static GLsizei count2[] = {
+        4, 4, 4, 4, 4,
+    };
+
+    static GLvoid *indices2[] = {
+        rect12, rect22, rect32, rect42, rect52
+    };
+
+    glMultiDrawElements(GL_POLYGON, count2, GL_UNSIGNED_BYTE, indices2, 5);
 }
 
 
@@ -240,11 +274,26 @@ void rotor (void)
         -72.0, 20.0, -20.0,   //17
     };
 
+    glBegin(GL_LINES);
+        glVertex3d(-76.0, 44.0, 0.0);
+        glVertex3d(-76.0, 44.0, -20.0);
+        glVertex3d(76.0, 44.0, 0.0);
+        glVertex3d(76.0, 44.0, -20.0);
+        glVertex3d(0.0, -88.0, 0.0);
+        glVertex3d(0.0, -88.0, -20.0);
+        glVertex3d(0.0, 60.0, 0.0);
+        glVertex3d(0.0, 60.0, -20.0);
+        glVertex3d(55.0, -25.0, 0.0);
+        glVertex3d(55.0, -25.0, -20.0);
+        glVertex3d(-55.0, -25.0, 0.0);
+        glVertex3d(-55.0, -25.0, -20.0);
+    glEnd();
+
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
 
     static GLubyte rotor[] = {
-        0, 1, 2, 3, 4, 5, 6, 
-        7, 8, 9, 10, 11, 12, 
+        0, 1, 2, 3, 4, 5, 6,
+        7, 8, 9, 10, 11, 12,
         13, 14, 15, 16, 17,
     };
 
@@ -263,8 +312,8 @@ void rotor (void)
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues2[0]);
 
     static GLubyte rotor2[] = {
-        0, 1, 2, 3, 4, 5, 6, 
-        7, 8, 9, 10, 11, 12, 
+        0, 1, 2, 3, 4, 5, 6,
+        7, 8, 9, 10, 11, 12,
         13, 14, 15, 16, 17,
     };
 
@@ -486,6 +535,42 @@ void housing (void)
         -182,   58, -20,    //87
     };
 
+    glBegin(GL_LINES);
+        glVertex3d(-182, 77, 0);
+        glVertex3d(-182, 77, -20);
+        glVertex3d(-125, 77, 0);
+        glVertex3d(-125, 77, -20);
+        glVertex3d(-125, -48, 0);
+        glVertex3d(-125, -48, -20);
+        glVertex3d(-182, -48, 0);
+        glVertex3d(-182, -48, -20);
+        glVertex3d(-182, -29, 0);
+        glVertex3d(-182, -29, -20);
+        glVertex3d(-144, -29, 0);
+        glVertex3d(-144, -29, -20);
+        glVertex3d(-144, 58, 0);
+        glVertex3d(-144, 58, -20);
+        glVertex3d(-182, 58, 0);
+        glVertex3d(-182, 58, -20);
+        glVertex3d(-182,  123, 0);
+        glVertex3d(-182,  123, -20);
+        glVertex3d(-134,  123, 0);
+        glVertex3d(-134,  123, -20);
+        glVertex3d(-182,  -95, 0);
+        glVertex3d(-182,  -95, -20);
+        glVertex3d(-134,  -95, 0);
+        glVertex3d(-134,  -95, -20);
+        glVertex3d(-182,  -76, 0);
+        glVertex3d(-182,  -76, -20);
+        glVertex3d(-120,  -76, 0);
+        glVertex3d(-120,  -76, -20);
+        glVertex3d(-120,  104, 0);
+        glVertex3d(-120,  104, -20);
+        glVertex3d(-182,  104, 0);
+        glVertex3d(-182,  104, -20);
+    glEnd();
+
+
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
 
     static GLubyte outline[] = {
@@ -564,24 +649,24 @@ void housing (void)
 void spark_plug (void)
 {
     static GLfloat vertexValues[] = {
-        0.0, 0.0, 0.0,      //0
-        0.0, 10.0, 0.0,     //1
-        17.0, 10.0, 0.0,    //2
-        17.0, 0.0, 0.0,     //3
+        0.0, 0.0, -10.0,      //0
+        0.0, 10.0, -10.0,     //1
+        17.0, 10.0, -10.0,    //2
+        17.0, 0.0, -10.0,     //3
 
-        17.0, 12.0, 0.0,    //4
-        23.0, 12.0, 0.0,    //5
-        23.0, 10.0, 0.0,    //6
-        44.0, 10.0, 0.0,    //7
-        44.0, 0.0, 0.0,     //8
-        23.0, 0.0, 0.0,     //9
-        23.0, -2.0, 0.0,    //10
-        17.0, -2.0, 0.0,    //11
+        17.0, 12.0, -10.0,    //4
+        23.0, 12.0, -10.0,    //5
+        23.0, 10.0, -10.0,    //6
+        44.0, 10.0, -10.0,    //7
+        44.0, 0.0, -10.0,     //8
+        23.0, 0.0, -10.0,     //9
+        23.0, -2.0, -10.0,    //10
+        17.0, -2.0, -10.0,    //11
 
-        44.0, 8.0, 0.0,     //12
-        60.0, 8.0, 0.0,     //13
-        60.0, 2.0, 0.0,     //14
-        44.0, 2.0, 0.0,     //15
+        44.0, 8.0, -10.0,     //12
+        60.0, 8.0, -10.0,     //13
+        60.0, 2.0, -10.0,     //14
+        44.0, 2.0, -10.0,     //15
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
@@ -623,23 +708,23 @@ void spark_plug (void)
 void sparks (void)
 {
     static GLfloat vertexValues[] = {
-        2.0, 1.0, 0.0,      //0
-        0.0, -13.0, 0.0,    //1
-        -1.0, 4.0, 0.0,     //2
-        -7.0, -11.0, 0.0,   //3
-        -3.0, -3.0, 0.0,    //4
-        -11.0, -6.0, 0.0,   //5
-        -5.0, 1.0, 0.0,     //6
-        -14.0, 2.0, 0.0,    //7
-        -6.0, 6.0, 0.0,     //8
-        -13.0, 9.0, 0.0,    //9
-        -6.0, 10.0, 0.0,    //10
-        -11.0, 17.0, 0.0,   //11
-        -3.0, 13.0, 0.0,    //12
-        -5.0, 22.0, 0.0,    //13
-        0.0, 15.0, 0.0,     //14
-        0.0, 24.0, 0.0,     //15
-        2.0, 10.0, 0.0,     //16
+        2.0, 1.0, -10.0,      //0
+        0.0, -13.0, -10.0,    //1
+        -1.0, 4.0, -10.0,     //2
+        -7.0, -11.0, -10.0,   //3
+        -3.0, -3.0, -10.0,    //4
+        -11.0, -6.0, -10.0,   //5
+        -5.0, 1.0, -10.0,     //6
+        -14.0, 2.0, -10.0,    //7
+        -6.0, 6.0, -10.0,     //8
+        -13.0, 9.0, -10.0,    //9
+        -6.0, 10.0, -10.0,    //10
+        -11.0, 17.0, -10.0,   //11
+        -3.0, 13.0, -10.0,    //12
+        -5.0, 22.0, -10.0,    //13
+        0.0, 15.0, -10.0,     //14
+        0.0, 24.0, -10.0,     //15
+        2.0, 10.0, -10.0,     //16
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
