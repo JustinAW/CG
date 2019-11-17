@@ -73,7 +73,6 @@ void reshape (int w, int h)
 void draw_wankel (void)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    //glLineWidth(2.0);
     glColor3f(0.0, 0.0, 0.0);
 
 // BACK BUFFER drawing ========================================================
@@ -81,16 +80,16 @@ void draw_wankel (void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     // INTAKE
-    glPushMatrix();
-        glTranslatef(INTAKE_X, 77.0, 0.0);
-        intake_exhaust();
-    glPopMatrix();
-
-    // EXHAUST
-    glPushMatrix();
-        glTranslatef(EXHAUST_X, -76.0, 0.0);
-        intake_exhaust();
-    glPopMatrix();
+//    glPushMatrix();
+//        glTranslatef(INTAKE_X, 77.0, 0.0);
+//        intake_exhaust();
+//    glPopMatrix();
+//
+//    // EXHAUST
+//    glPushMatrix();
+//        glTranslatef(EXHAUST_X, -76.0, 0.0);
+//        intake_exhaust();
+//    glPopMatrix();
 
     // ROTOR
     ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
@@ -243,6 +242,19 @@ void toggle_animation (int selection)
 }
 
 
+GLfloat sq (GLfloat x)
+{
+    return x * x;
+}
+
+
+GLfloat get_magnitude_cam (void)
+{
+    GLfloat m = sqrt(sq(CAM_X) + sq(CAM_Y) + sq(CAM_Z));
+    return m;
+}
+
+
 /****************************************************
  *                  keyboard                        *
  ****************************************************
@@ -250,6 +262,7 @@ void toggle_animation (int selection)
  ****************************************************/
 void keyboard (unsigned char key, int x, int y)
 {
+    GLfloat m = get_magnitude_cam();
     switch (key)
     {
         // ZOOM IN
@@ -257,61 +270,27 @@ void keyboard (unsigned char key, int x, int y)
             if ((CAM_X == 0.0) && (CAM_Y == 0.0) && (CAM_Z == 0.0))
             {
                 printf("Camera is at center of model, zoom out\n");
+                glutPostRedisplay();
+                break;
             }
-            else
-            {
-                if (CAM_X == 0.0)
-                    NULL;
-                else if (CAM_X < 0.0)
-                    CAM_X += ZOOM;
-                else if (CAM_X > 0.0)
-                    CAM_X -= ZOOM;
-
-                if (CAM_Y == 0.0)
-                    NULL;
-                else if (CAM_Y < 0.0)
-                    CAM_Y += ZOOM;
-                else if (CAM_Y > 450.0)
-                    CAM_Y -= ZOOM;
-
-                if (CAM_Z == 0.0)
-                    NULL;
-                else if (CAM_Z < 0.0)
-                    CAM_Z += ZOOM;
-                else if (CAM_Z > 0.0)
-                    CAM_Z -= ZOOM;
-            }
+            CAM_X -= (CAM_X / m) * ZOOM;
+            CAM_Y -= (CAM_Y / m) * ZOOM;
+            CAM_Z -= (CAM_Z / m) * ZOOM;
             glutPostRedisplay();
             break;
         // ZOOM OUT
         case 'Q': case 'q':
             if ((CAM_X == 0.0) && (CAM_Y == 0.0) && (CAM_Z == 0.0))
             {
-                CAM_Z += ZOOM;
+                CAM_X = 0.0;
+                CAM_Y = 0.0;
+                CAM_Z = 50.0;
+                glutPostRedisplay();
+                break;
             }
-            else
-            {
-                if (CAM_X == 0.0)
-                    NULL;
-                else if (CAM_X > 0.0)
-                    CAM_X += ZOOM;
-                else if (CAM_X < 0.0)
-                    CAM_X -= ZOOM;
-
-                if (CAM_Y == 0.0)
-                    NULL;
-                else if (CAM_Y > 0.0)
-                    CAM_Y += ZOOM;
-                else if (CAM_Y < 0.0)
-                    CAM_Y -= ZOOM;
-
-                if (CAM_Z == 0.0)
-                    NULL;
-                else if (CAM_Z >= 0.0)
-                    CAM_Z += ZOOM;
-                else if (CAM_Z < 0.0)
-                    CAM_Z -= ZOOM;
-            }
+            CAM_X += (CAM_X / m) * ZOOM;
+            CAM_Y += (CAM_Y / m) * ZOOM;
+            CAM_Z += (CAM_Z / m) * ZOOM;
             glutPostRedisplay();
             break;
         // ROTATE CAMERA LEFT
@@ -385,6 +364,7 @@ int main (int argc, char** argv)
     glutCreateWindow (argv[0]);
     init ();
 
+//    printf("OpenGL version: %s\n", glGetString(GL_VERSION));
     // make cursor visible during recording
     glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
 

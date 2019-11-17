@@ -2,6 +2,8 @@ Justin Weigle
 CG Project 4
 Wankel Rotary Engine
 
+Now with UPDATED ZOOMING that isn't awful!
+
 CAMERA CONTROLS have been implemented using the keyboard rather than the menu.
 Camera controls are as follows:
     A/a -> Rotate camera left / clockwise around the Y axis
