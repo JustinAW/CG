@@ -2,7 +2,7 @@
  *                  Project 4                       *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     17 Nov 2019                         *
+ *  Edited:     18 Nov 2019                         *
  ****************************************************
  * Draws the 3d animation of a Wankel rotary engine *
  * as well as a scene for the engine to be in.      *
@@ -38,6 +38,7 @@ static GLfloat CAM_I = 90.0;
 
 void init (void)
 {
+    glLoadIdentity();
     glEnableClientState(GL_VERTEX_ARRAY);
     glClearColor (1.0, 1.0, 1.0, 0.0);
     glShadeModel (GL_FLAT);

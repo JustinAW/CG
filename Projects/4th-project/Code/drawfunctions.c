@@ -2,7 +2,7 @@
  *                drawfunctions.c                   *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     17 Nov 2019                         *
+ *  Edited:     18 Nov 2019                         *
  ****************************************************
  * Contains the functions for drawing the parts of  *
  * a Wankel rotary engine in 3d                     *
@@ -244,6 +244,36 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
         x_disk_surface(30.0, 10.0, -20.0, 0.88);
         x_disk_surface(30.0, 40.0, 10.0, 0.44);
         x_disk_surface(30.0, -80, -120, 0.88);
+        glPushMatrix();
+            glScalef(0.88, 0.88, 1.0);
+            glBegin(GL_TRIANGLE_STRIP);
+                for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
+                {
+                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    glVertex3d(cos(heading), sin(heading), 10);
+                    glVertex3d(0.0, 0.0, 10.0);
+                }
+            glEnd();
+            glBegin(GL_TRIANGLE_STRIP);
+                for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
+                {
+                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    glVertex3d(cos(heading), sin(heading), -120);
+                    glVertex3d(0.0, 0.0, -120.0);
+                }
+            glEnd();
+        glPopMatrix();
+        glPushMatrix();
+            glScalef(0.44, 0.44, 1.0);
+            glBegin(GL_TRIANGLE_STRIP);
+                for (int i = 0; i <= 360; i += 360 / (SIDES / 24))
+                {
+                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    glVertex3d(cos(heading), sin(heading), 40);
+                    glVertex3d(0.0, 0.0, 40.0);
+                }
+            glEnd();
+        glPopMatrix();
     glPopMatrix();
 }
 
