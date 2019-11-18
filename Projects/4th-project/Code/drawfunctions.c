@@ -134,7 +134,7 @@ void gear_teeth_outline (int gear_spacing, GLfloat depth)
  ****************************************************/
 void unit_circle (GLfloat depth)
 {
-    glBegin(GL_LINE_LOOP);
+    glBegin(GL_POLYGON);
         double heading;
         for (int i = 0; i < 360; i += 360 / SIDES)
         {
@@ -205,9 +205,32 @@ void z_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
 }
 
 
+/****************************************************
+ *                 eccentric_shaft                  *
+ ****************************************************
+ * Draws the eccentric shaft                        *
+ ****************************************************/
 void eccentric_shaft (void)
 {
-    x_disk_surface(60, -20, -40, 47.32);
+    x_disk_surface(60, -20, -40, 1.3);
+    glPushMatrix();
+        glScalef(1.3, 1.3, 1.0);
+        glBegin(GL_TRIANGLE_STRIP);
+            double heading;
+            for (int i = 0; i < 360; i += 360 / (SIDES / 6))
+            {
+                heading = i * 3.1415926535897932384626433832795 / 180;
+                glVertex3d(cos(heading), sin(heading), -20);
+                glVertex3d(0.0, 0.0, -20.0);
+            }
+            for (int i = 0; i < 360; i += 360 / (SIDES / 6))
+            {
+                heading = i * 3.1415926535897932384626433832795 / 180;
+                glVertex3d(cos(heading), sin(heading), -40);
+                glVertex3d(0.0, 0.0, -40.0);
+            }
+        glEnd();
+    glPopMatrix();
 }
 
 

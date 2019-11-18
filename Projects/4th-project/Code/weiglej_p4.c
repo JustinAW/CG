@@ -102,7 +102,7 @@ void draw_wankel (void)
     glPushMatrix();
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
-        glScalef(1.65, 1.65, 1.0);
+        glScalef(60.0, 60.0, 1.0);
         eccentric_shaft();
     glPopMatrix();
 
