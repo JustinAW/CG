@@ -7,7 +7,7 @@ void inner_gear_surface (GLfloat, int);
 
 void outer_gear_surface (GLfloat, int);
 
-void gear_teeth_outline (int, GLfloat);
+void gear_teeth_outline (int);
 
 void unit_circle (GLfloat);
 
@@ -23,7 +23,7 @@ void chambers (void);
 
 void rotor (void);
 
-void eccentric_shaft (void);
+void eccentric_shaft (GLfloat, GLfloat);
 
 void housing (void);
 

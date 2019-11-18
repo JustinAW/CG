@@ -23,7 +23,6 @@ static GLfloat FPS = 60.0;
 static GLfloat ECC_SHFT_I = 0.0;
 static GLfloat ECC_SHFT_HEADING;
 static GLint ROTATION_SPEED = 3;
-static GLint INTAKE_EXHAUST_SPEED = 1;
 
 // Interaction
 static GLint RUN_ANIMATION = 0;
@@ -31,7 +30,7 @@ static GLint RUN_ANIMATION = 0;
 // Camera
 static GLfloat CAM_X = 0;
 static GLfloat CAM_Y = 0;
-static GLfloat CAM_Z = 450;
+static GLfloat CAM_Z = 500;
 static GLfloat ZOOM = 25;
 static GLfloat DISTANCE;
 static GLfloat CAM_HEADING;
@@ -79,13 +78,13 @@ void draw_wankel (void)
 
     // INTAKE
     glPushMatrix();
-        glTranslatef(-160, 77.0, -20.0);
+        glTranslatef(-160, 77.0, -30.0);
         intake_exhaust();
     glPopMatrix();
 
     // EXHAUST
     glPushMatrix();
-        glTranslatef(-160, -77.0, -20.0);
+        glTranslatef(-160, -77.0, -30.0);
         intake_exhaust();
     glPopMatrix();
 
@@ -100,10 +99,7 @@ void draw_wankel (void)
 
     // ECCENTRIC SHAFT
     glPushMatrix();
-        glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
-        glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
-        glScalef(60.0, 60.0, 1.0);
-        eccentric_shaft();
+        eccentric_shaft(ECC_SHFT_HEADING, ECC_SHFT_I);
     glPopMatrix();
 
     // PINION
@@ -112,8 +108,7 @@ void draw_wankel (void)
         x_disk_surface(30.0, 0.0, -20.0, 0.9);
         outer_gear_surface(0.0, 10);
         outer_gear_surface(-20.0, 10);
-        gear_teeth_outline(10, 0.0);
-        gear_teeth_outline(10, -20.0);
+        gear_teeth_outline(10);
     glPopMatrix();
 
     // CROWN GEAR
@@ -124,8 +119,7 @@ void draw_wankel (void)
         x_disk_surface(60.0, 0.0, -20.0, 1.3);
         inner_gear_surface(0.0, 5);
         inner_gear_surface(-20.0, 5);
-        gear_teeth_outline(5, 0.0);
-        gear_teeth_outline(5, -20.0);
+        gear_teeth_outline(5);
     glPopMatrix();
 
     // HOUSING
@@ -134,7 +128,7 @@ void draw_wankel (void)
     // SPARK PLUGS
     glPushMatrix();
         // top plug
-        glTranslatef(129.0, 28.0, -20.0);
+        glTranslatef(129.0, 28.0, -30.0);
         spark_plug();
         if (RUN_ANIMATION == 1)
             if (0 < ECC_SHFT_I/3 && ECC_SHFT_I/3 < 10)
@@ -203,7 +197,7 @@ void menu_choice (int selection)
         ECC_SHFT_I = 0;
         CAM_X = 0;
         CAM_Y = 0;
-        CAM_Z = 450;
+        CAM_Z = 500;
         CAM_I = 90.0;
         glutPostRedisplay();
     }
