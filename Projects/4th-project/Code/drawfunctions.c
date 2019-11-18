@@ -2,13 +2,14 @@
  *                drawfunctions.c                   *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     07 Nov 2019                         *
+ *  Edited:     17 Nov 2019                         *
  ****************************************************
  * Contains the functions for drawing the parts of  *
  * a Wankel rotary engine in 3d                     *
  ****************************************************/
 
 #include <GL/glut.h>
+#include <stdio.h>
 #include <math.h>
 #include "drawfunctions.h"
 
@@ -16,14 +17,14 @@ const int SIDES = 360;
 
 
 /****************************************************
- *              inner_gear_outline                  *
+ *              inner_gear_surface                  *
  ****************************************************
- * Draws the circular portion of the outline of an  *
- * inward facing gear                               *
+ * Draws the surface of a gear with teeth that are  *
+ * facing inward                                    *
  ****************************************************/
-void inner_gear_outline (GLfloat depth)
+void inner_gear_surface (GLfloat depth, int gear_spacing)
 {
-    glBegin(GL_LINE_LOOP);
+    glBegin(GL_TRIANGLE_STRIP);
         double heading;
         int counter = 0;
         int toggle = 1;
@@ -31,20 +32,36 @@ void inner_gear_outline (GLfloat depth)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
             glVertex3d(cos(heading) * 1.3, sin(heading) * 1.3, depth);
+
+            if (toggle)
+            {
+                glVertex3d(cos(heading), sin(heading), depth);
+            }
+            else
+            {
+                glVertex3d(cos(heading) * 0.9, sin(heading) * 0.9, depth);
+            }
+
+            counter += 1;
+            if (counter == gear_spacing)
+            {
+                counter = 0;
+                toggle = 1 - toggle;
+            }
         }
     glEnd();
 }
 
 
 /****************************************************
- *               outer_gear_outline                 *
+ *               outer_gear_surface                 *
  ****************************************************
- * Draws the circular portion of the outline of an  *
- * outward facing gear                              *
+ * Draws the surface of a gear with teeth that are  *
+ * facing outward                                   *
  ****************************************************/
-void outer_gear_outline (GLfloat depth)
+void outer_gear_surface (GLfloat depth, int gear_spacing)
 {
-    glBegin(GL_LINE_LOOP);
+    glBegin(GL_TRIANGLE_STRIP);
         double heading;
         int counter = 0;
         int toggle = 1;
@@ -52,6 +69,22 @@ void outer_gear_outline (GLfloat depth)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
             glVertex3d(cos(heading) * 0.7, sin(heading) * 0.7, depth);
+
+            if (toggle)
+            {
+                glVertex3d(cos(heading), sin(heading), depth);
+            }
+            else
+            {
+                glVertex3d(cos(heading) * 0.9, sin(heading) * 0.9, depth);
+            }
+
+            counter += 1;
+            if (counter == gear_spacing)
+            {
+                counter = 0;
+                toggle = 1 - toggle;
+            }
         }
     glEnd();
 }
@@ -64,7 +97,7 @@ void outer_gear_outline (GLfloat depth)
  ****************************************************/
 void gear_teeth_outline (int gear_spacing, GLfloat depth)
 {
-    glBegin(GL_LINE_LOOP);
+    glBegin(GL_TRIANGLE_STRIP);
         double heading;
         int counter = 0;
         int toggle = 1;
@@ -72,18 +105,21 @@ void gear_teeth_outline (int gear_spacing, GLfloat depth)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
             if (toggle)
-                glVertex3d(cos(heading), sin(heading), depth);
+            {
+                glVertex3d(cos(heading), sin(heading), 0);
+                glVertex3d(cos(heading), sin(heading), -20);
+            }
             else
-                glVertex3d(cos(heading) * 0.9, sin(heading) * 0.9, depth);
+            {
+                glVertex3d(cos(heading) * 0.9, sin(heading) * 0.9, 0);
+                glVertex3d(cos(heading) * 0.9, sin(heading) * 0.9, -20);
+            }
 
             counter += 1;
             if (counter == gear_spacing)
             {
                 counter = 0;
-                if (toggle == 1)
-                    toggle = 0;
-                else
-                    toggle = 1;
+                toggle = 1 - toggle;
             }
         }
     glEnd();
@@ -118,7 +154,7 @@ void unit_circle (GLfloat depth)
  ****************************************************/
 void x_unit_circle (GLfloat x)
 {
-    glBegin(GL_LINE_LOOP);
+    glBegin(GL_POLYGON);
         double heading;
         for (int i = 0; i < 360; i += 360 / SIDES)
         {
@@ -130,42 +166,48 @@ void x_unit_circle (GLfloat x)
 
 
 /****************************************************
- *               vert_disk_surface                  *
+ *                 x_disk_surface                   *
  ****************************************************
  * Draws lines on the surface of a disk's perimeter *
- * that is parallel to the z axis                   *
+ * that is parallel to the x axis                   *
  ****************************************************/
-void z_disk_surface (GLfloat divisions, GLfloat z, GLfloat scale)
+void x_disk_surface (GLfloat divisions, GLfloat z1, GLfloat z2, GLfloat scale)
 {
-    glBegin(GL_LINES);
+    glBegin(GL_TRIANGLE_STRIP);
         double heading;
-        for (int i = 0; i < 360; i += 360 / divisions)
+        for (int i = 0; i <= 360; i += 360 / divisions)
         {
             heading = i * M_PI / 180;
-            glVertex3d(cos(heading) * scale, sin(heading) * scale, 0.0);
-            glVertex3d(cos(heading) * scale, sin(heading) * scale, z);
+            glVertex3d(cos(heading) * scale, sin(heading) * scale, z1);
+            glVertex3d(cos(heading) * scale, sin(heading) * scale, z2);
         }
     glEnd();
 }
 
 
 /****************************************************
- *                horz_disk_surface                 *
+ *                  z_disk_surface                  *
  ****************************************************
  * Draws lines on the surface of a disk's perimeter *
- * that is parallel to the x axis
+ * that is parallel to the z axis                   *
  ****************************************************/
-void x_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
+void z_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
 {
-    glBegin(GL_LINES);
+    glBegin(GL_TRIANGLE_STRIP);
         double heading;
-        for (int i = 0; i < 360; i += 360 / divisions)
+        for (int i = 0; i <= 360; i += 360 / divisions)
         {
             heading = i * M_PI / 180;
             glVertex3d(x1, cos(heading) * scale, sin(heading) * scale);
             glVertex3d(x2, cos(heading) * scale, sin(heading) * scale);
         }
     glEnd();
+}
+
+
+void eccentric_shaft (void)
+{
+    x_disk_surface(60, -20, -40, 47.32);
 }
 
 
@@ -176,98 +218,7 @@ void x_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
  ****************************************************/
 void intake_exhaust (void)
 {
-    static GLfloat vertexValues[] = {
-        0.00, 0.00, 0.0,    //0  rect1
-        11.0, 0.00, 0.0,    //1
-        11.0, 27.0, 0.0,    //2
-        0.00, 27.0, 0.0,    //3_  end
-
-        20.0, 0.00, 0.0,    //4  rect2
-        31.0, 0.00, 0.0,    //5
-        31.0, 27.0, 0.0,    //6
-        20.0, 27.0, 0.0,    //7_  end
-
-        40.0, 0.00, 0.0,    //8  rect3
-        51.0, 0.00, 0.0,    //9
-        51.0, 27.0, 0.0,    //10
-        40.0, 27.0, 0.0,    //11_ end
-
-        60.0, 0.00, 0.0,    //12 rect4
-        71.0, 0.00, 0.0,    //13
-        71.0, 27.0, 0.0,    //14
-        60.0, 27.0, 0.0,    //15_ end
-
-        80.0, 00.0, 0.0,    //16 rect5
-        91.0, 00.0, 0.0,    //17
-        91.0, 27.0, 0.0,    //18
-        80.0, 27.0, 0.0,    //19_ end
-    };
-    static GLfloat vertexValues2[] = {
-        0.00, 0.00, -20.0,    //0  rect1
-        11.0, 0.00, -20.0,    //1
-        11.0, 27.0, -20.0,    //2
-        0.00, 27.0, -20.0,    //3_  end
-
-        20.0, 0.00, -20.0,    //4  rect2
-        31.0, 0.00, -20.0,    //5
-        31.0, 27.0, -20.0,    //6
-        20.0, 27.0, -20.0,    //7_  end
-
-        40.0, 0.00, -20.0,    //8  rect3
-        51.0, 0.00, -20.0,    //9
-        51.0, 27.0, -20.0,    //10
-        40.0, 27.0, -20.0,    //11_ end
-
-        60.0, 0.00, -20.0,    //12 rect4
-        71.0, 0.00, -20.0,    //13
-        71.0, 27.0, -20.0,    //14
-        60.0, 27.0, -20.0,    //15_ end
-
-        80.0, 00.0, -20.0,    //16 rect5
-        91.0, 00.0, -20.0,    //17
-        91.0, 27.0, -20.0,    //18
-        80.0, 27.0, -20.0,    //19_ end
-    };
-
-    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
-
-    //Define pieces here
-    static GLubyte name[] = {0, 0, 0, 0};
-    static GLubyte rect1[] = {0, 1, 2, 3};
-    static GLubyte rect2[] = {4, 5, 6, 7};
-    static GLubyte rect3[] = {8, 9, 10, 11};
-    static GLubyte rect4[] = {12, 13, 14, 15};
-    static GLubyte rect5[] = {16, 17, 18, 19};
-
-    static GLsizei count[] = {
-        4, 4, 4, 4, 4,
-    };
-
-    static GLvoid *indices[] = {
-        rect1, rect2, rect3, rect4, rect5
-    };
-
-    glMultiDrawElements(GL_POLYGON, count, GL_UNSIGNED_BYTE, indices, 5);
-
-    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues2[0]);
-
-    //Define pieces here
-    static GLubyte name2[] = {0, 0, 0, 0};
-    static GLubyte rect12[] = {0, 1, 2, 3};
-    static GLubyte rect22[] = {4, 5, 6, 7};
-    static GLubyte rect32[] = {8, 9, 10, 11};
-    static GLubyte rect42[] = {12, 13, 14, 15};
-    static GLubyte rect52[] = {16, 17, 18, 19};
-
-    static GLsizei count2[] = {
-        4, 4, 4, 4, 4,
-    };
-
-    static GLvoid *indices2[] = {
-        rect12, rect22, rect32, rect42, rect52
-    };
-
-    glMultiDrawElements(GL_POLYGON, count2, GL_UNSIGNED_BYTE, indices2, 5);
+    z_disk_surface(20.0, 0.0, 35.0, 12.0);
 }
 
 
@@ -279,100 +230,109 @@ void intake_exhaust (void)
 void rotor (void)
 {
     static GLfloat vertexValues[] = {
-        -76.0, 44.0, 0.0,   //0
-        -51.0, 53.0, 0.0,   //1
-        -26.0, 58.0, 0.0,   //2
-        0.0, 60.0, 0.0,     //3
-        26.0, 58.0, 0.0,    //4
-        51.0, 53.0, 0.0,    //5
-        76.0, 44.0, 0.0,    //6
-        72.0, 20.0, 0.0,    //7
-        65.0, -2.0, 0.0,    //8
-        55.0, -25.0, 0.0,   //9
-        41.0, -46.0, 0.0,   //10
-        24.0, -67.0, 0.0,   //11
-        0.0, -88.0, 0.0,    //12
-        -24.0, -67.0, 0.0,  //13
-        -41.0, -46.0, 0.0,  //14
-        -55.0, -25.0, 0.0,  //15
-        -65.0, -2.0, 0.0,   //16
-        -72.0, 20.0, 0.0,   //17
-    };
-    static GLfloat vertexValues2[] = {
-        -76.0, 44.0, -20.0,   //0
-        -51.0, 53.0, -20.0,   //1
-        -26.0, 58.0, -20.0,   //2
-        0.0, 60.0, -20.0,     //3
-        26.0, 58.0, -20.0,    //4
-        51.0, 53.0, -20.0,    //5
-        76.0, 44.0, -20.0,    //6
-        72.0, 20.0, -20.0,    //7
-        65.0, -2.0, -20.0,    //8
-        55.0, -25.0, -20.0,   //9
-        41.0, -46.0, -20.0,   //10
-        24.0, -67.0, -20.0,   //11
-        0.0, -88.0, -20.0,    //12
-        -24.0, -67.0, -20.0,  //13
-        -41.0, -46.0, -20.0,  //14
-        -55.0, -25.0, -20.0,  //15
-        -65.0, -2.0, -20.0,   //16
-        -72.0, 20.0, -20.0,   //17
-    };
+        -76.0,  44.0,   0.0,    //0
+        -51.0,  53.0,   0.0,    //1
+        -26.0,  58.0,   0.0,    //2
+          0.0,  60.0,   0.0,    //3
+         26.0,  58.0,   0.0,    //4
+         51.0,  53.0,   0.0,    //5
+         76.0,  44.0,   0.0,    //6
+         72.0,  20.0,   0.0,    //7
+         65.0,  -2.0,   0.0,    //8
+         55.0, -25.0,   0.0,    //9
+         41.0, -46.0,   0.0,    //10
+         24.0, -67.0,   0.0,    //11
+          0.0, -88.0,   0.0,    //12
+        -24.0, -67.0,   0.0,    //13
+        -41.0, -46.0,   0.0,    //14
+        -55.0, -25.0,   0.0,    //15
+        -65.0,  -2.0,   0.0,    //16
+        -72.0,  20.0,   0.0,    //17
 
-    glBegin(GL_LINES);
-        glVertex3d(-76.0, 44.0, 0.0);
-        glVertex3d(-76.0, 44.0, -20.0);
-        glVertex3d(76.0, 44.0, 0.0);
-        glVertex3d(76.0, 44.0, -20.0);
-        glVertex3d(0.0, -88.0, 0.0);
-        glVertex3d(0.0, -88.0, -20.0);
-        glVertex3d(0.0, 60.0, 0.0);
-        glVertex3d(0.0, 60.0, -20.0);
-        glVertex3d(55.0, -25.0, 0.0);
-        glVertex3d(55.0, -25.0, -20.0);
-        glVertex3d(-55.0, -25.0, 0.0);
-        glVertex3d(-55.0, -25.0, -20.0);
-    glEnd();
+        -76.0,  44.0, -40.0,    //18
+        -51.0,  53.0, -40.0,    //19
+        -26.0,  58.0, -40.0,    //20
+          0.0,  60.0, -40.0,    //21
+         26.0,  58.0, -40.0,    //22
+         51.0,  53.0, -40.0,    //23
+         76.0,  44.0, -40.0,    //24
+         72.0,  20.0, -40.0,    //25
+         65.0,  -2.0, -40.0,    //26
+         55.0, -25.0, -40.0,    //27
+         41.0, -46.0, -40.0,    //28
+         24.0, -67.0, -40.0,    //29
+          0.0, -88.0, -40.0,    //30
+        -24.0, -67.0, -40.0,    //31
+        -41.0, -46.0, -40.0,    //32
+        -55.0, -25.0, -40.0,    //33
+        -65.0,  -2.0, -40.0,    //34
+        -72.0,  20.0, -40.0,    //35
+    };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
 
     static GLubyte rotor[] = {
-        0, 1, 2, 3, 4, 5, 6,
-        7, 8, 9, 10, 11, 12,
-        13, 14, 15, 16, 17,
+        0, 18, 1, 19, 2, 20, 3, 21, 4, 22,
+        5, 23, 6, 24, 7, 25, 8, 26, 9, 27,
+        10, 28, 11, 29, 12, 30, 13, 31, 14, 32,
+        15, 33, 16, 34, 17, 35, 0, 18,
     };
 
     static GLsizei count[] = {
-        18,
+        38,
     };
 
     static GLvoid *indices[] = {
         rotor,
     };
 
-    glMultiDrawElements(GL_LINE_LOOP, count, GL_UNSIGNED_BYTE, indices, 1);
+    glMultiDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_BYTE, indices, 1);
 
-    glDrawElements(GL_LINE_LOOP, 18, GL_UNSIGNED_BYTE, rotor);
+    glPushMatrix();
+    glBegin(GL_TRIANGLE_STRIP);
+        double heading;
+        int stagger = 0;
+        int index = 7 * 3;
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex3d(cos(heading) * 47.32, sin(heading) * 47.32, 0);
+            glVertex3d(vertexValues[index],
+                    vertexValues[index+1],
+                    vertexValues[index+2]);
 
-    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues2[0]);
+            stagger++;
+            if (stagger == 20)
+            {
+                stagger = 0;
+                index -= 3;
+                if (index < 0)
+                    index = 17 * 3;
+            }
+        }
+    glEnd();
+    glBegin(GL_TRIANGLE_STRIP);
+        stagger = 0;
+        index = 25 * 3;
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            heading = i * 3.1415926535897932384626433832795 / 180;
+            glVertex3d(cos(heading) * 47.32, sin(heading) * 47.32, -40);
+            glVertex3d(vertexValues[index],
+                    vertexValues[index+1],
+                    vertexValues[index+2]);
 
-    static GLubyte rotor2[] = {
-        0, 1, 2, 3, 4, 5, 6,
-        7, 8, 9, 10, 11, 12,
-        13, 14, 15, 16, 17,
-    };
-
-    static GLsizei count2[] = {
-        18,
-    };
-
-    static GLvoid *indices2[] = {
-        rotor2,
-    };
-
-    glMultiDrawElements(GL_LINE_LOOP, count2, GL_UNSIGNED_BYTE, indices2, 1);
-
-    glDrawElements(GL_LINE_LOOP, 18, GL_UNSIGNED_BYTE, rotor2);
+            stagger++;
+            if (stagger == 20)
+            {
+                stagger = 0;
+                index -= 3;
+                if (index < 18 * 3)
+                    index = 35 * 3;
+            }
+        }
+    glEnd();
+    glPopMatrix();
 }
 
 
@@ -487,156 +447,110 @@ void housing (void)
         -117,   95, 0,    //99  end     inner_outline
 
         // -Z ... add 100 to index: 100 through 199
-        -128,  120, -20,    //0   outer_outline
-        -109,  143, -20,    //1
-         -89,  160, -20,    //2
-         -65,  173, -20,    //3
-         -43,  182, -20,    //4
-         -24,  186, -20,    //5
-          -3,  189, -20,    //6
-           5,  189, -20,    //7   peak
-          21,  188, -20,    //8
-          38,  185, -20,    //9
-          62,  177, -20,    //10
-          84,  165, -20,    //11
-         101,  152, -20,    //12
-         115,  137, -20,    //13
-         128,  120, -20,    //14
-         138,  101, -20,    //15
-         146,   77, -20,    //16
-         150,   52, -20,    //17
-         150,  -50, -20,    //18  right side
-         145,  -78, -20,    //19
-         136, -103, -20,    //20
-         124, -124, -20,    //21
-         111, -140, -20,    //22
-          94, -156, -20,    //23
-          72, -170, -20,    //24
-          49, -180, -20,    //25
-          21, -186, -20,    //26
-           3, -187, -20,    //27  valley
-          -8, -187, -20,    //28
-         -36, -182, -20,    //29
-         -58, -175, -20,    //30
-         -68, -170, -20,    //31
-         -88, -158, -20,    //32
-        -113, -132, -20,    //33
-        -130, -109, -20,    //34
-        -136,  -95, -20,    //35
-        -140,  -85, -20,    //36
-        -142,  -75, -20,    //37
-        -144,  -65, -20,    //38
-        -145,  -55, -20,    //39
-        -146,  -50, -20,    //40
-        -146,   50, -20,    //41
-        -145,   55, -20,    //42
-        -144,   65, -20,    //43
-        -143,   75, -20,    //44
-        -141,   85, -20,    //45
-        -137,   95, -20,    //46
-        -132,  110, -20,    //47  end    outer_outline
+        -128,  120, -40,    //0   outer_outline
+        -109,  143, -40,    //1
+         -89,  160, -40,    //2
+         -65,  173, -40,    //3
+         -43,  182, -40,    //4
+         -24,  186, -40,    //5
+          -3,  189, -40,    //6
+           5,  189, -40,    //7   peak
+          21,  188, -40,    //8
+          38,  185, -40,    //9
+          62,  177, -40,    //10
+          84,  165, -40,    //11
+         101,  152, -40,    //12
+         115,  137, -40,    //13
+         128,  120, -40,    //14
+         138,  101, -40,    //15
+         146,   77, -40,    //16
+         150,   52, -40,    //17
+         150,  -50, -40,    //18  right side
+         145,  -78, -40,    //19
+         136, -103, -40,    //20
+         124, -124, -40,    //21
+         111, -140, -40,    //22
+          94, -156, -40,    //23
+          72, -170, -40,    //24
+          49, -180, -40,    //25
+          21, -186, -40,    //26
+           3, -187, -40,    //27  valley
+          -8, -187, -40,    //28
+         -36, -182, -40,    //29
+         -58, -175, -40,    //30
+         -68, -170, -40,    //31
+         -88, -158, -40,    //32
+        -113, -132, -40,    //33
+        -130, -109, -40,    //34
+        -136,  -95, -40,    //35
+        -140,  -85, -40,    //36
+        -142,  -75, -40,    //37
+        -144,  -65, -40,    //38
+        -145,  -55, -40,    //39
+        -146,  -50, -40,    //40
+        -146,   50, -40,    //41
+        -145,   55, -40,    //42
+        -144,   65, -40,    //43
+        -143,   75, -40,    //44
+        -141,   85, -40,    //45
+        -137,   95, -40,    //46
+        -132,  110, -40,    //47  end    outer_outline
 
-        -114,  104, -20,    //48  inner_outline
-         -98,  125, -20,    //49
-         -80,  141, -20,    //50
-         -63,  152, -20,    //51
-         -43,  162, -20,    //52
-         -20,  169, -20,    //53
-          -3,  171, -20,    //54  inner peak
-          15,  170, -20,    //55
-          37,  166, -20,    //56
-          56,  159, -20,    //57
-          77,  147, -20,    //58
-          93,  133, -20,    //59
-         108,  116, -20,    //60
-         119,   97, -20,    //61
-         127,   75, -20,    //62
-         131,   52, -20,    //63
-         131,   24, -20,    //64
-         129,   17, -20,    //65
-         127,    8, -20,    //66
-         127,   -3, -20,    //67
-         129,  -13, -20,    //68
-         131,  -22, -20,    //69
-         131,  -42, -20,    //70
-         130,  -61, -20,    //71
-         125,  -81, -20,    //72
-         115, -102, -20,    //73
-         103, -120, -20,    //74
-          88, -136, -20,    //75
-          69, -150, -20,    //76
-          46, -161, -20,    //77
-          26, -166, -20,    //78
-           4, -169, -20,    //79
-         -17, -167, -20,    //80
-         -39, -162, -20,    //80
-         -60, -153, -20,    //82
-         -78, -141, -20,    //83
-         -95, -125, -20,    //84
-        -108, -108, -20,    //85
-        -116,  -93, -20,    //86
-        -122,  -76, -20,    //87
-        -124,  -65, -20,    //88
-        -125,  -55, -20,    //89
-        -126,  -50, -20,    //90
-        -124,  -25, -20,    //91
-        -122,    0, -20,    //92
-        -124,   25, -20,    //93
-        -126,   50, -20,    //94
-        -125,   55, -20,    //95
-        -124,   65, -20,    //96
-        -123,   75, -20,    //97
-        -121,   85, -20,    //98
-        -117,   95, -20,    //99  end     inner_outline
+        -114,  104, -40,    //48  inner_outline
+         -98,  125, -40,    //49
+         -80,  141, -40,    //50
+         -63,  152, -40,    //51
+         -43,  162, -40,    //52
+         -20,  169, -40,    //53
+          -3,  171, -40,    //54  inner peak
+          15,  170, -40,    //55
+          37,  166, -40,    //56
+          56,  159, -40,    //57
+          77,  147, -40,    //58
+          93,  133, -40,    //59
+         108,  116, -40,    //60
+         119,   97, -40,    //61
+         127,   75, -40,    //62
+         131,   52, -40,    //63
+         131,   24, -40,    //64
+         129,   17, -40,    //65
+         127,    8, -40,    //66
+         127,   -3, -40,    //67
+         129,  -13, -40,    //68
+         131,  -22, -40,    //69
+         131,  -42, -40,    //70
+         130,  -61, -40,    //71
+         125,  -81, -40,    //72
+         115, -102, -40,    //73
+         103, -120, -40,    //74
+          88, -136, -40,    //75
+          69, -150, -40,    //76
+          46, -161, -40,    //77
+          26, -166, -40,    //78
+           4, -169, -40,    //79
+         -17, -167, -40,    //80
+         -39, -162, -40,    //80
+         -60, -153, -40,    //82
+         -78, -141, -40,    //83
+         -95, -125, -40,    //84
+        -108, -108, -40,    //85
+        -116,  -93, -40,    //86
+        -122,  -76, -40,    //87
+        -124,  -65, -40,    //88
+        -125,  -55, -40,    //89
+        -126,  -50, -40,    //90
+        -124,  -25, -40,    //91
+        -122,    0, -40,    //92
+        -124,   25, -40,    //93
+        -126,   50, -40,    //94
+        -125,   55, -40,    //95
+        -124,   65, -40,    //96
+        -123,   75, -40,    //97
+        -121,   85, -40,    //98
+        -117,   95, -40,    //99  end     inner_outline
     };
 
     glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
-
-    static GLubyte outline[] = {
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-        10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-        20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-        30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
-        40, 41, 42, 43, 44, 45, 46, 47, 0,
-    };
-
-    static GLubyte inner_outline[] = {
-        48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-        58, 59, 60, 61, 62, 63, 64, 65, 66, 67,
-        68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
-        78, 79, 80, 81, 82, 83, 84, 85, 86, 87,
-        88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
-        98, 99, 48,
-    };
-
-    static GLubyte outline2[] = {
-        100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
-        110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
-        120, 121, 122, 123, 124, 125, 126, 127, 128, 129,
-        130, 131, 132, 133, 134, 135, 136, 137, 138, 139,
-        140, 141, 142, 143, 144, 145, 146, 147, 100,
-    };
-
-    static GLubyte inner_outline2[] = {
-        148, 149, 150, 151, 152, 153, 154, 155, 156, 157,
-        158, 159, 160, 161, 162, 163, 164, 165, 166, 167,
-        168, 169, 170, 171, 172, 173, 174, 175, 176, 177,
-        178, 179, 180, 181, 182, 183, 184, 185, 186, 187,
-        188, 189, 190, 191, 192, 193, 194, 195, 196, 197,
-        198, 199, 148,
-    };
-
-    static GLsizei count[] = {
-        49, 53,
-        49, 53,
-    };
-
-    static GLvoid *indices[] = {
-        outline, inner_outline,
-        outline2, inner_outline2,
-    };
-
-    //glMultiDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_BYTE, indices, 4);
 
     static GLubyte surface_front[] = {
          0, 48,  1, 49,  2, 50,  3, 51,  4, 52,
@@ -666,16 +580,41 @@ void housing (void)
         146, 198, 147, 199, 100, 148,
     };
 
-    static GLvoid *indices2[] = {
-        surface_front,
-        surface_back,
-    };
-    static GLsizei count2[] = {
-        106,
-        106,
+    static GLubyte surface_outin[] = {
+        0, 100, 1, 101, 2, 102, 3, 103, 4, 104,
+        5, 105, 6, 106, 7, 107, 8, 108, 9, 109,
+        10, 110, 11, 111, 12, 112, 13, 113, 14, 114,
+        15, 115, 16, 116, 17, 117, 18, 118, 19, 119,
+        20, 120, 21, 121, 22, 122, 23, 123, 24, 124,
+        25, 125, 26, 126, 27, 127, 28, 128, 29, 129,
+        30, 130, 31, 131, 32, 132, 33, 133, 34, 134,
+        35, 135, 36, 136, 37, 137, 38, 138, 39, 139,
+        40, 140, 41, 141, 42, 142, 43, 143, 44, 144,
+        45, 145, 46, 146, 47, 147, 48, 148, 49, 149,
+        50, 150, 51, 151, 52, 152, 53, 153, 54, 154,
+        55, 155, 56, 156, 57, 157, 58, 158, 59, 159,
+        60, 160, 61, 161, 62, 162, 63, 163, 64, 164,
+        65, 165, 66, 166, 67, 167, 68, 168, 69, 169,
+        70, 170, 71, 171, 72, 172, 73, 173, 74, 174,
+        75, 175, 76, 176, 77, 177, 78, 178, 79, 179,
+        80, 180, 81, 181, 82, 182, 83, 183, 84, 184,
+        85, 185, 86, 186, 87, 187, 88, 188, 89, 189,
+        90, 190, 91, 191, 92, 192, 93, 193, 94, 194,
+        95, 195, 96, 196, 97, 197, 98, 198, 99, 199,
     };
 
-    glMultiDrawElements(GL_TRIANGLE_STRIP, count2, GL_UNSIGNED_BYTE, indices2, 2);
+    static GLvoid *indices[] = {
+        surface_front,
+        surface_back,
+        surface_outin,
+    };
+    static GLsizei count[] = {
+        106,
+        106,
+        200,
+    };
+
+    glMultiDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_BYTE, indices, 3);
 }
 
 
@@ -686,25 +625,25 @@ void housing (void)
  ****************************************************/
 void spark_plug (void)
 {
-    x_disk_surface(10.0, 0.0, 17.0, 5.0);
+    z_disk_surface(10.0, 0.0, 17.0, 5.0);
     glPushMatrix();
         glScalef(1.0, 5.0, 5.0);
         x_unit_circle(0.0);
         x_unit_circle(17.0);
     glPopMatrix();
-    x_disk_surface(12.0, 17.0, 23.0, 6.0);
+    z_disk_surface(12.0, 17.0, 23.0, 6.0);
     glPushMatrix();
         glScalef(1.0, 6.0, 6.0);
         x_unit_circle(17.0);
         x_unit_circle(23.0);
     glPopMatrix();
-    x_disk_surface(10.0, 23.0, 44.0, 5.0);
+    z_disk_surface(10.0, 23.0, 44.0, 5.0);
     glPushMatrix();
         glScalef(1.0, 5.0, 5.0);
         x_unit_circle(23.0);
         x_unit_circle(44.0);
     glPopMatrix();
-    x_disk_surface(8.0, 44.0, 60.0, 3.0);
+    z_disk_surface(8.0, 44.0, 60.0, 3.0);
     glPushMatrix();
         glScalef(1.0, 3.0, 3.0);
         x_unit_circle(44.0);

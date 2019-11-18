@@ -2,7 +2,7 @@
  *                  Project 4                       *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     16 Nov 2019                         *
+ *  Edited:     17 Nov 2019                         *
  ****************************************************
  * Draws the 3d animation of a Wankel rotary engine *
  * as well as a scene for the engine to be in.      *
@@ -20,8 +20,6 @@
 // Animation
 static clock_t RESET_TIME, ANIM_TIME = 0;
 static GLfloat FPS = 60.0;
-static GLfloat INTAKE_X = -223.0;
-static GLfloat EXHAUST_X = -203.0;
 static GLfloat ECC_SHFT_I = 0.0;
 static GLfloat ECC_SHFT_HEADING;
 static GLint ROTATION_SPEED = 3;
@@ -37,7 +35,7 @@ static GLfloat CAM_Z = 450;
 static GLfloat ZOOM = 25;
 static GLfloat DISTANCE;
 static GLfloat CAM_HEADING;
-static GLfloat CAM_I = 0.0;
+static GLfloat CAM_I = 90.0;
 
 void init (void)
 {
@@ -80,16 +78,16 @@ void draw_wankel (void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     // INTAKE
-//    glPushMatrix();
-//        glTranslatef(INTAKE_X, 77.0, 0.0);
-//        intake_exhaust();
-//    glPopMatrix();
-//
-//    // EXHAUST
-//    glPushMatrix();
-//        glTranslatef(EXHAUST_X, -76.0, 0.0);
-//        intake_exhaust();
-//    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(-160, 77.0, -20.0);
+        intake_exhaust();
+    glPopMatrix();
+
+    // EXHAUST
+    glPushMatrix();
+        glTranslatef(-160, -77.0, -20.0);
+        intake_exhaust();
+    glPopMatrix();
 
     // ROTOR
     ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
@@ -100,12 +98,20 @@ void draw_wankel (void)
         rotor();
     glPopMatrix();
 
+    // ECCENTRIC SHAFT
+    glPushMatrix();
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
+        glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
+        glScalef(1.65, 1.65, 1.0);
+        eccentric_shaft();
+    glPopMatrix();
+
     // PINION
     glPushMatrix();
         glScalef(30.0, 30.0, 1.0);
-        z_disk_surface(30.0, -20.0, 0.9);
-        outer_gear_outline(0.0);
-        outer_gear_outline(-20.0);
+        x_disk_surface(30.0, 0.0, -20.0, 0.9);
+        outer_gear_surface(0.0, 10);
+        outer_gear_surface(-20.0, 10);
         gear_teeth_outline(10, 0.0);
         gear_teeth_outline(10, -20.0);
     glPopMatrix();
@@ -115,9 +121,9 @@ void draw_wankel (void)
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3), 0.0, 0.0, 1.0);
         glScalef(60.0, 60.0, 1.0);
-        z_disk_surface(60.0, -20.0, 1.3);
-        inner_gear_outline(0.0);
-        inner_gear_outline(-20.0);
+        x_disk_surface(60.0, 0.0, -20.0, 1.3);
+        inner_gear_surface(0.0, 5);
+        inner_gear_surface(-20.0, 5);
         gear_teeth_outline(5, 0.0);
         gear_teeth_outline(5, -20.0);
     glPopMatrix();
@@ -128,7 +134,7 @@ void draw_wankel (void)
     // SPARK PLUGS
     glPushMatrix();
         // top plug
-        glTranslatef(129.0, 28.0, -10.0);
+        glTranslatef(129.0, 28.0, -20.0);
         spark_plug();
         if (RUN_ANIMATION == 1)
             if (0 < ECC_SHFT_I/3 && ECC_SHFT_I/3 < 10)
@@ -172,16 +178,6 @@ void idle (void)
         {
             RESET_TIME = RESET_TIME + (1.0/FPS) * CLOCKS_PER_SEC;
 
-            // INTAKE
-            INTAKE_X += INTAKE_EXHAUST_SPEED;
-            if (INTAKE_X > -191)
-                INTAKE_X = -223;
-
-            // EXHAUST
-            EXHAUST_X -= INTAKE_EXHAUST_SPEED;
-            if (EXHAUST_X < -235)
-                EXHAUST_X = -203;
-
             // ROTOR, CROWN GEAR, ECCENTRIC SHAFT, SPARK
             ECC_SHFT_I += (ROTATION_SPEED * 3);
             if (ECC_SHFT_I > (360 - ROTATION_SPEED * 3))
@@ -204,13 +200,11 @@ void menu_choice (int selection)
     if (selection == 1)
     {
         RUN_ANIMATION = 0;
-        INTAKE_X = -223.0;
-        EXHAUST_X = -203.0;
         ECC_SHFT_I = 0;
         CAM_X = 0;
         CAM_Y = 0;
         CAM_Z = 450;
-        CAM_I = 0.0;
+        CAM_I = 90.0;
         glutPostRedisplay();
     }
     // EXIT
