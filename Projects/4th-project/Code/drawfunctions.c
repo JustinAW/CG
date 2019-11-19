@@ -15,6 +15,26 @@
 
 const int SIDES = 360;
 
+static GLfloat silver_ambient[] = {0.2, 0.2, 0.2, 1.0};
+static GLfloat silver_diffuse[] = {0.3, 0.3, 0.3, 1.0};
+static GLfloat silver_specular[] = {1, 0.5, 0.5, 1.0};
+
+
+GLfloat sq (GLdouble x)
+{
+    return x * x;
+}
+
+
+void normalize (GLdouble *v)
+{
+    GLdouble n = sqrt(sq(v[0]) + sq(v[1]) + sq(v[2]));
+
+    v[0] /= n;
+    v[1] /= n;
+    v[2] /= n;
+}
+
 
 /****************************************************
  *              inner_gear_surface                  *
@@ -28,6 +48,7 @@ void inner_gear_surface (GLfloat depth, int gear_spacing)
         double heading;
         int counter = 0;
         int toggle = 1;
+        glNormal3d(0.0, 0.0, 1.0);
         for (int i = 0; i <= 360; i += 360 / SIDES)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
@@ -65,6 +86,7 @@ void outer_gear_surface (GLfloat depth, int gear_spacing)
         double heading;
         int counter = 0;
         int toggle = 1;
+        glNormal3d(0.0, 0.0, 1.0);
         for (int i = 0; i <= 360; i += 360 / SIDES)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
@@ -95,8 +117,9 @@ void outer_gear_surface (GLfloat depth, int gear_spacing)
  ****************************************************
  * Draws the outline of the teeth of a gear         *
  ****************************************************/
-void gear_teeth_outline (int gear_spacing)
+void gear_teeth_outline (int gear_spacing, int inner)
 {
+    GLdouble v[3], n[3];
     glBegin(GL_TRIANGLE_STRIP);
         double heading;
         int counter = 0;
@@ -106,13 +129,55 @@ void gear_teeth_outline (int gear_spacing)
             heading = i * 3.1415926535897932384626433832795 / 180;
             if (toggle)
             {
-                glVertex3d(cos(heading), sin(heading), 0);
-                glVertex3d(cos(heading), sin(heading), -20);
+                n[0] = v[0] = (cos(heading));
+                n[1] = v[1] = (sin(heading));
+                n[2] = v[2] = (0);
+                if (inner == 1)
+                {
+                    n[0] *= -1;
+                    n[1] *= -1;
+                }
+                normalize(n);
+                glNormal3dv(n);
+                glVertex3dv(v);
+
+                n[0] = v[0] = (cos(heading));
+                n[1] = v[1] = (sin(heading));
+                n[2] = v[2] = (-20);
+                if (inner == 1)
+                {
+                    n[0] *= -1;
+                    n[1] *= -1;
+                }
+                normalize(n);
+                glNormal3dv(n);
+                glVertex3dv(v);
             }
             else
             {
-                glVertex3d(cos(heading) * 0.9, sin(heading) * 0.9, 0);
-                glVertex3d(cos(heading) * 0.9, sin(heading) * 0.9, -20);
+                n[0] = v[0] = (cos(heading) * 0.9);
+                n[1] = v[1] = (sin(heading) * 0.9);
+                n[2] = v[2] = (0);
+                if (inner == 1)
+                {
+                    n[0] *= -1;
+                    n[1] *= -1;
+                }
+                normalize(n);
+                glNormal3dv(n);
+                glVertex3dv(v);
+
+                n[0] = v[0] = (cos(heading) * 0.9);
+                n[1] = v[1] = (sin(heading) * 0.9);
+                n[2] = v[2] = (-20);
+                if (inner == 1)
+                {
+                    n[0] *= -1;
+                    n[1] *= -1;
+                }
+                normalize(n);
+                glNormal3dv(n);
+                glVertex3dv(v);
             }
 
             counter += 1;
@@ -154,12 +219,19 @@ void unit_circle (GLfloat depth)
  ****************************************************/
 void x_unit_circle (GLfloat x)
 {
+    GLdouble v[3], n[3];
     glBegin(GL_POLYGON);
         double heading;
         for (int i = 0; i < 360; i += 360 / SIDES)
         {
             heading = i * 3.1415926535897932384626433832795 / 180;
-            glVertex3d(x, cos(heading), sin(heading));
+
+            n[0] = v[0] = (x);
+            n[1] = v[1] = (cos(heading));
+            n[2] = v[2] = (sin(heading));
+            normalize(n);
+            glNormal3dv(n);
+            glVertex3dv(v);
         }
     glEnd();
 }
@@ -173,13 +245,26 @@ void x_unit_circle (GLfloat x)
  ****************************************************/
 void x_disk_surface (GLfloat divisions, GLfloat z1, GLfloat z2, GLfloat scale)
 {
+    GLdouble v[3], n[3];
     glBegin(GL_TRIANGLE_STRIP);
         double heading;
         for (int i = 0; i <= 360; i += 360 / divisions)
         {
             heading = i * M_PI / 180;
-            glVertex3d(cos(heading) * scale, sin(heading) * scale, z1);
-            glVertex3d(cos(heading) * scale, sin(heading) * scale, z2);
+
+            n[0] = v[0] = (cos(heading) * scale);
+            n[1] = v[1] = (sin(heading) * scale);
+            n[2] = v[2] = (z1);
+            normalize(n);
+            glNormal3dv(n);
+            glVertex3dv(v);
+
+            n[0] = v[0] = (cos(heading) * scale);
+            n[1] = v[1] = (sin(heading) * scale);
+            n[2] = v[2] = (z2);
+            normalize(n);
+            glNormal3dv(n);
+            glVertex3dv(v);
         }
     glEnd();
 }
@@ -193,13 +278,26 @@ void x_disk_surface (GLfloat divisions, GLfloat z1, GLfloat z2, GLfloat scale)
  ****************************************************/
 void z_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
 {
+    GLdouble v[3], n[3];
     glBegin(GL_TRIANGLE_STRIP);
-        double heading;
+        GLdouble heading;
         for (int i = 0; i <= 360; i += 360 / divisions)
         {
             heading = i * M_PI / 180;
-            glVertex3d(x1, cos(heading) * scale, sin(heading) * scale);
-            glVertex3d(x2, cos(heading) * scale, sin(heading) * scale);
+
+            n[0] = v[0] = (x1);
+            n[1] = v[1] = (cos(heading) * scale);
+            n[2] = v[2] = (sin(heading) * scale);
+            normalize(n);
+            glNormal3dv(n);
+            glVertex3dv(v);
+
+            n[0] = v[0] = (x2);
+            n[1] = v[1] = (cos(heading) * scale);
+            n[2] = v[2] = (sin(heading) * scale);
+            normalize(n);
+            glNormal3dv(n);
+            glVertex3dv(v);
         }
     glEnd();
 }
@@ -212,6 +310,12 @@ void z_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
  ****************************************************/
 void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
 {
+    GLdouble v[3], n[3];
+    glMaterialfv(GL_FRONT, GL_AMBIENT, silver_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, silver_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, 90.0);
+
     glPushMatrix();
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
@@ -224,7 +328,15 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 6))
                 {
                     heading = i * 3.1415926535897932384626433832795 / 180;
-                    glVertex3d(cos(heading), sin(heading), -20);
+
+                    n[0] = v[0] = (cos(heading));
+                    n[1] = v[1] = (sin(heading));
+                    n[2] = v[2] = (-20);
+                    normalize(n);
+                    glNormal3dv(n);
+                    glVertex3dv(v);
+
+                    glNormal3d(0.0, 0.0, 1.0);  // front in rotor
                     glVertex3d(0.0, 0.0, -20.0);
                 }
             glEnd();
@@ -232,7 +344,15 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 6))
                 {
                     heading = i * 3.1415926535897932384626433832795 / 180;
-                    glVertex3d(cos(heading), sin(heading), -80);
+
+                    n[0] = v[0] = (cos(heading));
+                    n[1] = v[1] = (sin(heading));
+                    n[2] = v[2] = (-80);
+                    normalize(n);
+                    glNormal3dv(n);
+                    glVertex3dv(v);
+
+                    glNormal3d(0.0, 0.0, -1.0); // back in rotor
                     glVertex3d(0.0, 0.0, -80.0);
                 }
             glEnd();
@@ -241,16 +361,24 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
     glPushMatrix();
         glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
         glScalef(30.0, 30.0, 1.0);
-        x_disk_surface(30.0, 10.0, -20.0, 0.88);
-        x_disk_surface(30.0, 40.0, 10.0, 0.44);
-        x_disk_surface(30.0, -80, -120, 0.88);
+        x_disk_surface(30.0, 10.0, -20.0, 0.7);
+        x_disk_surface(30.0, 40.0, 10.0, 0.4);
+        x_disk_surface(30.0, -80, -120, 0.7);
         glPushMatrix();
-            glScalef(0.88, 0.88, 1.0);
+            glScalef(0.7, 0.7, 1.0);
             glBegin(GL_TRIANGLE_STRIP);
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
                 {
                     heading = i * 3.1415926535897932384626433832795 / 180;
-                    glVertex3d(cos(heading), sin(heading), 10);
+
+                    n[0] = v[0] = (cos(heading));
+                    n[1] = v[1] = (sin(heading));
+                    n[2] = v[2] = (10.0);
+                    normalize(n);
+                    glNormal3dv(n);
+                    glVertex3dv(v);
+
+                    glNormal3d(0.0, 0.0, 1.0);  // one back from front
                     glVertex3d(0.0, 0.0, 10.0);
                 }
             glEnd();
@@ -258,18 +386,34 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
                 {
                     heading = i * 3.1415926535897932384626433832795 / 180;
-                    glVertex3d(cos(heading), sin(heading), -120);
+
+                    n[0] = v[0] = (cos(heading));
+                    n[1] = v[1] = (sin(heading));
+                    n[2] = v[2] = (-120);
+                    normalize(n);
+                    glNormal3dv(n);
+                    glVertex3dv(v);
+
+                    glNormal3d(0.0, 0.0, -1.0); // backmost
                     glVertex3d(0.0, 0.0, -120.0);
                 }
             glEnd();
         glPopMatrix();
         glPushMatrix();
-            glScalef(0.44, 0.44, 1.0);
+            glScalef(0.4, 0.4, 1.0);
             glBegin(GL_TRIANGLE_STRIP);
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 24))
                 {
                     heading = i * 3.1415926535897932384626433832795 / 180;
-                    glVertex3d(cos(heading), sin(heading), 40);
+
+                    n[0] = v[0] = (cos(heading));
+                    n[1] = v[1] = (sin(heading));
+                    n[2] = v[2] = (40.0);
+                    normalize(n);
+                    glNormal3dv(n);
+                    glVertex3dv(v);
+
+                    glNormal3d(0.0, 0.0, 1.0);  // frontmost
                     glVertex3d(0.0, 0.0, 40.0);
                 }
             glEnd();
@@ -648,8 +792,8 @@ void housing (void)
     };
 
     static GLubyte surface_outin[] = {
-        0, 100, 1, 101, 2, 102, 3, 103, 4, 104,
-        5, 105, 6, 106, 7, 107, 8, 108, 9, 109,
+         0, 100,  1, 101,  2, 102,  3, 103,  4, 104,
+         5, 105,  6, 106,  7, 107,  8, 108,  9, 109,
         10, 110, 11, 111, 12, 112, 13, 113, 14, 114,
         15, 115, 16, 116, 17, 117, 18, 118, 19, 119,
         20, 120, 21, 121, 22, 122, 23, 123, 24, 124,
@@ -657,17 +801,18 @@ void housing (void)
         30, 130, 31, 131, 32, 132, 33, 133, 34, 134,
         35, 135, 36, 136, 37, 137, 38, 138, 39, 139,
         40, 140, 41, 141, 42, 142, 43, 143, 44, 144,
-        45, 145, 46, 146, 47, 147, 48, 148, 49, 149,
-        50, 150, 51, 151, 52, 152, 53, 153, 54, 154,
-        55, 155, 56, 156, 57, 157, 58, 158, 59, 159,
-        60, 160, 61, 161, 62, 162, 63, 163, 64, 164,
-        65, 165, 66, 166, 67, 167, 68, 168, 69, 169,
-        70, 170, 71, 171, 72, 172, 73, 173, 74, 174,
-        75, 175, 76, 176, 77, 177, 78, 178, 79, 179,
-        80, 180, 81, 181, 82, 182, 83, 183, 84, 184,
-        85, 185, 86, 186, 87, 187, 88, 188, 89, 189,
-        90, 190, 91, 191, 92, 192, 93, 193, 94, 194,
-        95, 195, 96, 196, 97, 197, 98, 198, 99, 199,
+        45, 145, 46, 146, 47, 147,  0, 100, 48, 148,
+        49, 149, 50, 150, 51, 151, 52, 152, 53, 153,
+        54, 154, 55, 155, 56, 156, 57, 157, 58, 158,
+        59, 159, 60, 160, 61, 161, 62, 162, 63, 163,
+        64, 164, 65, 165, 66, 166, 67, 167, 68, 168,
+        69, 169, 70, 170, 71, 171, 72, 172, 73, 173,
+        74, 174, 75, 175, 76, 176, 77, 177, 78, 178,
+        79, 179, 80, 180, 81, 181, 82, 182, 83, 183,
+        84, 184, 85, 185, 86, 186, 87, 187, 88, 188,
+        89, 189, 90, 190, 91, 191, 92, 192, 93, 193,
+        94, 194, 95, 195, 96, 196, 97, 197, 98, 198,
+        99, 199, 48, 148,
     };
 
     static GLvoid *indices[] = {
@@ -678,7 +823,7 @@ void housing (void)
     static GLsizei count[] = {
         106,
         106,
-        200,
+        204,
     };
 
     glMultiDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_BYTE, indices, 3);

@@ -36,12 +36,41 @@ static GLfloat DISTANCE;
 static GLfloat CAM_HEADING;
 static GLfloat CAM_I = 90.0;
 
+// Lights
+//static GLfloat light0_position[] = {0, 0, 300, 1};
+static GLfloat light0_position[] = {300.0, 0.0, 300.0, 1.0};
+//static GLfloat light0_direction[] = {0, 0, -1};
+static GLfloat light0_direction[] = {-1.0, 0.0, -1.0};
+
 void init (void)
 {
     glLoadIdentity();
+
+    // Light Property Arrays
+    GLfloat global_ambient[] = {0.2, 0.2, 0.2, 1.0};
+        // LIGHT0 (Overhead light)
+    GLfloat light0_ambient[] = {0.0, 0.0, 0.0, 1.0};
+    GLfloat light0_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light0_specular[] = {0.3, 0.3, 0.3, 1.0};
+
+    // Light Property Settings
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+        // LIGHT0 (Overhead light)
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_LIGHT0);
+
     glEnableClientState(GL_VERTEX_ARRAY);
-    glClearColor (1.0, 1.0, 1.0, 0.0);
-    glShadeModel (GL_FLAT);
+    glClearColor(0.5, 0.5, 0.5, 0.0);
+    glShadeModel(GL_SMOOTH);
 }
 
 
@@ -70,12 +99,28 @@ void reshape (int w, int h)
  ****************************************************/
 void draw_wankel (void)
 {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glColor3f(0.0, 0.0, 0.0);
 
 // BACK BUFFER drawing ========================================================
     glDrawBuffer(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    // LIGHTS
+    glPushMatrix();
+        glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+        glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0_direction);
+        glLighti(GL_LIGHT0, GL_SPOT_EXPONENT, 10.0);
+        glLighti(GL_LIGHT0, GL_SPOT_CUTOFF, 50.0);
+    glPopMatrix();
+
+    //light fixture
+    glPushMatrix();
+        glTranslatef(0, 300, 0);
+        glScalef(20, 20, 20);
+        unit_circle(0);
+        x_unit_circle(0);
+    glPopMatrix();
 
     // INTAKE
     glPushMatrix();
@@ -109,7 +154,7 @@ void draw_wankel (void)
         x_disk_surface(30.0, 0.0, -20.0, 0.9);
         outer_gear_surface(0.0, 10);
         outer_gear_surface(-20.0, 10);
-        gear_teeth_outline(10);
+        gear_teeth_outline(10, 0);
     glPopMatrix();
 
     // CROWN GEAR
@@ -120,7 +165,7 @@ void draw_wankel (void)
         x_disk_surface(60.0, 0.0, -20.0, 1.3);
         inner_gear_surface(0.0, 5);
         inner_gear_surface(-20.0, 5);
-        gear_teeth_outline(5);
+        gear_teeth_outline(5, 1);
     glPopMatrix();
 
     // HOUSING
@@ -231,9 +276,17 @@ void toggle_animation (int selection)
 }
 
 
-GLfloat sq (GLfloat x)
+void light_control (int selection)
 {
-    return x * x;
+    // LIGHT 0
+    if (selection == 1)
+    {
+        if(glIsEnabled(GL_LIGHT0))
+            glDisable(GL_LIGHT0);
+        else
+            glEnable(GL_LIGHT0);
+        glutPostRedisplay();
+    }
 }
 
 
@@ -361,8 +414,11 @@ int main (int argc, char** argv)
     int submenu = glutCreateMenu(toggle_animation);
     glutAddMenuEntry("Start Animation", 1);
     glutAddMenuEntry("Stop Animation", 2);
+    int lightmenu = glutCreateMenu(light_control);
+    glutAddMenuEntry("Toggle Light 0 (overhead)", 1);
     glutCreateMenu(menu_choice);
     glutAddSubMenu("Toggle Animation", submenu);
+    glutAddSubMenu("Light Control", lightmenu);
     glutAddMenuEntry("Reset", 1);
     glutAddMenuEntry("Exit", 2);
     glutAttachMenu (GLUT_RIGHT_BUTTON);

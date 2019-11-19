@@ -1,13 +1,17 @@
 #ifndef DRAWFUNCTIONS_H
 #define DRAWFUNCTIONS_H
 
+GLfloat sq (GLdouble);
+
+void normalize (GLdouble *);
+
 void glMultiDrawElements (GLenum, const GLsizei *, GLenum, const GLvoid *, GLsizei);
 
 void inner_gear_surface (GLfloat, int);
 
 void outer_gear_surface (GLfloat, int);
 
-void gear_teeth_outline (int);
+void gear_teeth_outline (int, int);
 
 void unit_circle (GLfloat);
 
