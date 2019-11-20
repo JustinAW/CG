@@ -15,9 +15,44 @@
 
 const int SIDES = 360;
 
-static GLfloat silver_ambient[] = {0.2, 0.2, 0.2, 1.0};
-static GLfloat silver_diffuse[] = {0.3, 0.3, 0.3, 1.0};
-static GLfloat silver_specular[] = {1, 0.5, 0.5, 1.0};
+static GLfloat silver_ambient[] = {0.29225, 0.29225, 0.29225, 1.0};
+static GLfloat silver_diffuse[] = {0.50754, 0.50754, 0.50754, 1.0};
+static GLfloat silver_specular[] = {0.508273, 0.508273, 0.508273, 1.0};
+static GLfloat silver_shine = 51.2;
+
+// polished silver
+static GLfloat psilver_ambient[] = {0.23125, 0.23125, 0.23125, 1.0};
+static GLfloat psilver_diffuse[] = {0.2775, 0.2775, 0.2775, 1.0};
+static GLfloat psilver_specular[] = {0.773911, 0.773911, 0.773911, 1.0};
+static GLfloat psilver_shine = 89.6;
+
+static GLfloat tin_ambient[] = {0.105882, 0.058824, 0.113725, 1.0};
+static GLfloat tin_diffuse[] = {0.427451, 0.470588, 0.541176, 1.0};
+static GLfloat tin_specular[] = {0.333333, 0.333333, 0.521569, 1.0};
+static GLfloat tin_shine = 9.84615;
+
+static GLfloat chrome_ambient[] = {0.25, 0.25, 0.25, 1.0};
+static GLfloat chrome_diffuse[] = {0.4, 0.4, 0.4, 1.0};
+static GLfloat chrome_specular[] = {0.774597, 0.774597, 0.774597, 1.0};
+static GLfloat chrome_shine = 76.8;
+
+// polished chrome
+static GLfloat pchrome_ambient[] = {0.2, 0.2, 0.2, 1.0};
+static GLfloat pchrome_diffuse[] = {0.3, 0.3, 0.3, 1.0};
+static GLfloat pchrome_specular[] = {0.874597, 0.874597, 0.874597, 1.0};
+static GLfloat pchrome_shine = 86.8;
+
+// obsidian
+static GLfloat obi_ambient[] = {0.05375, 0.05, 0.06625, 0.82};
+static GLfloat obi_diffuse[] = {0.18275, 0.17, 0.22525, 0.82};
+static GLfloat obi_specular[] = {0.332741, 0.328634, 0.346435, 0.82};
+static GLfloat obi_shine = 38.4;
+
+// white plastic
+static GLfloat wplastic_ambient[] = {0.3, 0.3, 0.3, 1.0};
+static GLfloat wplastic_diffuse[] = {0.78, 0.78, 0.78, 1.0};
+static GLfloat wplastic_specular[] = {0.80, 0.80, 0.80, 1.0};
+static GLfloat wplastic_shine = 32.0;
 
 
 GLfloat sq (GLdouble x)
@@ -44,6 +79,11 @@ void normalize (GLdouble *v)
  ****************************************************/
 void inner_gear_surface (GLfloat depth, int gear_spacing)
 {
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  chrome_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  chrome_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, chrome_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, chrome_shine);
+
     glBegin(GL_TRIANGLE_STRIP);
         double heading;
         int counter = 0;
@@ -51,7 +91,7 @@ void inner_gear_surface (GLfloat depth, int gear_spacing)
         glNormal3d(0.0, 0.0, 1.0);
         for (int i = 0; i <= 360; i += 360 / SIDES)
         {
-            heading = i * 3.1415926535897932384626433832795 / 180;
+            heading = i * M_PI / 180;
             glVertex3d(cos(heading) * 1.3, sin(heading) * 1.3, depth);
 
             if (toggle)
@@ -82,6 +122,11 @@ void inner_gear_surface (GLfloat depth, int gear_spacing)
  ****************************************************/
 void outer_gear_surface (GLfloat depth, int gear_spacing)
 {
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  chrome_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  chrome_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, chrome_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, chrome_shine);
+
     glBegin(GL_TRIANGLE_STRIP);
         double heading;
         int counter = 0;
@@ -89,7 +134,7 @@ void outer_gear_surface (GLfloat depth, int gear_spacing)
         glNormal3d(0.0, 0.0, 1.0);
         for (int i = 0; i <= 360; i += 360 / SIDES)
         {
-            heading = i * 3.1415926535897932384626433832795 / 180;
+            heading = i * M_PI / 180;
             glVertex3d(cos(heading) * 0.7, sin(heading) * 0.7, depth);
 
             if (toggle)
@@ -120,13 +165,18 @@ void outer_gear_surface (GLfloat depth, int gear_spacing)
 void gear_teeth_outline (int gear_spacing, int inner)
 {
     GLdouble v[3], n[3];
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  chrome_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  chrome_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, chrome_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, chrome_shine);
+
     glBegin(GL_TRIANGLE_STRIP);
         double heading;
         int counter = 0;
         int toggle = 1;
         for (int i = 0; i <= 360; i += 360 / SIDES)
         {
-            heading = i * 3.1415926535897932384626433832795 / 180;
+            heading = i * M_PI / 180;
             if (toggle)
             {
                 n[0] = v[0] = (cos(heading));
@@ -203,7 +253,7 @@ void unit_circle (GLfloat depth)
         double heading;
         for (int i = 0; i < 360; i += 360 / SIDES)
         {
-            heading = i * 3.1415926535897932384626433832795 / 180;
+            heading = i * M_PI / 180;
             glVertex3d(cos(heading), sin(heading), depth);
         }
     glEnd();
@@ -224,7 +274,7 @@ void x_unit_circle (GLfloat x)
         double heading;
         for (int i = 0; i < 360; i += 360 / SIDES)
         {
-            heading = i * 3.1415926535897932384626433832795 / 180;
+            heading = i * M_PI / 180;
 
             n[0] = v[0] = (x);
             n[1] = v[1] = (cos(heading));
@@ -311,10 +361,10 @@ void z_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
 void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
 {
     GLdouble v[3], n[3];
-    glMaterialfv(GL_FRONT, GL_AMBIENT, silver_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, silver_diffuse);
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  silver_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  silver_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
-    glMateriali(GL_FRONT, GL_SHININESS, 90.0);
+    glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
 
     glPushMatrix();
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
@@ -327,7 +377,7 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
                 double heading;
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 6))
                 {
-                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    heading = i * M_PI / 180;
 
                     n[0] = v[0] = (cos(heading));
                     n[1] = v[1] = (sin(heading));
@@ -343,7 +393,7 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
             glBegin(GL_TRIANGLE_STRIP);
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 6))
                 {
-                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    heading = i * M_PI / 180;
 
                     n[0] = v[0] = (cos(heading));
                     n[1] = v[1] = (sin(heading));
@@ -369,7 +419,7 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
             glBegin(GL_TRIANGLE_STRIP);
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
                 {
-                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    heading = i * M_PI / 180;
 
                     n[0] = v[0] = (cos(heading));
                     n[1] = v[1] = (sin(heading));
@@ -385,7 +435,7 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
             glBegin(GL_TRIANGLE_STRIP);
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
                 {
-                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    heading = i * M_PI / 180;
 
                     n[0] = v[0] = (cos(heading));
                     n[1] = v[1] = (sin(heading));
@@ -404,7 +454,7 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
             glBegin(GL_TRIANGLE_STRIP);
                 for (int i = 0; i <= 360; i += 360 / (SIDES / 24))
                 {
-                    heading = i * 3.1415926535897932384626433832795 / 180;
+                    heading = i * M_PI / 180;
 
                     n[0] = v[0] = (cos(heading));
                     n[1] = v[1] = (sin(heading));
@@ -429,6 +479,11 @@ void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
  ****************************************************/
 void intake_exhaust (void)
 {
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  obi_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  obi_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, obi_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, obi_shine);
+
     z_disk_surface(20.0, 0.0, 35.0, 15.0);
 }
 
@@ -440,47 +495,53 @@ void intake_exhaust (void)
  ****************************************************/
 void rotor (void)
 {
-    static GLfloat vertexValues[] = {
-        -76.0,  44.0,   0.0,    //0
-        -51.0,  53.0,   0.0,    //1
-        -26.0,  58.0,   0.0,    //2
-          0.0,  60.0,   0.0,    //3
-         26.0,  58.0,   0.0,    //4
-         51.0,  53.0,   0.0,    //5
-         76.0,  44.0,   0.0,    //6
-         72.0,  20.0,   0.0,    //7
-         65.0,  -2.0,   0.0,    //8
-         55.0, -25.0,   0.0,    //9
-         41.0, -46.0,   0.0,    //10
-         24.0, -67.0,   0.0,    //11
-          0.0, -88.0,   0.0,    //12
-        -24.0, -67.0,   0.0,    //13
-        -41.0, -46.0,   0.0,    //14
-        -55.0, -25.0,   0.0,    //15
-        -65.0,  -2.0,   0.0,    //16
-        -72.0,  20.0,   0.0,    //17
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  psilver_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  psilver_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, psilver_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, psilver_shine);
 
-        -76.0,  44.0, -60.0,    //18
-        -51.0,  53.0, -60.0,    //19
-        -26.0,  58.0, -60.0,    //20
-          0.0,  60.0, -60.0,    //21
-         26.0,  58.0, -60.0,    //22
-         51.0,  53.0, -60.0,    //23
-         76.0,  44.0, -60.0,    //24
-         72.0,  20.0, -60.0,    //25
-         65.0,  -2.0, -60.0,    //26
-         55.0, -25.0, -60.0,    //27
-         41.0, -46.0, -60.0,    //28
-         24.0, -67.0, -60.0,    //29
-          0.0, -88.0, -60.0,    //30
-        -24.0, -67.0, -60.0,    //31
-        -41.0, -46.0, -60.0,    //32
-        -55.0, -25.0, -60.0,    //33
-        -65.0,  -2.0, -60.0,    //34
-        -72.0,  20.0, -60.0,    //35
+    static GLfloat vertexValues[] = {
+        -76.0,  44.0,   0.0, -0.216,  0.368, 0.333,    //0
+        -51.0,  53.0,   0.0, -0.178,  0.641, 0.333,    //1
+        -26.0,  58.0,   0.0, -0.040,  0.641, 0.333,    //2
+          0.0,  60.0,   0.0,  0.000,  0.641, 0.333,    //3
+         26.0,  58.0,   0.0,  0.091,  0.659, 0.333,    //4
+         51.0,  53.0,   0.0,  0.046,  0.413, 0.333,    //5
+         76.0,  44.0,   0.0,  0.216,  0.368, 0.333,    //6
+         72.0,  20.0,   0.0,  0.011, -0.046, 0.333,    //7
+         65.0,  -2.0,   0.0,  0.012, -0.032, 0.333,    //8
+         55.0, -25.0,   0.0,  0.028, -0.052, 0.333,    //9
+         41.0, -46.0,   0.0,  0.018, -0.025, 0.333,    //10
+         24.0, -67.0,   0.0,  0.040, -0.041, 0.333,    //11
+          0.0, -88.0,   0.0,  0.000, -0.333, 0.333,    //12
+        -24.0, -67.0,   0.0, -0.040, -0.041, 0.333,    //13
+        -41.0, -46.0,   0.0, -0.018, -0.025, 0.333,    //14
+        -55.0, -25.0,   0.0, -0.028, -0.052, 0.333,    //15
+        -65.0,  -2.0,   0.0, -0.012, -0.032, 0.333,    //16
+        -72.0,  20.0,   0.0, -0.011, -0.046, 0.333,    //17
+
+        -76.0,  44.0, -60.0, -0.216,  0.368, -0.333,    //18
+        -51.0,  53.0, -60.0, -0.178,  0.641, -0.333,    //19
+        -26.0,  58.0, -60.0, -0.040,  0.641, -0.333,    //20
+          0.0,  60.0, -60.0,  0.000,  0.641, -0.333,    //21
+         26.0,  58.0, -60.0,  0.091,  0.659, -0.333,    //22
+         51.0,  53.0, -60.0,  0.046,  0.413, -0.333,    //23
+         76.0,  44.0, -60.0,  0.216,  0.368, -0.333,    //24
+         72.0,  20.0, -60.0,  0.011, -0.046, -0.333,    //25
+         65.0,  -2.0, -60.0,  0.012, -0.032, -0.333,    //26
+         55.0, -25.0, -60.0,  0.028, -0.052, -0.333,    //27
+         41.0, -46.0, -60.0,  0.018, -0.025, -0.333,    //28
+         24.0, -67.0, -60.0,  0.040, -0.041, -0.333,    //29
+          0.0, -88.0, -60.0,  0.000, -0.333, -0.333,    //30
+        -24.0, -67.0, -60.0, -0.040, -0.041, -0.333,    //31
+        -41.0, -46.0, -60.0, -0.018, -0.025, -0.333,    //32
+        -55.0, -25.0, -60.0, -0.028, -0.052, -0.333,    //33
+        -65.0,  -2.0, -60.0, -0.012, -0.032, -0.333,    //34
+        -72.0,  20.0, -60.0, -0.011, -0.046, -0.333,    //35
     };
 
-    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
+    glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
+    glNormalPointer(GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
     static GLubyte rotor_perim[] = {
         0, 18, 1, 19, 2, 20, 3, 21, 4, 22,
@@ -499,47 +560,70 @@ void rotor (void)
 
     glMultiDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_BYTE, indices, 1);
 
+    GLdouble v[3], n[3];
     glPushMatrix();
         glBegin(GL_TRIANGLE_STRIP);
             double heading;
             int stagger = 0;
-            int index = 7 * 3;
+            int index = 7 * 6;
+            n[0] = 0;
+            n[1] = 0;
+            n[2] = 1;
             for (int i = 0; i <= 360; i += 360 / SIDES)
             {
-                heading = i * 3.1415926535897932384626433832795 / 180;
-                glVertex3d(cos(heading) * 47.32, sin(heading) * 47.32, 0);
-                glVertex3d(vertexValues[index],
-                        vertexValues[index+1],
-                        vertexValues[index+2]);
+                heading = i * M_PI / 180;
+
+                v[0] = (cos(heading) * 47.32);
+                v[1] = (sin(heading) * 47.32);
+                v[2] = (0);
+                glNormal3dv(n);
+                glVertex3dv(v);
+
+                v[0] = (vertexValues[index]);
+                v[1] = (vertexValues[index+1]);
+                v[2] = (vertexValues[index+2]);
+                glNormal3dv(n);
+                glVertex3dv(v);
 
                 stagger++;
                 if (stagger == 20)
                 {
                     stagger = 0;
-                    index -= 3;
+                    index -= 6;
                     if (index < 0)
-                        index = 17 * 3;
+                        index = 17 * 6;
                 }
             }
         glEnd();
         glBegin(GL_TRIANGLE_STRIP);
             stagger = 0;
-            index = 25 * 3;
+            index = 25 * 6;
+            n[0] = 0;
+            n[1] = 0;
+            n[2] = -1;
             for (int i = 0; i <= 360; i += 360 / SIDES)
             {
-                heading = i * 3.1415926535897932384626433832795 / 180;
-                glVertex3d(cos(heading) * 47.32, sin(heading) * 47.32, -60);
-                glVertex3d(vertexValues[index],
-                        vertexValues[index+1],
-                        vertexValues[index+2]);
+                heading = i * M_PI / 180;
+
+                v[0] = (cos(heading) * 47.32);
+                v[1] = (sin(heading) * 47.32);
+                v[2] = (-60);
+                glNormal3dv(n);
+                glVertex3dv(v);
+
+                v[0] = (vertexValues[index]);
+                v[1] = (vertexValues[index+1]);
+                v[2] = (vertexValues[index+2]);
+                glNormal3dv(n);
+                glVertex3dv(v);
 
                 stagger++;
                 if (stagger == 20)
                 {
                     stagger = 0;
-                    index -= 3;
-                    if (index < 18 * 3)
-                        index = 35 * 3;
+                    index -= 6;
+                    if (index < 18 * 6)
+                        index = 35 * 6;
                 }
             }
         glEnd();
@@ -554,214 +638,220 @@ void rotor (void)
  ****************************************************/
 void housing (void)
 {
-    static GLfloat vertexValues[] = {
-        -128,  120, 0,    //0   outer_outline
-        -109,  143, 0,    //1
-         -89,  160, 0,    //2
-         -65,  173, 0,    //3
-         -43,  182, 0,    //4
-         -24,  186, 0,    //5
-          -3,  189, 0,    //6
-           5,  189, 0,    //7   peak
-          21,  188, 0,    //8
-          38,  185, 0,    //9
-          62,  177, 0,    //10
-          84,  165, 0,    //11
-         101,  152, 0,    //12
-         115,  137, 0,    //13
-         128,  120, 0,    //14
-         138,  101, 0,    //15
-         146,   77, 0,    //16
-         150,   52, 0,    //17
-         150,  -50, 0,    //18  right side
-         145,  -78, 0,    //19
-         136, -103, 0,    //20
-         124, -124, 0,    //21
-         111, -140, 0,    //22
-          94, -156, 0,    //23
-          72, -170, 0,    //24
-          49, -180, 0,    //25
-          21, -186, 0,    //26
-           3, -187, 0,    //27  valley
-          -8, -187, 0,    //28
-         -36, -182, 0,    //29
-         -58, -175, 0,    //30
-         -68, -170, 0,    //31
-         -88, -158, 0,    //32
-        -113, -132, 0,    //33
-        -130, -109, 0,    //34
-        -136,  -95, 0,    //35
-        -140,  -85, 0,    //36
-        -142,  -75, 0,    //37
-        -144,  -65, 0,    //38
-        -145,  -55, 0,    //39
-        -146,  -50, 0,    //40
-        -146,   50, 0,    //41
-        -145,   55, 0,    //42
-        -144,   65, 0,    //43
-        -143,   75, 0,    //44
-        -141,   85, 0,    //45
-        -137,   95, 0,    //46
-        -132,  110, 0,    //47  end    outer_outline
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  pchrome_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  pchrome_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, pchrome_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, pchrome_shine);
 
-        -114,  104, 0,    //48  inner_outline
-         -98,  125, 0,    //49
-         -80,  141, 0,    //50
-         -63,  152, 0,    //51
-         -43,  162, 0,    //52
-         -20,  169, 0,    //53
-          -3,  171, 0,    //54  inner peak
-          15,  170, 0,    //55
-          37,  166, 0,    //56
-          56,  159, 0,    //57
-          77,  147, 0,    //58
-          93,  133, 0,    //59
-         108,  116, 0,    //60
-         119,   97, 0,    //61
-         127,   75, 0,    //62
-         131,   52, 0,    //63
-         131,   24, 0,    //64
-         129,   17, 0,    //65
-         127,    8, 0,    //66
-         127,   -3, 0,    //67
-         129,  -13, 0,    //68
-         131,  -22, 0,    //69
-         131,  -42, 0,    //70
-         130,  -61, 0,    //71
-         125,  -81, 0,    //72
-         115, -102, 0,    //73
-         103, -120, 0,    //74
-          88, -136, 0,    //75
-          69, -150, 0,    //76
-          46, -161, 0,    //77
-          26, -166, 0,    //78
-           4, -169, 0,    //79
-         -17, -167, 0,    //80
-         -39, -162, 0,    //80
-         -60, -153, 0,    //82
-         -78, -141, 0,    //83
-         -95, -125, 0,    //84
-        -108, -108, 0,    //85
-        -116,  -93, 0,    //86
-        -122,  -76, 0,    //87
-        -124,  -65, 0,    //88
-        -125,  -55, 0,    //89
-        -126,  -50, 0,    //90
-        -124,  -25, 0,    //91
-        -122,    0, 0,    //92
-        -124,   25, 0,    //93
-        -126,   50, 0,    //94
-        -125,   55, 0,    //95
-        -124,   65, 0,    //96
-        -123,   75, 0,    //97
-        -121,   85, 0,    //98
-        -117,   95, 0,    //99  end     inner_outline
+    static GLfloat vertexValues[] = {
+        -128,  120, 0, 0, 0, 1,    //0   outer_outline
+        -109,  143, 0, 0, 0, 1,    //1
+         -89,  160, 0, 0, 0, 1,    //2
+         -65,  173, 0, 0, 0, 1,    //3
+         -43,  182, 0, 0, 0, 1,    //4
+         -24,  186, 0, 0, 0, 1,    //5
+          -3,  189, 0, 0, 0, 1,    //6
+           5,  189, 0, 0, 1, 1,    //7   peak
+          21,  188, 0, 0, 1, 1,    //8
+          38,  185, 0, 0, 1, 1,    //9
+          62,  177, 0, 0, 1, 1,    //10
+          84,  165, 0, 0, 1, 1,    //11
+         101,  152, 0, 0, 1, 1,    //12
+         115,  137, 0, 0, 1, 1,    //13
+         128,  120, 0, 1, 1, 1,    //14
+         138,  101, 0, 1, 1, 1,    //15
+         146,   77, 0, 1, 0, 1,    //16
+         150,   52, 0, 1, 0, 1,    //17
+         150,  -50, 0, 1, 0, 1,    //18  right side
+         145,  -78, 0, 1, 0, 1,    //19
+         136, -103, 0, 1, 0, 1,    //20
+         124, -124, 0, 1, 0, 1,    //21
+         111, -140, 0, 1, 0, 1,    //22
+          94, -156, 0, 1, 0, 1,    //23
+          72, -170, 0, 0, 0, 1,    //24
+          49, -180, 0, 0, 0, 1,    //25
+          21, -186, 0, 0, 0, 1,    //26
+           3, -187, 0, 0, 0, 1,    //27  valley
+          -8, -187, 0, 0, 0, 1,    //28
+         -36, -182, 0, 0, 0, 1,    //29
+         -58, -175, 0, 0, 0, 1,    //30
+         -68, -170, 0, 0, 0, 1,    //31
+         -88, -158, 0, 0, 0, 1,    //32
+        -113, -132, 0, 0, 0, 1,    //33
+        -130, -109, 0, 0, 0, 1,    //34
+        -136,  -95, 0, 0, 0, 1,    //35
+        -140,  -85, 0, 0, 0, 1,    //36
+        -142,  -75, 0, 0, 0, 1,    //37
+        -144,  -65, 0, 0, 0, 1,    //38
+        -145,  -55, 0, 0, 0, 1,    //39
+        -146,  -50, 0, 0, 0, 1,    //40
+        -146,   50, 0, 0, 0, 1,    //41
+        -145,   55, 0, 0, 0, 1,    //42
+        -144,   65, 0, 0, 0, 1,    //43
+        -143,   75, 0, 0, 0, 1,    //44
+        -141,   85, 0, 0, 0, 1,    //45
+        -137,   95, 0, 0, 0, 1,    //46
+        -132,  110, 0, 0, 0, 1,    //47  end    outer_outline
+
+        -114,  104, 0, 0, 0, 1,    //48  inner_outline
+         -98,  125, 0, 0, 0, 1,    //49
+         -80,  141, 0, 0, 0, 1,    //50
+         -63,  152, 0, 0, 0, 1,    //51
+         -43,  162, 0, 0, 0, 1,    //52
+         -20,  169, 0, 0, 0, 1,    //53
+          -3,  171, 0, 0, 0, 1,    //54  inner peak
+          15,  170, 0, 0, 0, 1,    //55
+          37,  166, 0, 0, 0, 1,    //56
+          56,  159, 0, 0, 0, 1,    //57
+          77,  147, 0, 0, 0, 1,    //58
+          93,  133, 0, 0, 0, 1,    //59
+         108,  116, 0, 0, 0, 1,    //60
+         119,   97, 0, 0, 0, 1,    //61
+         127,   75, 0, 0, 0, 1,    //62
+         131,   52, 0, 0, 0, 1,    //63
+         131,   24, 0, 0, 0, 1,    //64
+         129,   17, 0, 0, 0, 1,    //65
+         127,    8, 0, 0, 0, 1,    //66
+         127,   -3, 0, 0, 0, 1,    //67
+         129,  -13, 0, 0, 0, 1,    //68
+         131,  -22, 0, 0, 0, 1,    //69
+         131,  -42, 0, 0, 0, 1,    //70
+         130,  -61, 0, 0, 0, 1,    //71
+         125,  -81, 0, 0, 0, 1,    //72
+         115, -102, 0, 0, 0, 1,    //73
+         103, -120, 0, 0, 0, 1,    //74
+          88, -136, 0, 0, 0, 1,    //75
+          69, -150, 0, 0, 0, 1,    //76
+          46, -161, 0, 0, 0, 1,    //77
+          26, -166, 0, 0, 0, 1,    //78
+           4, -169, 0, 0, 0, 1,    //79
+         -17, -167, 0, 0, 0, 1,    //80
+         -39, -162, 0, 0, 0, 1,    //80
+         -60, -153, 0, 0, 0, 1,    //82
+         -78, -141, 0, 0, 0, 1,    //83
+         -95, -125, 0, 0, 0, 1,    //84
+        -108, -108, 0, 0, 0, 1,    //85
+        -116,  -93, 0, 0, 0, 1,    //86
+        -122,  -76, 0, 0, 0, 1,    //87
+        -124,  -65, 0, 0, 0, 1,    //88
+        -125,  -55, 0, 0, 0, 1,    //89
+        -126,  -50, 0, 0, 0, 1,    //90
+        -124,  -25, 0, 0, 0, 1,    //91
+        -122,    0, 0, 0, 0, 1,    //92
+        -124,   25, 0, 0, 0, 1,    //93
+        -126,   50, 0, 0, 0, 1,    //94
+        -125,   55, 0, 0, 0, 1,    //95
+        -124,   65, 0, 0, 0, 1,    //96
+        -123,   75, 0, 0, 0, 1,    //97
+        -121,   85, 0, 0, 0, 1,    //98
+        -117,   95, 0, 0, 0, 1,    //99  end     inner_outline
 
         // -Z ... add 100 to index: 100 through 199
-        -128,  120, -60,    //0   outer_outline
-        -109,  143, -60,    //1
-         -89,  160, -60,    //2
-         -65,  173, -60,    //3
-         -43,  182, -60,    //4
-         -24,  186, -60,    //5
-          -3,  189, -60,    //6
-           5,  189, -60,    //7   peak
-          21,  188, -60,    //8
-          38,  185, -60,    //9
-          62,  177, -60,    //10
-          84,  165, -60,    //11
-         101,  152, -60,    //12
-         115,  137, -60,    //13
-         128,  120, -60,    //14
-         138,  101, -60,    //15
-         146,   77, -60,    //16
-         150,   52, -60,    //17
-         150,  -50, -60,    //18  right side
-         145,  -78, -60,    //19
-         136, -103, -60,    //20
-         124, -124, -60,    //21
-         111, -140, -60,    //22
-          94, -156, -60,    //23
-          72, -170, -60,    //24
-          49, -180, -60,    //25
-          21, -186, -60,    //26
-           3, -187, -60,    //27  valley
-          -8, -187, -60,    //28
-         -36, -182, -60,    //29
-         -58, -175, -60,    //30
-         -68, -170, -60,    //31
-         -88, -158, -60,    //32
-        -113, -132, -60,    //33
-        -130, -109, -60,    //34
-        -136,  -95, -60,    //35
-        -140,  -85, -60,    //36
-        -142,  -75, -60,    //37
-        -144,  -65, -60,    //38
-        -145,  -55, -60,    //39
-        -146,  -50, -60,    //40
-        -146,   50, -60,    //41
-        -145,   55, -60,    //42
-        -144,   65, -60,    //43
-        -143,   75, -60,    //44
-        -141,   85, -60,    //45
-        -137,   95, -60,    //46
-        -132,  110, -60,    //47  end    outer_outline
+        -128,  120, -60, 0, 0, -1,    //0   outer_outline
+        -109,  143, -60, 0, 0, -1,    //1
+         -89,  160, -60, 0, 0, -1,    //2
+         -65,  173, -60, 0, 0, -1,    //3
+         -43,  182, -60, 0, 0, -1,    //4
+         -24,  186, -60, 0, 0, -1,    //5
+          -3,  189, -60, 0, 0, -1,    //6
+           5,  189, -60, 0, 0, -1,    //7   peak
+          21,  188, -60, 0, 0, -1,    //8
+          38,  185, -60, 0, 0, -1,    //9
+          62,  177, -60, 0, 0, -1,    //10
+          84,  165, -60, 0, 0, -1,    //11
+         101,  152, -60, 0, 0, -1,    //12
+         115,  137, -60, 0, 0, -1,    //13
+         128,  120, -60, 0, 0, -1,    //14
+         138,  101, -60, 0, 0, -1,    //15
+         146,   77, -60, 0, 0, -1,    //16
+         150,   52, -60, 0, 0, -1,    //17
+         150,  -50, -60, 0, 0, -1,    //18  right side
+         145,  -78, -60, 0, 0, -1,    //19
+         136, -103, -60, 0, 0, -1,    //20
+         124, -124, -60, 0, 0, -1,    //21
+         111, -140, -60, 0, 0, -1,    //22
+          94, -156, -60, 0, 0, -1,    //23
+          72, -170, -60, 0, 0, -1,    //24
+          49, -180, -60, 0, 0, -1,    //25
+          21, -186, -60, 0, 0, -1,    //26
+           3, -187, -60, 0, 0, -1,    //27  valley
+          -8, -187, -60, 0, 0, -1,    //28
+         -36, -182, -60, 0, 0, -1,    //29
+         -58, -175, -60, 0, 0, -1,    //30
+         -68, -170, -60, 0, 0, -1,    //31
+         -88, -158, -60, 0, 0, -1,    //32
+        -113, -132, -60, 0, 0, -1,    //33
+        -130, -109, -60, 0, 0, -1,    //34
+        -136,  -95, -60, 0, 0, -1,    //35
+        -140,  -85, -60, 0, 0, -1,    //36
+        -142,  -75, -60, 0, 0, -1,    //37
+        -144,  -65, -60, 0, 0, -1,    //38
+        -145,  -55, -60, 0, 0, -1,    //39
+        -146,  -50, -60, 0, 0, -1,    //40
+        -146,   50, -60, 0, 0, -1,    //41
+        -145,   55, -60, 0, 0, -1,    //42
+        -144,   65, -60, 0, 0, -1,    //43
+        -143,   75, -60, 0, 0, -1,    //44
+        -141,   85, -60, 0, 0, -1,    //45
+        -137,   95, -60, 0, 0, -1,    //46
+        -132,  110, -60, 0, 0, -1,    //47  end    outer_outline
 
-        -114,  104, -60,    //48  inner_outline
-         -98,  125, -60,    //49
-         -80,  141, -60,    //50
-         -63,  152, -60,    //51
-         -43,  162, -60,    //52
-         -20,  169, -60,    //53
-          -3,  171, -60,    //54  inner peak
-          15,  170, -60,    //55
-          37,  166, -60,    //56
-          56,  159, -60,    //57
-          77,  147, -60,    //58
-          93,  133, -60,    //59
-         108,  116, -60,    //60
-         119,   97, -60,    //61
-         127,   75, -60,    //62
-         131,   52, -60,    //63
-         131,   24, -60,    //64
-         129,   17, -60,    //65
-         127,    8, -60,    //66
-         127,   -3, -60,    //67
-         129,  -13, -60,    //68
-         131,  -22, -60,    //69
-         131,  -42, -60,    //70
-         130,  -61, -60,    //71
-         125,  -81, -60,    //72
-         115, -102, -60,    //73
-         103, -120, -60,    //74
-          88, -136, -60,    //75
-          69, -150, -60,    //76
-          46, -161, -60,    //77
-          26, -166, -60,    //78
-           4, -169, -60,    //79
-         -17, -167, -60,    //80
-         -39, -162, -60,    //80
-         -60, -153, -60,    //82
-         -78, -141, -60,    //83
-         -95, -125, -60,    //84
-        -108, -108, -60,    //85
-        -116,  -93, -60,    //86
-        -122,  -76, -60,    //87
-        -124,  -65, -60,    //88
-        -125,  -55, -60,    //89
-        -126,  -50, -60,    //90
-        -124,  -25, -60,    //91
-        -122,    0, -60,    //92
-        -124,   25, -60,    //93
-        -126,   50, -60,    //94
-        -125,   55, -60,    //95
-        -124,   65, -60,    //96
-        -123,   75, -60,    //97
-        -121,   85, -60,    //98
-        -117,   95, -60,    //99  end     inner_outline
+        -114,  104, -60, 0, 0, -1,    //48  inner_outline
+         -98,  125, -60, 0, 0, -1,    //49
+         -80,  141, -60, 0, 0, -1,    //50
+         -63,  152, -60, 0, 0, -1,    //51
+         -43,  162, -60, 0, 0, -1,    //52
+         -20,  169, -60, 0, 0, -1,    //53
+          -3,  171, -60, 0, 0, -1,    //54  inner peak
+          15,  170, -60, 0, 0, -1,    //55
+          37,  166, -60, 0, 0, -1,    //56
+          56,  159, -60, 0, 0, -1,    //57
+          77,  147, -60, 0, 0, -1,    //58
+          93,  133, -60, 0, 0, -1,    //59
+         108,  116, -60, 0, 0, -1,    //60
+         119,   97, -60, 0, 0, -1,    //61
+         127,   75, -60, 0, 0, -1,    //62
+         131,   52, -60, 0, 0, -1,    //63
+         131,   24, -60, 0, 0, -1,    //64
+         129,   17, -60, 0, 0, -1,    //65
+         127,    8, -60, 0, 0, -1,    //66
+         127,   -3, -60, 0, 0, -1,    //67
+         129,  -13, -60, 0, 0, -1,    //68
+         131,  -22, -60, 0, 0, -1,    //69
+         131,  -42, -60, 0, 0, -1,    //70
+         130,  -61, -60, 0, 0, -1,    //71
+         125,  -81, -60, 0, 0, -1,    //72
+         115, -102, -60, 0, 0, -1,    //73
+         103, -120, -60, 0, 0, -1,    //74
+          88, -136, -60, 0, 0, -1,    //75
+          69, -150, -60, 0, 0, -1,    //76
+          46, -161, -60, 0, 0, -1,    //77
+          26, -166, -60, 0, 0, -1,    //78
+           4, -169, -60, 0, 0, -1,    //79
+         -17, -167, -60, 0, 0, -1,    //80
+         -39, -162, -60, 0, 0, -1,    //80
+         -60, -153, -60, 0, 0, -1,    //82
+         -78, -141, -60, 0, 0, -1,    //83
+         -95, -125, -60, 0, 0, -1,    //84
+        -108, -108, -60, 0, 0, -1,    //85
+        -116,  -93, -60, 0, 0, -1,    //86
+        -122,  -76, -60, 0, 0, -1,    //87
+        -124,  -65, -60, 0, 0, -1,    //88
+        -125,  -55, -60, 0, 0, -1,    //89
+        -126,  -50, -60, 0, 0, -1,    //90
+        -124,  -25, -60, 0, 0, -1,    //91
+        -122,    0, -60, 0, 0, -1,    //92
+        -124,   25, -60, 0, 0, -1,    //93
+        -126,   50, -60, 0, 0, -1,    //94
+        -125,   55, -60, 0, 0, -1,    //95
+        -124,   65, -60, 0, 0, -1,    //96
+        -123,   75, -60, 0, 0, -1,    //97
+        -121,   85, -60, 0, 0, -1,    //98
+        -117,   95, -60, 0, 0, -1,    //99  end     inner_outline
     };
 
-    glVertexPointer(3, GL_FLOAT, 3*sizeof(GLfloat), &vertexValues[0]);
+    glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
+    glNormalPointer(GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
     static GLubyte surface_front[] = {
          0, 48,  1, 49,  2, 50,  3, 51,  4, 52,
@@ -837,29 +927,52 @@ void housing (void)
  ****************************************************/
 void spark_plug (void)
 {
+    glMaterialfv(GL_FRONT, GL_AMBIENT, silver_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, silver_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, 90.0);
+
     z_disk_surface(10.0, 0.0, 17.0, 5.0);
     glPushMatrix();
         glScalef(1.0, 5.0, 5.0);
         x_unit_circle(0.0);
         x_unit_circle(17.0);
     glPopMatrix();
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, silver_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, silver_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, 90.0);
+
     z_disk_surface(12.0, 17.0, 23.0, 6.0);
     glPushMatrix();
         glScalef(1.0, 6.0, 6.0);
         x_unit_circle(17.0);
         x_unit_circle(23.0);
     glPopMatrix();
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  wplastic_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  wplastic_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, wplastic_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, wplastic_shine);
+
     z_disk_surface(10.0, 23.0, 44.0, 5.0);
     glPushMatrix();
         glScalef(1.0, 5.0, 5.0);
         x_unit_circle(23.0);
         x_unit_circle(44.0);
     glPopMatrix();
-    z_disk_surface(8.0, 44.0, 60.0, 3.0);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  obi_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  obi_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, obi_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, obi_shine);
+
+    z_disk_surface(8.0, 44.0, 52.0, 3.0);
     glPushMatrix();
         glScalef(1.0, 3.0, 3.0);
         x_unit_circle(44.0);
-        x_unit_circle(60.0);
+        x_unit_circle(52.0);
     glPopMatrix();
 }
 
