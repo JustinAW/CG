@@ -21,6 +21,17 @@ GLubyte tex1[] =     {255, 0, 0, 255,
                       0, 0, 255, 255,
                       0, 0, 255, 255};
 
+void keyboard (unsigned char key, int x, int y)
+{
+    switch(key){
+        case 27:
+            exit(0);
+            break;
+        default:
+            break;
+    }
+}
+
 
 int main (int argc, char** argv)
 {
@@ -32,6 +43,7 @@ int main (int argc, char** argv)
     glutReshapeFunc(reshape);
     init ();
     glutDisplayFunc (display);
+    glutKeyboardFunc(keyboard);
     glutMainLoop ();
     return 0;
 }
@@ -63,7 +75,10 @@ void display (void)
     glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri (GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri (GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage1D (GL_TEXTURE_1D, 0, GL_RGBA, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex1); 
+
+    // target, level, internalFormat, width, border, format, type, texels
+    glTexImage1D (GL_TEXTURE_1D, 0, GL_BGRA, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex1); 
+
     glEnable(GL_TEXTURE_1D);
     glBegin(GL_LINES);
         glTexCoord1f(0.0);

@@ -20,6 +20,18 @@ void buildTexture (void);
 GLubyte tex[8][8][4]; //Note: Could use 1D array, but easier to conceptualize as 
                       //2D array with 4 values per texel
 
+void keyboard (unsigned char key, int x, int y)
+{
+    switch(key){
+        case 27:
+            exit(0);
+            break;
+        default:
+            break;
+    }
+}
+
+
 int main (int argc, char** argv)
 {
     glutInit (&argc, argv);
@@ -30,6 +42,7 @@ int main (int argc, char** argv)
     glutReshapeFunc(reshape);
     init ();
     glutDisplayFunc (display);
+    glutKeyboardFunc(keyboard);
     glutMainLoop ();
     return 0;
 }
