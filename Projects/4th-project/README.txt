@@ -2,7 +2,8 @@ Justin Weigle
 CG Project 4
 Wankel Rotary Engine
 
-Now with UPDATED ZOOMING that isn't awful!
+Now with UPDATED ZOOMING that isn't awful! And rotating that doesn't act
+unpredictably!
 
 CAMERA CONTROLS have been implemented using the keyboard rather than the menu.
 Camera controls are as follows:
@@ -13,6 +14,13 @@ Camera controls are as follows:
 
     E/e -> Zoom in
     Q/q -> Zoom out
+
+SPOTLIGHT CONTROLS have also been implemented using the keyboard.
+Spotlight controls are as follows:
+    UP_ARROW    -> Move spotlight up
+    DOWN_ARROW  -> Move spotlight down
+    LEFT_ARROW  -> Move spotlight left
+    RIGHT_ARROW -> Move spotlight right
 
 MAKEFILE FUNCTIONALITY
     make            -compiles (outputs executable named "rotary")

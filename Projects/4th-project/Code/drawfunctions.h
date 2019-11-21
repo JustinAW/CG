@@ -8,6 +8,8 @@ GLfloat sq (GLdouble);
 
 void normalize (GLdouble *);
 
+void unit_square (void);
+
 void unit_cube (void);
 
 void inner_gear_surface (GLfloat, int);
@@ -43,5 +45,7 @@ void table (void);
 void toolbox (void);
 
 void overhead_light (void);
+
+void flashlight (void);
 
 #endif

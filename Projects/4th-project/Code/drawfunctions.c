@@ -2,7 +2,7 @@
  *                drawfunctions.c                   *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     18 Nov 2019                         *
+ *  Edited:     21 Nov 2019                         *
  ****************************************************
  * Contains the functions for drawing the parts of  *
  * a Wankel rotary engine in 3d                     *
@@ -69,13 +69,27 @@ static GLfloat wood_diffuse[] = {0.4, 0.2168, 0.1036, 1.0};
 static GLfloat wood_specular[] = {0.393548, 0.271906, 0.166721, 1.0};
 static GLfloat wood_shine = 5.0;
 
+static GLfloat flashlight_emission[] = {0.91, 0.71, 0.48, 1.0};
+static GLfloat zero_emission[] = {0.0, 0.0, 0.0, 1.0};
+static GLfloat spark_emission[] = {1.0, 0.97, 0.52, 1.0};
 
+
+/****************************************************
+ *                       sq                         *
+ ****************************************************
+ * squares a number                                 *
+ ****************************************************/
 GLfloat sq (GLdouble x)
 {
     return x * x;
 }
 
 
+/****************************************************
+ *                    normalize                     *
+ ****************************************************
+ * Normalizes a vector                              *
+ ****************************************************/
 void normalize (GLdouble *v)
 {
     GLdouble n = sqrt(sq(v[0]) + sq(v[1]) + sq(v[2]));
@@ -86,6 +100,22 @@ void normalize (GLdouble *v)
 }
 
 
+void unit_square (void)
+{
+    glBegin(GL_QUADS);
+        glVertex3d(0,0,0);
+        glVertex3d(0,1,0);
+        glVertex3d(1,1,0);
+        glVertex3d(1,0,0);
+    glEnd();
+}
+
+
+/****************************************************
+ *                    unit_cube                     *
+ ****************************************************
+ * Draws a length 1 cube with origin at 0,0,0       *
+ ****************************************************/
 void unit_cube (void)
 {
     static GLfloat vertexValues[] = {
@@ -1073,8 +1103,10 @@ void sparks (void)
         0, 2, 4, 6, 8, 10, 12, 14, 16,
     };
 
+    glMaterialfv(GL_FRONT, GL_EMISSION, spark_emission);
     glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_BYTE, spark_tips);
     glDrawElements(GL_POLYGON, 9, GL_UNSIGNED_BYTE, spark_body);
+    glMaterialfv(GL_FRONT, GL_EMISSION, zero_emission);
 }
 
 
@@ -1171,6 +1203,11 @@ void toolbox (void)
 }
 
 
+/****************************************************
+ *                overhead_light                    *
+ ****************************************************
+ * Draws an overhead light to put a light source in *
+ ****************************************************/
 void overhead_light (void)
 {
     glPushMatrix();
@@ -1178,13 +1215,50 @@ void overhead_light (void)
         glRotatef(90, 0, 0, 1);
         glPushMatrix();
             glScalef(70, 30, 30);
-            z_disk_surface(20.0, 0, 1, 1.0);
+            z_disk_surface(20, 0, 1, 1);
             x_unit_circle(1);
         glPopMatrix();
         glPushMatrix();
             glTranslatef(70, 0, 0);
             glScalef(300, 3, 3);
-            z_disk_surface(20.0, 0, 1, 1.0);
+            z_disk_surface(20, 0, 1, 1);
+        glPopMatrix();
+    glPopMatrix();
+}
+
+
+/****************************************************
+ *                flashlight                        *
+ ****************************************************
+ * Draws a flashlight on the table                  *
+ ****************************************************/
+void flashlight (void)
+{
+    glPushMatrix();
+        glMaterialfv(GL_FRONT, GL_AMBIENT,  tin_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,  tin_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, tin_specular);
+        glMateriali(GL_FRONT, GL_SHININESS, tin_shine);
+        glTranslatef(250, -170, 0);
+        glRotatef(45, 0, 1, 0);
+        glRotatef(-3, 0, 0, 1);
+        glPushMatrix();
+            glScalef(110, 10, 10);
+            z_disk_surface(20, 0, 1, 1);
+            x_unit_circle(1);
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(-30, 0, 0);
+            glScalef(30, 15, 15);
+            z_disk_surface(20, 0, 1, 1);
+            x_unit_circle(1);
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(-55, 0, 0);
+            glScalef(30, 14.8, 14.8);
+            glMaterialfv(GL_FRONT, GL_EMISSION, flashlight_emission);
+            x_unit_circle(1);
+            glMaterialfv(GL_FRONT, GL_EMISSION, zero_emission);
         glPopMatrix();
     glPopMatrix();
 }
