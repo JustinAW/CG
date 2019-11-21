@@ -36,7 +36,7 @@ static GLfloat CAM_ANGLE_X = 0;
 static GLfloat CAM_ANGLE_Y = 0;
 
 // Lights
-static GLfloat light0_position[] = {0.0, 300.0, 0.0, 1.0};
+static GLfloat light0_position[] = {0.0, 600.0, 0.0, 1.0};
 static GLfloat light0_direction[] = {0.0, -1.0, 0.0};
 
 void init (void)
@@ -67,7 +67,7 @@ void init (void)
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.5, 0.5, 0.5, 0.0);
     glShadeModel(GL_SMOOTH);
 }
 
@@ -113,7 +113,7 @@ void draw_wankel (void)
 
     //light fixture
     glPushMatrix();
-        glTranslatef(0, 300, 0);
+        glTranslatef(0, 600, 0);
         glScalef(20, 20, 20);
         unit_circle(0);
         x_unit_circle(0);
