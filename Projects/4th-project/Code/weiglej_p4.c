@@ -32,12 +32,11 @@ static GLfloat CAM_X = 0;
 static GLfloat CAM_Y = 0;
 static GLfloat CAM_Z = 500;
 static GLfloat ZOOM = 25;
-static GLfloat DISTANCE;
-static GLfloat CAM_HEADING;
-static GLfloat CAM_I = 90.0;
+static GLfloat CAM_ANGLE_X = 0;
+static GLfloat CAM_ANGLE_Y = 0;
 
 // Lights
-static GLfloat light0_position[] = {50.0, 300.0, 0.0, 1.0};
+static GLfloat light0_position[] = {0.0, 300.0, 0.0, 1.0};
 static GLfloat light0_direction[] = {0.0, -1.0, 0.0};
 
 void init (void)
@@ -109,8 +108,7 @@ void draw_wankel (void)
     glPushMatrix();
         glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
         glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0_direction);
-        glLighti(GL_LIGHT0, GL_SPOT_EXPONENT, 10.0);
-//        glLighti(GL_LIGHT0, GL_SPOT_CUTOFF, 50.0);
+        glLighti(GL_LIGHT0, GL_SPOT_EXPONENT, 50.0);
     glPopMatrix();
 
     //light fixture
@@ -197,6 +195,8 @@ void display (void)
 {
     glPushMatrix();
         gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glRotatef(CAM_ANGLE_X, 0, 1, 0);
+        glRotatef(CAM_ANGLE_Y, 1, 0, 0);
         draw_wankel();
     glPopMatrix();
     glutSwapBuffers();
@@ -243,7 +243,8 @@ void menu_choice (int selection)
         CAM_X = 0;
         CAM_Y = 0;
         CAM_Z = 500;
-        CAM_I = 90.0;
+        CAM_ANGLE_X = 0;
+        CAM_ANGLE_Y = 0;
         glutPostRedisplay();
     }
     // EXIT
@@ -275,6 +276,11 @@ void toggle_animation (int selection)
 }
 
 
+/****************************************************
+ *              light_control                       *
+ ****************************************************
+ * Submenu options for turning lights on and off    *
+ ****************************************************/
 void light_control (int selection)
 {
     // LIGHT 0
@@ -289,10 +295,15 @@ void light_control (int selection)
 }
 
 
+/****************************************************
+ *              get_magnitude_cam                   *
+ ****************************************************
+ * Gets the magnitude of the camera's normal vector *
+ * - used in keyboard                               *
+ ****************************************************/
 GLfloat get_magnitude_cam (void)
 {
-    GLfloat m = sqrt(sq(CAM_X) + sq(CAM_Y) + sq(CAM_Z));
-    return m;
+     return sqrt(sq(CAM_X) + sq(CAM_Y) + sq(CAM_Z));
 }
 
 
@@ -310,7 +321,7 @@ void keyboard (unsigned char key, int x, int y)
         case 'E': case 'e':
             if ((CAM_X == 0.0) && (CAM_Y == 0.0) && (CAM_Z == 0.0))
             {
-                printf("Camera is at center of model, zoom out\n");
+                printf("Full zoom, zoom out... if you want to\n");
                 glutPostRedisplay();
                 break;
             }
@@ -336,58 +347,30 @@ void keyboard (unsigned char key, int x, int y)
             break;
         // ROTATE CAMERA LEFT
         case 'A': case 'a':
-            DISTANCE = sqrt(
-                      pow((CAM_X - 0.0), 2)
-                    + pow((CAM_Z - 0.0), 2)
-                    );
-            CAM_I += 15;
-            if (CAM_I >= 360)
-                CAM_I = 0;
-            CAM_HEADING = CAM_I * M_PI / 180;
-            CAM_X = cos(CAM_HEADING) * DISTANCE;
-            CAM_Z = sin(CAM_HEADING) * DISTANCE;
+            CAM_ANGLE_X += 5;
+            if (CAM_ANGLE_X >= 360)
+                CAM_ANGLE_X = 0;
             glutPostRedisplay();
             break;
         // ROTATE CAMERA RIGHT
         case 'D': case 'd':
-            DISTANCE = sqrt(
-                      pow((CAM_X - 0.0), 2)
-                    + pow((CAM_Z - 0.0), 2)
-                    );
-            CAM_I -= 15;
-            if (CAM_I <= 0)
-                CAM_I = 360;
-            CAM_HEADING = CAM_I * M_PI / 180;
-            CAM_X = cos(CAM_HEADING) * DISTANCE;
-            CAM_Z = sin(CAM_HEADING) * DISTANCE;
+            CAM_ANGLE_X -= 5;
+            if (CAM_ANGLE_X <= 0)
+                CAM_ANGLE_X = 360;
             glutPostRedisplay();
             break;
         // ROTATE CAMERA AROUND X CLOCKWISE
         case 'W': case 'w':
-            DISTANCE = sqrt(
-                      pow((CAM_Y - 0.0), 2)
-                    + pow((CAM_Z - 0.0), 2)
-                    );
-            CAM_I -= 15;
-            if (CAM_I <= 0)
-                CAM_I = 360;
-            CAM_HEADING = CAM_I * M_PI / 180;
-            CAM_Y = cos(CAM_HEADING) * DISTANCE;
-            CAM_Z = sin(CAM_HEADING) * DISTANCE;
+            CAM_ANGLE_Y += 5;
+            if(CAM_ANGLE_Y >= 360)
+                CAM_ANGLE_Y = 0;
             glutPostRedisplay();
             break;
         // ROTATE CAMERA AROUND X COUNTER CLOCKWISE
         case 'S': case 's':
-            DISTANCE = sqrt(
-                      pow((CAM_Y - 0.0), 2)
-                    + pow((CAM_Z - 0.0), 2)
-                    );
-            CAM_I += 15;
-            if (CAM_I >= 360)
-                CAM_I = 0;
-            CAM_HEADING = CAM_I * M_PI / 180;
-            CAM_Y = cos(CAM_HEADING) * DISTANCE;
-            CAM_Z = sin(CAM_HEADING) * DISTANCE;
+            CAM_ANGLE_Y -= 5;
+            if (CAM_ANGLE_Y <= 0)
+                CAM_ANGLE_Y = 360;
             glutPostRedisplay();
             break;
         default:
@@ -405,7 +388,6 @@ int main (int argc, char** argv)
     glutCreateWindow (argv[0]);
     init ();
 
-//    printf("OpenGL version: %s\n", glGetString(GL_VERSION));
     // make cursor visible during recording
     glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
 
@@ -413,8 +395,10 @@ int main (int argc, char** argv)
     int submenu = glutCreateMenu(toggle_animation);
     glutAddMenuEntry("Start Animation", 1);
     glutAddMenuEntry("Stop Animation", 2);
+
     int lightmenu = glutCreateMenu(light_control);
     glutAddMenuEntry("Toggle Light 0 (overhead)", 1);
+
     glutCreateMenu(menu_choice);
     glutAddSubMenu("Toggle Animation", submenu);
     glutAddSubMenu("Light Control", lightmenu);
