@@ -1211,6 +1211,10 @@ void toolbox (void)
 void overhead_light (void)
 {
     glPushMatrix();
+        glMaterialfv(GL_FRONT, GL_AMBIENT,  psilver_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,  psilver_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, psilver_specular);
+        glMateriali(GL_FRONT, GL_SHININESS, psilver_shine);
         glTranslatef(-250, 450, 0);
         glRotatef(90, 0, 0, 1);
         glPushMatrix();
