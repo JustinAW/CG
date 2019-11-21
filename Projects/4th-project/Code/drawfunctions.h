@@ -1,11 +1,14 @@
 #ifndef DRAWFUNCTIONS_H
 #define DRAWFUNCTIONS_H
 
+
+void glMultiDrawElements (GLenum, const GLsizei *, GLenum, const GLvoid *, GLsizei);
+
 GLfloat sq (GLdouble);
 
 void normalize (GLdouble *);
 
-void glMultiDrawElements (GLenum, const GLsizei *, GLenum, const GLvoid *, GLsizei);
+void unit_cube (void);
 
 void inner_gear_surface (GLfloat, int);
 
@@ -34,5 +37,11 @@ void housing (void);
 void spark_plug ();
 
 void sparks (void);
+
+void table (void);
+
+void toolbox (void);
+
+void overhead_light (void);
 
 #endif

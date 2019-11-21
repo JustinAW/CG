@@ -36,8 +36,11 @@ static GLfloat CAM_ANGLE_X = 0;
 static GLfloat CAM_ANGLE_Y = 0;
 
 // Lights
-static GLfloat light0_position[] = {0.0, 600.0, 0.0, 1.0};
+static GLfloat light0_position[] = {-250.0, 450.0, 0.0, 1.0};
 static GLfloat light0_direction[] = {0.0, -1.0, 0.0};
+
+static GLfloat light1_position[] = {250.0, 450.0, 0.0, 1.0};
+static GLfloat light1_direction[] = {0.0, -1.0, 0.0};
 
 void init (void)
 {
@@ -45,25 +48,34 @@ void init (void)
 
     // Light Property Arrays
     GLfloat global_ambient[] = {0.2, 0.2, 0.2, 1.0};
-        // LIGHT0 (Overhead light)
+        // LIGHT0 (Overhead light left)
     GLfloat light0_ambient[] = {0.0, 0.0, 0.0, 1.0};
     GLfloat light0_diffuse[] = {1.0, 1.0, 1.0, 1.0};
     GLfloat light0_specular[] = {0.3, 0.3, 0.3, 1.0};
+        // LIGHT1 (Overhead light right)
+    GLfloat light1_ambient[] = {0.0, 0.0, 0.0, 1.0};
+    GLfloat light1_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light1_specular[] = {0.3, 0.3, 0.3, 1.0};
 
     // Light Property Settings
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
-        // LIGHT0 (Overhead light)
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+        // LIGHT0 (Overhead light left)
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
+        // LIGHT1 (Overhead light right)
+    glLightfv(GL_LIGHT1, GL_AMBIENT,  light1_ambient);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE,  light1_diffuse);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
     glEnable(GL_DEPTH_TEST);
 
     glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
@@ -104,19 +116,52 @@ void draw_wankel (void)
     glDrawBuffer(GL_BACK);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+    // ROOM
+    glPushMatrix();
+        glTranslatef(-1500, -637, -325);
+        glScalef(3000, 1500, 1);
+        glBegin(GL_QUADS);
+            glVertex3d(0,0,0);
+            glVertex3d(0,1,0);
+            glVertex3d(1,1,0);
+            glVertex3d(1,0,0);
+        glEnd();
+    glPopMatrix();
+
     // LIGHTS
     glPushMatrix();
         glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
         glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0_direction);
         glLighti(GL_LIGHT0, GL_SPOT_EXPONENT, 50.0);
     glPopMatrix();
-
-    //light fixture
     glPushMatrix();
-        glTranslatef(0, 600, 0);
-        glScalef(20, 20, 20);
-        unit_circle(0);
-        x_unit_circle(0);
+        glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+        glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, light1_direction);
+        glLighti( GL_LIGHT1, GL_SPOT_EXPONENT, 50.0);
+    glPopMatrix();
+
+    // TABLES
+    glPushMatrix();
+        table();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(750, 0, 250);
+        glRotatef(90, 0, 1, 0);
+        table();
+    glPopMatrix();
+
+    // TOOLBOX
+    glPushMatrix();
+        toolbox();
+    glPopMatrix();
+
+    // OVERHEAD LIGHTS
+    glPushMatrix();
+        overhead_light();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(500, 0, 0);
+        overhead_light();
     glPopMatrix();
 
     // INTAKE
@@ -292,6 +337,15 @@ void light_control (int selection)
             glEnable(GL_LIGHT0);
         glutPostRedisplay();
     }
+    // LIGHT 1
+    if (selection == 2)
+    {
+        if(glIsEnabled(GL_LIGHT1))
+            glDisable(GL_LIGHT1);
+        else
+            glEnable(GL_LIGHT1);
+        glutPostRedisplay();
+    }
 }
 
 
@@ -397,7 +451,8 @@ int main (int argc, char** argv)
     glutAddMenuEntry("Stop Animation", 2);
 
     int lightmenu = glutCreateMenu(light_control);
-    glutAddMenuEntry("Toggle Light 0 (overhead)", 1);
+    glutAddMenuEntry("Toggle Light 0 (overhead left)", 1);
+    glutAddMenuEntry("Toggle Light 1 (overhead right)", 2);
 
     glutCreateMenu(menu_choice);
     glutAddSubMenu("Toggle Animation", submenu);

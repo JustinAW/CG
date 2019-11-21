@@ -54,6 +54,21 @@ static GLfloat wplastic_diffuse[] = {0.78, 0.78, 0.78, 1.0};
 static GLfloat wplastic_specular[] = {0.80, 0.80, 0.80, 1.0};
 static GLfloat wplastic_shine = 32.0;
 
+static GLfloat ruby_ambient[] = {0.1745, 0.01175, 0.01175, 0.55};
+static GLfloat ruby_diffuse[] = {0.61424, 0.04136, 0.04136, 0.55};
+static GLfloat ruby_specular[] = {0.727811, 0.626959, 0.626959, 0.55};
+static GLfloat ruby_shine = 76.8;
+
+static GLfloat bronze_ambient[] = {0.2125, 0.1275, 0.054, 1.0};
+static GLfloat bronze_diffuse[] = {0.714, 0.4284, 0.18144, 1.0};
+static GLfloat bronze_specular[] = {0.393548, 0.271906, 0.166721, 1.0};
+static GLfloat bronze_shine = 25.6;
+
+static GLfloat wood_ambient[] = {0.25, 0.148, 0.06475, 1.0};
+static GLfloat wood_diffuse[] = {0.4, 0.2168, 0.1036, 1.0};
+static GLfloat wood_specular[] = {0.393548, 0.271906, 0.166721, 1.0};
+static GLfloat wood_shine = 5.0;
+
 
 GLfloat sq (GLdouble x)
 {
@@ -68,6 +83,39 @@ void normalize (GLdouble *v)
     v[0] /= n;
     v[1] /= n;
     v[2] /= n;
+}
+
+
+void unit_cube (void)
+{
+    static GLfloat vertexValues[] = {
+        // front
+        0, 0, 0, -1, -1, 1,   //0
+        0, 1, 0, -1,  1, 1,   //1
+        1, 1, 0,  1,  1, 1,   //2
+        1, 0, 0,  1, -1, 1,   //3
+        // back
+        0, 0, -1, -1, -1, -1,   //4
+        0, 1, -1, -1,  1, -1,   //5
+        1, 1, -1,  1,  1, -1,   //6
+        1, 0, -1,  1, -1, -1,   //7
+    };
+
+    glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
+    glNormalPointer(GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
+
+    static GLubyte top[] = { 1, 5, 6, 2, };
+    static GLubyte front[] = { 0, 1, 2, 3, };
+    static GLubyte right[] = { 3, 2, 6, 7, };
+    static GLubyte back[] = { 7, 6, 5, 4, };
+    static GLubyte left[] = { 4, 5, 1, 0, };
+    static GLubyte bottom[] = { 0, 4, 7, 3, };
+
+    static GLvoid *indices[] = { top, front, right, back, left, bottom, };
+
+    static GLsizei count[] = { 4, 4, 4, 4, 4, 4, };
+
+    glMultiDrawElements(GL_QUADS, count, GL_UNSIGNED_BYTE, indices, 6);
 }
 
 
@@ -934,7 +982,7 @@ void spark_plug (void)
     glMaterialfv(GL_FRONT, GL_AMBIENT, silver_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, silver_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
-    glMateriali(GL_FRONT, GL_SHININESS, 90.0);
+    glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
 
     z_disk_surface(10.0, 0.0, 17.0, 5.0);
     glPushMatrix();
@@ -946,7 +994,7 @@ void spark_plug (void)
     glMaterialfv(GL_FRONT, GL_AMBIENT, silver_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, silver_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
-    glMateriali(GL_FRONT, GL_SHININESS, 90.0);
+    glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
 
     z_disk_surface(12.0, 17.0, 23.0, 6.0);
     glPushMatrix();
@@ -1027,4 +1075,116 @@ void sparks (void)
 
     glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_BYTE, spark_tips);
     glDrawElements(GL_POLYGON, 9, GL_UNSIGNED_BYTE, spark_body);
+}
+
+
+/****************************************************
+ *                   table                          *
+ ****************************************************
+ * Draws a nice table                               *
+ ****************************************************/
+void table (void)
+{
+    //top
+    glPushMatrix();
+        glMaterialfv(GL_FRONT, GL_AMBIENT,  wood_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,  wood_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, wood_specular);
+        glMateriali(GL_FRONT, GL_SHININESS, wood_shine);
+        glTranslatef(-500, -237, 170);
+        glScalef(1000, 50, 400);
+        unit_cube();
+    glPopMatrix();
+    //legs
+    glPushMatrix();
+        glMaterialfv(GL_FRONT, GL_AMBIENT,  obi_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,  obi_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, obi_specular);
+        glMateriali(GL_FRONT, GL_SHININESS, obi_shine);
+        glTranslatef(-500, -237, 145);
+        glRotatef(180, 1, 0, 0);
+        glScalef(25, 400, 25);
+        unit_cube(); //front left
+        glPushMatrix();
+            glTranslatef(39, 0, 0);
+            unit_cube(); //front right
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(0, 0, 15);
+            unit_cube(); //back left
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(39, 0, 15);
+            unit_cube(); //back right
+        glPopMatrix();
+    glPopMatrix();
+}
+
+
+/****************************************************
+ *                   toolbox                        *
+ ****************************************************
+ * Draws a ruby red toolbox                         *
+ ****************************************************/
+void toolbox (void)
+{
+    glPushMatrix();
+        glMaterialfv(GL_FRONT, GL_AMBIENT,  ruby_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,  ruby_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, ruby_specular);
+        glMateriali(GL_FRONT, GL_SHININESS, ruby_shine);
+        glTranslatef(-1050, -637, 170);
+        glPushMatrix();
+            glScalef(500, 700, 400);
+            unit_cube();
+        glPopMatrix();
+        glMaterialfv(GL_FRONT, GL_AMBIENT,  silver_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,  silver_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
+        glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
+        glPushMatrix();
+            glTranslatef(50, 150, 5);
+            glScalef(400, 10, 10);
+            unit_cube();
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(50, 300, 5);
+            glScalef(400, 10, 10);
+            unit_cube();
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(50, 450, 5);
+            glScalef(400, 10, 10);
+            unit_cube();
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(50, 550, 5);
+            glScalef(400, 10, 10);
+            unit_cube();
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(50, 625, 5);
+            glScalef(400, 10, 10);
+            unit_cube();
+        glPopMatrix();
+    glPopMatrix();
+}
+
+
+void overhead_light (void)
+{
+    glPushMatrix();
+        glTranslatef(-250, 450, 0);
+        glRotatef(90, 0, 0, 1);
+        glPushMatrix();
+            glScalef(70, 30, 30);
+            z_disk_surface(20.0, 0, 1, 1.0);
+            x_unit_circle(1);
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef(70, 0, 0);
+            glScalef(300, 3, 3);
+            z_disk_surface(20.0, 0, 1, 1.0);
+        glPopMatrix();
+    glPopMatrix();
 }
