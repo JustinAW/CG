@@ -1,5 +1,5 @@
-tex: texlab1D.c
-	gcc -o x texlab1D.c -lglut -lGL -lGLU -lm
+tex: texlab2D.c
+	gcc -o x texlab2D.c -lglut -lGL -lGLU -lm
 
 run: tex
 	./x

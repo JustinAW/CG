@@ -1,5 +1,3 @@
-
-
 /********************************************************
  *                                                      *
  *                       texlab2d.c                     *
@@ -7,30 +5,19 @@
  ********************************************************/
 
 /*
- * Tests 1S texturing
+ * Tests 2D texturing
  */
 
-#include <GL\glut.h>
+#include <GL/glut.h>
 
 void init (void);
 void reshape (int, int);
 void display (void);
 void buildTexture (void);
+void keyboard (unsigned char, int, int);
 
-GLubyte tex[8][8][4]; //Note: Could use 1D array, but easier to conceptualize as 
+GLubyte tex[8][8][4]; //Note: Could use 1D array but easier to conceptualize as
                       //2D array with 4 values per texel
-
-void keyboard (unsigned char key, int x, int y)
-{
-    switch(key){
-        case 27:
-            exit(0);
-            break;
-        default:
-            break;
-    }
-}
-
 
 int main (int argc, char** argv)
 {
@@ -52,6 +39,7 @@ void init (void)
     glClearColor (1.0, 1.0, 1.0, 1.0);
     glShadeModel(GL_FLAT);
     buildTexture();
+//    gluScaleImage(GL_RGBA, 8, 8, GL_UNSIGNED_BYTE, tex, 8, 8, GL_UNSIGNED_BYTE, tex);
 }
 
 void reshape (int w, int h)
@@ -138,3 +126,14 @@ void buildTexture (void)
     }
 }
 
+
+void keyboard (unsigned char key, int x, int y)
+{
+    switch(key){
+        case 'f':
+            exit(0);
+            break;
+        default:
+            break;
+    }
+}
