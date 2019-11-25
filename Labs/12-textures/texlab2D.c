@@ -9,6 +9,7 @@
  */
 
 #include <GL/glut.h>
+#include <math.h>
 
 void init (void);
 void reshape (int, int);
@@ -65,15 +66,21 @@ void display (void)
     glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex); 
     glEnable(GL_TEXTURE_2D);
     glColor4f(1.0, 0.0, 1.0, 1.0);
-    glBegin(GL_POLYGON);
-        glTexCoord2f(0.0, 0.0);
-        glVertex2i(-3, -3);
-        glTexCoord2f(1.0, 0.0);
-        glVertex2i(3, -3);
-        glTexCoord2f(1.0, 1.0);
-        glVertex2i(3, 3);
-        glTexCoord2f(0.0, 1.0);
-        glVertex2i(-3, 3);
+
+    glBegin(GL_QUADS);
+        glVertex3d(0,-3,0);
+        glVertex3d(0,0,0);
+        glVertex3d(0,0,0);
+        glVertex3d(0,0,0);
+
+//        glTexCoord2f(0.0, 0.0);
+//        glVertex2i(-3, -3);
+//        glTexCoord2f(1.0, 0.0);
+//        glVertex2i(3, -3);
+//        glTexCoord2f(1.0, 1.0);
+//        glVertex2i(3, 3);
+//        glTexCoord2f(0.0, 1.0);
+//        glVertex2i(-3, 3);
     glEnd();
 
     glFlush ();
@@ -124,6 +131,11 @@ void buildTexture (void)
             }
         }
     }
+
+//    tex[0][7][0] = 0;
+//    tex[0][7][1] = 255;
+//    tex[0][7][2] = 255;
+//    tex[0][7][3] = 255;
 }
 
 

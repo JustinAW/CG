@@ -76,4 +76,53 @@ Q14:
     Both result in the same image of red-blue
 
 Q15:
+    In scaling just the one dimension, it scales the texture down to fit all
+    the colors in the space allotted, losing some of the quality in one
+    dimension. In scaling both dimensions, it makes the quality go down in both
+    directions. It pushes to the bottom left corner when scaling.
+
+Q16:
+    tex[0][0] is the lower left corner of the texture map.
+
+Q17:
+    tex[0][7] is the lower right corner.
+
+Q18:
+    glTexCoord2f(0.0, 1.0);
+    glVertex2i(-3, -3);
+    glTexCoord2f(1.0, 1.0);
+    glVertex2i(3, -3);
+    glTexCoord2f(1.0, 0.0);
+    glVertex2i(3, 3);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2i(-3, 3);
+
+Q19:
+    The texture is still mapped the entire width, and it is shrunk down to fit
+    it vertically.
+
+Q20:
+    The texture is now mapped the entire width, but the height is mapped so it
+    appears as if the image is still a square. Aka it's the original image, but
+    with the top cut off.
+
+Q21:
+    This squishes the texture so that all of it is on the trapezoid, but it is
+    quite distorted because it is a square texture.
+
+Q22:
+    It's about what I expected due to the texture being mapped to the corners
+    of the trapezoid.
+
+Q23:
+    With the bottom left mapped to the bottom left and the bottom right mapped
+    to the bottom right of the triangle, there's nothing unusual there. But
+    with both the top left and top right of the texture mapped to the peak of
+    the triangle, I kind of expected distortion, but it looks normal.
+
+Q24:
+    It depends what the desired result is, but I think the one with two coords
+    mapped to the peak looked better.
+
+Q25:
 
