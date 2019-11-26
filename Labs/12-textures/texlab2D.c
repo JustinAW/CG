@@ -4,18 +4,27 @@
  *                                                      *
  ********************************************************/
 
-/*
- * Tests 2D texturing
- */
-
 #include <GL/glut.h>
 #include <math.h>
+#include <stdio.h>
 
 void init (void);
 void reshape (int, int);
 void display (void);
 void buildTexture (void);
 void keyboard (unsigned char, int, int);
+
+static GLfloat CAM_X = 0;
+static GLfloat CAM_Y = 0;
+static GLfloat CAM_Z = 20;
+static GLfloat ZOOM = 1;
+static GLfloat CAM_ANGLE_X = 0;
+static GLfloat CAM_ANGLE_Y = 0;
+
+static GLfloat SIDES = 20;
+
+static GLfloat light_position[] = {0, 0, 100, 1.0};
+static GLfloat light_direction[] = {0, 0, -1};
 
 GLubyte tex[8][8][4]; //Note: Could use 1D array but easier to conceptualize as
                       //2D array with 4 values per texel
@@ -27,8 +36,9 @@ int main (int argc, char** argv)
     glutInitWindowSize (800, 800);
     glutInitWindowPosition (0, 0);
     glutCreateWindow (argv[0]);
-    glutReshapeFunc(reshape);
     init ();
+
+    glutReshapeFunc(reshape);
     glutDisplayFunc (display);
     glutKeyboardFunc(keyboard);
     glutMainLoop ();
@@ -37,10 +47,30 @@ int main (int argc, char** argv)
 
 void init (void)
 {
+    glLoadIdentity();
+
+    buildTexture();
+    glEnable(GL_TEXTURE_2D);
+
     glClearColor (1.0, 1.0, 1.0, 1.0);
     glShadeModel(GL_FLAT);
-    buildTexture();
-//    gluScaleImage(GL_RGBA, 8, 8, GL_UNSIGNED_BYTE, tex, 8, 8, GL_UNSIGNED_BYTE, tex);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_DEPTH_TEST);
+
+    GLfloat global_ambient[] = {0.2, 0.2, 0.2, 1.0};
+    GLfloat light_ambient[] = {0.0, 0.0, 0.0, 1.0};
+    GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light_specular[] = {0.2, 0.2, 0.2, 1.0};
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 }
 
 void reshape (int w, int h)
@@ -49,9 +79,12 @@ void reshape (int w, int h)
         glViewport (0, 0, (GLfloat) h, (GLfloat) h);
     else
         glViewport (0, 0, (GLfloat) w, (GLfloat) w);
+
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
-    gluOrtho2D (-5.0, 5.0, -5.0, 5.0);
+    //glOrtho (-10.0, 10.0, -10.0, 10.0, 1.0, 100000.0);
+    gluPerspective(75, 1, 5, 1000000000);
+
     glMatrixMode (GL_MODELVIEW);
     glLoadIdentity ();
 }
@@ -63,25 +96,70 @@ void display (void)
     glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex); 
-    glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0, 0.0, 1.0, 1.0);
+    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
+//    glColor4f(0.0, 0.0, 1.0, 1.0);
 
-    glBegin(GL_QUADS);
-        glVertex3d(0,-3,0);
-        glVertex3d(0,0,0);
-        glVertex3d(0,0,0);
-        glVertex3d(0,0,0);
+    glPushMatrix();
+        glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+        glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light_direction);
+        gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glRotatef(CAM_ANGLE_X, 0, 1, 0);
+        glRotatef(CAM_ANGLE_Y, 1, 0, 0);
 
-//        glTexCoord2f(0.0, 0.0);
-//        glVertex2i(-3, -3);
-//        glTexCoord2f(1.0, 0.0);
-//        glVertex2i(3, -3);
-//        glTexCoord2f(1.0, 1.0);
-//        glVertex2i(3, 3);
-//        glTexCoord2f(0.0, 1.0);
-//        glVertex2i(-3, 3);
-    glEnd();
+        GLdouble v[3];
+        double theta;
+        glBegin(GL_QUADS);
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            theta = i * M_PI / 180;
+
+
+            v[0] = (sin(theta) * 3);
+            v[1] = 3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+
+            v[0] = (sin(theta) * 3);
+            v[1] = -3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            i += (360 / SIDES);
+            theta = i * M_PI / 180;
+
+            if (i == (360 / SIDES))
+                glTexCoord2f(0, 0);
+            if (i == (360 + 360 / SIDES))
+                glTexCoord2f(1, 0);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = -3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            if (i == (360 / SIDES))
+                glTexCoord2f(0, 1);
+            if (i == (360 + 360 / SIDES))
+                glTexCoord2f(1, 1);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = 3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            i -= (360 / SIDES);
+        }
+//            glTexCoord2f(0.0, 0.0);
+//            glVertex2i(-3, -3);
+//            glTexCoord2f(1.0, 0.0);
+//            glVertex2i(3, -3);
+//            glTexCoord2f(1.0, 1.0);
+//            glVertex2i(3, 3);
+//            glTexCoord2f(0.0, 1.0);
+//            glVertex2i(-3, 3);
+        glEnd();
+    glPopMatrix();
 
     glFlush ();
 }
@@ -139,11 +217,80 @@ void buildTexture (void)
 }
 
 
+GLfloat sq (GLdouble x)
+{
+    return x * x;
+}
+
+
+GLfloat get_magnitude_cam (void)
+{
+     return sqrt(sq(CAM_X) + sq(CAM_Y) + sq(CAM_Z));
+}
+
+
 void keyboard (unsigned char key, int x, int y)
 {
+    GLfloat m = get_magnitude_cam();
     switch(key){
         case 'f':
             exit(0);
+            break;
+        // ZOOM IN
+        case 'E': case 'e':
+            if ((CAM_X == 0.0) && (CAM_Y == 0.0) && (CAM_Z == 0.0))
+            {
+                printf("Full zoom, zoom out... if you want to\n");
+                glutPostRedisplay();
+                break;
+            }
+            CAM_X -= (CAM_X / m) * ZOOM;
+            CAM_Y -= (CAM_Y / m) * ZOOM;
+            CAM_Z -= (CAM_Z / m) * ZOOM;
+            glutPostRedisplay();
+            break;
+        // ZOOM OUT
+        case 'Q': case 'q':
+            if ((CAM_X == 0.0) && (CAM_Y == 0.0) && (CAM_Z == 0.0))
+            {
+                CAM_X = 0.0;
+                CAM_Y = 0.0;
+                CAM_Z = 50.0;
+                glutPostRedisplay();
+                break;
+            }
+            CAM_X += (CAM_X / m) * ZOOM;
+            CAM_Y += (CAM_Y / m) * ZOOM;
+            CAM_Z += (CAM_Z / m) * ZOOM;
+            glutPostRedisplay();
+            break;
+        // ROTATE CAMERA LEFT
+        case 'A': case 'a':
+            CAM_ANGLE_X += 5;
+            if (CAM_ANGLE_X >= 360)
+                CAM_ANGLE_X = 0;
+            glutPostRedisplay();
+            break;
+        // ROTATE CAMERA RIGHT
+        case 'D': case 'd':
+            CAM_ANGLE_X -= 5;
+            if (CAM_ANGLE_X <= 0)
+                CAM_ANGLE_X = 360;
+            glutPostRedisplay();
+            break;
+        // ROTATE CAMERA AROUND X CLOCKWISE
+        case 'W': case 'w':
+            CAM_ANGLE_Y += 5;
+            if(CAM_ANGLE_Y >= 360)
+                CAM_ANGLE_Y = 0;
+            glutPostRedisplay();
+            break;
+        // ROTATE CAMERA AROUND X COUNTER CLOCKWISE
+        case 'S': case 's':
+            CAM_ANGLE_Y -= 5;
+            if (CAM_ANGLE_Y <= 0)
+                CAM_ANGLE_Y = 360;
+            glutPostRedisplay();
             break;
         default:
             break;
