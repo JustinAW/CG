@@ -1,3 +1,10 @@
+/************************************
+ *         Textures Lab             *
+ *           Lab 12                 *
+ *  Author: Justin Weigle           *
+ *  Edited: 27 Nov 2019             *
+ ************************************/
+
 Q1:
     It makes the line have 4 colors instead of just 2. Red, yellow, green, and
     cyan.
