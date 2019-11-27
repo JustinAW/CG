@@ -125,4 +125,45 @@ Q24:
     mapped to the peak looked better.
 
 Q25:
+        GLdouble v[3];
+        GLdouble theta;
+        glBegin(GL_QUADS);
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            theta = i * M_PI / 180;
 
+            glTexCoord2f(i / (360 / SIDES) / SIDES, 1);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = 3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            glTexCoord2f(i / (360 / SIDES) / SIDES, 0);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = -3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            // Using quads instead of quad_strip, so coords must be repeated
+            // to make a cylinder
+            i += (360 / SIDES);
+            theta = i * M_PI / 180;
+
+            glTexCoord2f(i / (360 / SIDES) / SIDES, 0);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = -3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            glTexCoord2f(i / (360 / SIDES) / SIDES, 1);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = 3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            i -= (360 / SIDES);
+        }

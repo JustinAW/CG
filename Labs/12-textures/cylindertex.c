@@ -1,7 +1,5 @@
 /********************************************************
  *                                                      *
- *                       texlab2d.c                     *
- *                                                      *
  ********************************************************/
 
 #include <GL/glut.h>
@@ -144,14 +142,6 @@ void display (void)
 
             i -= (360 / SIDES);
         }
-//            glTexCoord2f(0.0, 0.0);
-//            glVertex2i(-3, -3);
-//            glTexCoord2f(1.0, 0.0);
-//            glVertex2i(3, -3);
-//            glTexCoord2f(1.0, 1.0);
-//            glVertex2i(3, 3);
-//            glTexCoord2f(0.0, 1.0);
-//            glVertex2i(-3, 3);
         glEnd();
     glPopMatrix();
 
