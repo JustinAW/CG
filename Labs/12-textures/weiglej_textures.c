@@ -167,3 +167,55 @@ Q25:
 
             i -= (360 / SIDES);
         }
+
+    /********************************************
+     * If you want to make the texture mapped   *
+     * like the glu quadric maps it, you can    *
+     * modify the code to as follows:           *
+     * (modifications labeled with comments)    *
+     ********************************************/
+
+        GLdouble v[3];
+        GLdouble theta;
+        glBegin(GL_QUADS);
+        for (int i = 0; i <= 360; i += 360 / SIDES)
+        {
+            theta = i * M_PI / 180;
+
+            // Coord2f(1 - ... , 1 was changed to 0);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 0);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = 3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            // Coord2f(1 - ... , 0 was changed to 1);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 1);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = -3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            i += (360 / SIDES);
+            theta = i * M_PI / 180;
+
+            // Coord2f(1 - ... , 0 was changed to 1);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 1);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = -3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            // Coord2f(1 - ... , 1 was changed to 0);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 0);
+
+            v[0] = (sin(theta) * 3);
+            v[1] = 3;
+            v[2] = (cos(theta) * 3);
+            glVertex3dv(v);
+
+            i -= (360 / SIDES);
+        }

@@ -94,65 +94,26 @@ void display (void)
     glLineWidth(3);
 
     glPushMatrix();
-        glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA,
+                GL_UNSIGNED_BYTE, tex);
+
         glLightfv(GL_LIGHT0, GL_POSITION, light_position);
         glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light_direction);
+
         gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
         glRotatef(CAM_ANGLE_X, 0, 1, 0);
         glRotatef(CAM_ANGLE_Y, 1, 0, 0);
 
-        GLdouble v[3];
-        GLdouble theta;
-        glBegin(GL_QUADS);
-        for (int i = 0; i <= 360; i += 360 / SIDES)
-        {
-            theta = i * M_PI / 180;
-
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 1);
-
-            v[0] = (sin(theta) * 3);
-            v[1] = 3;
-            v[2] = (cos(theta) * 3);
-            glVertex3dv(v);
-
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 0);
-
-            v[0] = (sin(theta) * 3);
-            v[1] = -3;
-            v[2] = (cos(theta) * 3);
-            glVertex3dv(v);
-
-            i += (360 / SIDES);
-            theta = i * M_PI / 180;
-
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 0);
-
-            v[0] = (sin(theta) * 3);
-            v[1] = -3;
-            v[2] = (cos(theta) * 3);
-            glVertex3dv(v);
-
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 1);
-
-            v[0] = (sin(theta) * 3);
-            v[1] = 3;
-            v[2] = (cos(theta) * 3);
-            glVertex3dv(v);
-
-            i -= (360 / SIDES);
-        }
-//            glTexCoord2f(0.0, 0.0);
-//            glVertex2i(-3, -3);
-//            glTexCoord2f(1.0, 0.0);
-//            glVertex2i(3, -3);
-//            glTexCoord2f(1.0, 1.0);
-//            glVertex2i(3, 3);
-//            glTexCoord2f(0.0, 1.0);
-//            glVertex2i(-3, 3);
-        glEnd();
+        GLUquadricObj *q = gluNewQuadric();
+        gluQuadricDrawStyle(q, GLU_FILL);
+        gluQuadricOrientation(q, GLU_OUTSIDE);
+        gluQuadricNormals(q, GLU_FLAT);
+        gluQuadricTexture(q, GL_TRUE);
+        gluCylinder(q, 3, 3, 6, 20, 20);
+        gluDeleteQuadric(q);
     glPopMatrix();
 
     glFlush ();

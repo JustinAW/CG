@@ -109,14 +109,14 @@ void display (void)
         {
             theta = i * M_PI / 180;
 
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 1);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 0);
 
             v[0] = (sin(theta) * 3);
             v[1] = 3;
             v[2] = (cos(theta) * 3);
             glVertex3dv(v);
 
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 0);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 1);
 
             v[0] = (sin(theta) * 3);
             v[1] = -3;
@@ -126,14 +126,14 @@ void display (void)
             i += (360 / SIDES);
             theta = i * M_PI / 180;
 
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 0);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 1);
 
             v[0] = (sin(theta) * 3);
             v[1] = -3;
             v[2] = (cos(theta) * 3);
             glVertex3dv(v);
 
-            glTexCoord2f(i / (360 / SIDES) / SIDES, 1);
+            glTexCoord2f(1 - i / (360 / SIDES) / SIDES, 0);
 
             v[0] = (sin(theta) * 3);
             v[1] = 3;
