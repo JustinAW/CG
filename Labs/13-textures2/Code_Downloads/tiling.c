@@ -18,6 +18,8 @@ void keyboard (unsigned char, int, int);
 static GLuint tex;        // Bitmap data
 static GLfloat borderColor[] = {1.0, 0.0, 0.0, 1.0};
 
+static GLfloat BORDER_COLOR[] = {.25, .0, .75};
+
 /**************************************************************
  *                            main                            *
  **************************************************************/
@@ -52,17 +54,17 @@ int main (int argc, char** argv)
 
 void init (void)
 {
-  glClearColor (1.0, 1.0, 1.0, 0.0);
-  glShadeModel(GL_FLAT);
-  glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  //NOTE: No need to call glTexImage2D since SOIL_load_OGL_texture() loads
-  //      loads the image directly into texture memory
-  //glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, tex);
-  glEnable(GL_TEXTURE_2D);
+    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glShadeModel(GL_FLAT);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, BORDER_COLOR);
+    //NOTE: No need to call glTexImage2D since SOIL_load_OGL_texture() loads
+    //      loads the image directly into texture memory
+    glEnable(GL_TEXTURE_2D);
 }
 
 /**************************************************************
@@ -71,15 +73,15 @@ void init (void)
 
 void reshape (int w, int h)
 {
-  if ( w > h)
-    glViewport (0, 0, (GLfloat) h, (GLfloat) h);
-  else
-    glViewport (0, 0, (GLfloat) w, (GLfloat) w);
-  glMatrixMode (GL_PROJECTION);
-  glLoadIdentity ();
-  gluOrtho2D (-5.0, 5.0, -5.0, 5.0);
-  glMatrixMode (GL_MODELVIEW);
-  glLoadIdentity ();
+    if ( w > h)
+        glViewport (0, 0, (GLfloat) h, (GLfloat) h);
+    else
+        glViewport (0, 0, (GLfloat) w, (GLfloat) w);
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
+    gluOrtho2D (-5.0, 5.0, -5.0, 5.0);
+    glMatrixMode (GL_MODELVIEW);
+    glLoadIdentity ();
 }
 
 /**************************************************************
@@ -88,20 +90,20 @@ void reshape (int w, int h)
 
 void display (void)
 {
-  glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-  glColor4f(1.0, 0.0, 1.0, 1.0);
-  glBegin(GL_POLYGON);
-    glTexCoord2f(0.0, 0.0);
-    glVertex2i(-3, -2);
-    glTexCoord2f(3.0, 0.0);
-    glVertex2i(3, -2);
-    glTexCoord2f(3.0, 2.0);
-    glVertex2i(3, 2);
-    glTexCoord2f(0.0, 2.0);
-    glVertex2i(-3, 2);
-  glEnd();
+    glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glColor4f(1.0, 0.0, 1.0, 1.0);
+    glBegin(GL_POLYGON);
+        glTexCoord2f(0.0, 0.0);
+        glVertex2i(-3, -2);
+        glTexCoord2f(3.0, 0.0);
+        glVertex2i(3, -2);
+        glTexCoord2f(3.0, 2.0);
+        glVertex2i(3, 2);
+        glTexCoord2f(0.0, 2.0);
+        glVertex2i(-3, 2);
+    glEnd();
 
-  glFlush ();
+    glFlush ();
 }
 
 
