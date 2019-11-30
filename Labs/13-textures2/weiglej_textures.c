@@ -59,4 +59,7 @@ Q10:
     It appears as if there is no difference between linear and nearest.
 
 Q11:
+    This is simply the grass texture, but repeated 6 times.
+
+Q12:
 
