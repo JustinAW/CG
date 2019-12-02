@@ -22,7 +22,6 @@ GLuint tex2;
 /**************************************************************
  *                            main                            *
  **************************************************************/
-
 int main (int argc, char** argv)
 {
     glutInit(&argc, argv);
@@ -75,10 +74,13 @@ void reshape (int w, int h)
  **************************************************************/
 void display (void)
 {
-    glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     tex = SOIL_load_OGL_texture("Bitmaps/grass64.bmp", 4, 0, 0);
     if (!tex) {
         printf("***NO BITMAP RETRIEVED***\n");  //Check to see if successfully loaded
@@ -86,14 +88,29 @@ void display (void)
     }
     glBegin(GL_POLYGON);
         glTexCoord2f(0.0, 0.0);
-        glVertex2i(0, -3);
-        glTexCoord2f(1.0, 0.0);
-        glVertex2i(6, -3);
-        glTexCoord2f(1.0, 1.0);
-        glVertex2i(6, 3);
-        glTexCoord2f(0.0, 1.0);
-        glVertex2i(0, 3);
+        glVertex2i(-12, -2);
+        glTexCoord2f(3.0, 0.0);
+        glVertex2i(-6, -2);
+        glTexCoord2f(3.0, 2.0);
+        glVertex2i(-6, 2);
+        glTexCoord2f(0.0, 2.0);
+        glVertex2i(-12, 2);
     glEnd();
+    glBegin(GL_POLYGON);
+        glTexCoord2f(0.0, 0.0);
+        glVertex2i(-6, -2);
+        glTexCoord2f(3.0, 0.0);
+        glVertex2i(0, -2);
+        glTexCoord2f(3.0, 1.0);
+        glVertex2i(0, 0);
+        glTexCoord2f(0.0, 1.0);
+        glVertex2i(-6, 0);
+    glEnd();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     tex2 = SOIL_load_OGL_texture("Bitmaps/pattern1-64.bmp", 4, 0, 0);
     if (!tex2) {
         printf("***NO BITMAP RETRIEVED***\n");
@@ -101,19 +118,33 @@ void display (void)
     }
     glBegin(GL_POLYGON);
         glTexCoord2f(0.0, 0.0);
-        glVertex2i(-15, -3);
-        glTexCoord2f(1.0, 0.0);
-        glVertex2i(0, -3);
-        glTexCoord2f(1.0, 1.0);
-        glVertex2i(0, 3);
+        glVertex2i(-6, 0);
+        glTexCoord2f(2.0, 0.0);
+        glVertex2i(-3, 0);
+        glTexCoord2f(2.0, 3.0);
+        glVertex2i(-3, 6);
+        glTexCoord2f(0.0, 3.0);
+        glVertex2i(-6, 6);
+    glEnd();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBegin(GL_POLYGON);
+        glTexCoord2f(0.0, 0.0);
+        glVertex2i(-12, -4);
+        glTexCoord2f(6.0, 0.0);
+        glVertex2i(0, -4);
+        glTexCoord2f(6.0, 1.0);
+        glVertex2i(0, -2);
         glTexCoord2f(0.0, 1.0);
-        glVertex2i(-15, 3);
+        glVertex2i(-12, -2);
     glEnd();
 
-    glFlush ();
+    glFlush();
 }
 
-
+/**************************************************************
+ *                          keyboard                          *
+ **************************************************************/
 void keyboard (unsigned char key, int x, int y) {
     switch (key) {
         case 27:
