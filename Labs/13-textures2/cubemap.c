@@ -59,26 +59,26 @@ void init (void)
     glEnable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_NORMALIZE);
+    glEnable(GL_TEXTURE_CUBE_MAP);
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
 
-//    tex = SOIL_load_OGL_texture("Bitmaps/sphere-256x256.bmp", 4, 0,
-//            SOIL_FLAG_MIPMAPS);
-//    if (!tex) {
-//        printf("***NO BITMAP RETRIEVED***\n");
-//        exit(1);
-//    }
     tex = SOIL_load_OGL_cubemap
     (
-        "Bitmaps/grass64.bmp",
-        "Bitmaps/pattern1-64.bmp",
-        "Bitmaps/grass64.bmp",
-        "Bitmaps/pattern1-64.bmp",
-        "Bitmaps/grass64.bmp",
-        "Bitmaps/pattern1-64.bmp",
+        "Bitmaps/one.bmp",
+        "Bitmaps/two.bmp",
+        "Bitmaps/three.bmp",
+        "Bitmaps/four.bmp",
+        "Bitmaps/five.bmp",
+        "Bitmaps/six.bmp",
         SOIL_LOAD_RGBA,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS
     );
     glBindTexture(GL_TEXTURE_2D, tex);
+
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
 
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -127,7 +127,7 @@ void display (void)
         gluQuadricOrientation(q, GLU_OUTSIDE);
         gluQuadricNormals(q, GLU_FLAT);
         gluQuadricTexture(q, GL_TRUE);
-        gluSphere(q, 3, 10, 10);
+        gluSphere(q, 3, 60, 60);
         gluDeleteQuadric(q);
     glPopMatrix();
 

@@ -320,9 +320,29 @@ Q23:
         gluQuadricOrientation(q, GLU_OUTSIDE);
         gluQuadricNormals(q, GLU_FLAT);
         gluQuadricTexture(q, GL_TRUE);
-        gluSphere(q, 3, 20, 20);
+        gluSphere(q, 3, 60, 60);
         gluDeleteQuadric(q);
     glPopMatrix();
 
 Q24:
+    // init
+    glEnable(GL_TEXTURE_CUBE_MAP);
+    tex = SOIL_load_OGL_cubemap
+    (
+        "Bitmaps/one.bmp",
+        "Bitmaps/two.bmp",
+        "Bitmaps/three.bmp",
+        "Bitmaps/four.bmp",
+        "Bitmaps/five.bmp",
+        "Bitmaps/six.bmp",
+        SOIL_LOAD_RGBA,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS
+    );
+    glBindTexture(GL_TEXTURE_2D, tex);
 
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+
+    //display
+    identical to q23 display code
