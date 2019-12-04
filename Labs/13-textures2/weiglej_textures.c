@@ -104,16 +104,27 @@ Q18:
     Otherwise, the images produced are all the same as the ones from q14-q17
 
 Q19:
+    // in init
+    tex = SOIL_load_OGL_texture("Bitmaps/grass64.bmp", 4, 0, 0);
+    if (!tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, tex);
+    tex2 = SOIL_load_OGL_texture("Bitmaps/pattern1-64.bmp", 4, 0, 0);
+    if (!tex2) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, tex2);
+
+    // in display
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    tex = SOIL_load_OGL_texture("Bitmaps/grass64.bmp", 4, 0, 0);
-    if (!tex) {
-        printf("***NO BITMAP RETRIEVED***\n");  //Check to see if successfully loaded
-        exit(1);
-    }
+    glBindTexture(GL_TEXTURE_2D, tex);
     glBegin(GL_POLYGON);
         glTexCoord2f(0.0, 0.0);
         glVertex2i(-12, -2);
@@ -139,11 +150,7 @@ Q19:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    tex2 = SOIL_load_OGL_texture("Bitmaps/pattern1-64.bmp", 4, 0, 0);
-    if (!tex2) {
-        printf("***NO BITMAP RETRIEVED***\n");
-        exit(1);
-    }
+    glBindTexture(GL_TEXTURE_2D, tex2);
     glBegin(GL_POLYGON);
         glTexCoord2f(0.0, 0.0);
         glVertex2i(-6, 0);
@@ -168,4 +175,68 @@ Q19:
     glEnd();
 
 Q20:
+    // globals
+    // mipmaps
+    GLubyte mm64[64][64][4];
+    GLubyte mm32[32][32][4];
+    GLubyte mm16[16][16][4];
+    GLubyte mm8[8][8][4];
+    GLubyte mm4[4][4][4];
+    GLubyte mm2[2][2][4];
+    GLubyte mm1[1][1][4];
+    // texture
+    static GLuint tex;
 
+    // init
+    buildTexture();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+            GL_NEAREST_MIPMAP_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mm64);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 32, 32, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mm32);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 16, 16, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mm16);
+    glTexImage2D(GL_TEXTURE_2D, 3, GL_RGBA, 8, 8, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mm8);
+    glTexImage2D(GL_TEXTURE_2D, 4, GL_RGBA, 4, 4, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mm4);
+    glTexImage2D(GL_TEXTURE_2D, 5, GL_RGBA, 2, 2, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mm2);
+    glTexImage2D(GL_TEXTURE_2D, 6, GL_RGBA, 1, 1, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mm1);
+
+    // buildTexture
+    GLubyte base, offset, i, j;
+    for (i = 0; i < 64; i++) {
+        for (j = 0; j < 64; j++) {
+            mm64[i][j][0] = 255;
+            mm64[i][j][1] = 0;
+            mm64[i][j][2] = 0;
+            mm64[i][j][3] = 255;
+        }
+    }
+    // repeat with i,j < 32, 16, ... , 1 and different colors for each
+
+    // display
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glPushMatrix();
+        gluLookAt(0.0, 0.0, CAM_Z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glBegin(GL_POLYGON);
+            glTexCoord2f(0.0, 0.0);
+            glVertex2i(-3, -3);
+            glTexCoord2f(1.0, 0.0);
+            glVertex2i(3, -3);
+            glTexCoord2f(1.0, 1.0);
+            glVertex2i(3, 3);
+            glTexCoord2f(0.0, 1.0);
+            glVertex2i(-3, 3);
+        glEnd();
+    glPopMatrix();

@@ -45,6 +45,20 @@ int main (int argc, char** argv)
  **************************************************************/
 void init (void)
 {
+    tex = SOIL_load_OGL_texture("Bitmaps/grass64.bmp", 4, 0, 0);
+    if (!tex) {
+        printf("***NO BITMAP RETRIEVED***\n");  //Check to see if successfully loaded
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    tex2 = SOIL_load_OGL_texture("Bitmaps/pattern1-64.bmp", 4, 0, 0);
+    if (!tex2) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, tex2);
+
     glClearColor (1.0, 1.0, 1.0, 0.0);
     glShadeModel(GL_FLAT);
     glEnable(GL_TEXTURE_2D);
@@ -81,11 +95,7 @@ void display (void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    tex = SOIL_load_OGL_texture("Bitmaps/grass64.bmp", 4, 0, 0);
-    if (!tex) {
-        printf("***NO BITMAP RETRIEVED***\n");  //Check to see if successfully loaded
-        exit(1);
-    }
+    glBindTexture(GL_TEXTURE_2D, tex);
     glBegin(GL_POLYGON);
         glTexCoord2f(0.0, 0.0);
         glVertex2i(-12, -2);
@@ -111,11 +121,7 @@ void display (void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    tex2 = SOIL_load_OGL_texture("Bitmaps/pattern1-64.bmp", 4, 0, 0);
-    if (!tex2) {
-        printf("***NO BITMAP RETRIEVED***\n");
-        exit(1);
-    }
+    glBindTexture(GL_TEXTURE_2D, tex2);
     glBegin(GL_POLYGON);
         glTexCoord2f(0.0, 0.0);
         glVertex2i(-6, 0);
