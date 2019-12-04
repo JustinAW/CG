@@ -240,3 +240,89 @@ Q20:
             glVertex2i(-3, 3);
         glEnd();
     glPopMatrix();
+
+Q21:
+    /*
+     * I noticed that SOIL has a convenient feature that you can use
+     * and skip out on having to use gluBuild*Mipmaps
+     * If you pass it SOIL_FLAG_MIPMAPS, it will generate the mipmaps for you.
+     * The downside is there doesn't appear to be a way of setting levels, but
+     * that seems a minor issue.
+     */
+    tex = SOIL_load_OGL_texture("Bitmaps/grass64.bmp",
+            4, 0, SOIL_FLAG_POWER_OF_TWO/* | SOIL_FLAG_MIPMAPS */);
+    if (!tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+            GL_NEAREST_MIPMAP_NEAREST);
+
+    unsigned char *image;
+    image = SOIL_load_image("Bitmaps/grass64.bmp", &WIDTH, &HEIGHT, &CHANNELS,
+            SOIL_LOAD_RGBA);
+    if (!image) {
+        printf("***NO IMAGE RETRIEVED***\n");
+        exit(1);
+    }
+    gluBuild2DMipmapLevels(GL_TEXTURE_2D, GL_RGBA, 64, 64, GL_RGBA,
+            GL_UNSIGNED_BYTE, 0, 0, 6, image);
+    free(image);
+
+Q22:
+    GL_LINEAR_MIPMAP_NEAREST works better than the rest, and that's probably
+    due to the fact that it combines the surrounding texture elements of the
+    closest mipmap, therefore it makes a crisp yet not overly pixelated image.
+
+Q23:
+    /*
+     * Note: camera code used from project to get better look at the objects
+     */
+
+    // init
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+
+    tex = SOIL_load_OGL_texture("Bitmaps/sphere-256x256.bmp", 4, 0,
+            SOIL_FLAG_MIPMAPS);
+    if (!tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+            GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+    // display
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glPushMatrix();
+        gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        glRotatef(CAM_ANGLE_X, 0, 1, 0);
+        glRotatef(CAM_ANGLE_Y, 1, 0, 0);
+
+        GLUquadricObj *q = gluNewQuadric();
+        gluQuadricDrawStyle(q, GLU_FILL);
+        gluQuadricOrientation(q, GLU_OUTSIDE);
+        gluQuadricNormals(q, GLU_FLAT);
+        gluQuadricTexture(q, GL_TRUE);
+        gluSphere(q, 3, 20, 20);
+        gluDeleteQuadric(q);
+    glPopMatrix();
+
+Q24:
+
