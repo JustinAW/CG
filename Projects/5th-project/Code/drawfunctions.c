@@ -986,11 +986,17 @@ void sparks (void)
 void table (void)
 {
     //top
+    glEnable(GL_TEXTURE_CUBE_MAP);
     glEnable(GL_TEXTURE_2D);
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
+            GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glPushMatrix();
         glMaterialfv(GL_FRONT, GL_AMBIENT,  wood_ambient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  wood_diffuse);
@@ -1001,6 +1007,7 @@ void table (void)
         unit_cube();
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_CUBE_MAP);
     //legs
     glPushMatrix();
         glMaterialfv(GL_FRONT, GL_AMBIENT,  obi_ambient);
@@ -1195,5 +1202,15 @@ void barrel (void)
         glDisable(GL_TEXTURE_2D);
         circle(100, 150);
         circle(600, 150);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0, 200, 0);
+        glRotatef(90, 1, 0, 0);
+        glutSolidTorus(10, 150, 60, 60);
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0, 500, 0);
+        glRotatef(90, 1, 0, 0);
+        glutSolidTorus(10, 150, 60, 60);
     glPopMatrix();
 }

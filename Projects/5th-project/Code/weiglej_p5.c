@@ -133,7 +133,12 @@ void init (void)
     }
     glBindTexture(GL_TEXTURE_2D, chrome_tex);
 
-    wood_tex = SOIL_load_OGL_texture(
+    wood_tex = SOIL_load_OGL_cubemap(
+            "../Bitmaps/wood.bmp",
+            "../Bitmaps/wood.bmp",
+            "../Bitmaps/wood.bmp",
+            "../Bitmaps/wood.bmp",
+            "../Bitmaps/wood.bmp",
             "../Bitmaps/wood.bmp",
             SOIL_LOAD_RGBA,
             SOIL_CREATE_NEW_ID,
@@ -142,7 +147,7 @@ void init (void)
         printf("***NO BITMAP RETRIEVED***\n");
         exit(1);
     }
-    glBindTexture(GL_TEXTURE_2D, wood_tex);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, wood_tex);
 
     conc_tex = SOIL_load_OGL_texture(
             "../Bitmaps/concrete.bmp",
@@ -238,7 +243,7 @@ void draw_environment (void)
     glDisable(GL_CULL_FACE);
 
     // TABLES
-    glBindTexture(GL_TEXTURE_2D, wood_tex);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, wood_tex);
     glPushMatrix();
         table();
     glPopMatrix();
