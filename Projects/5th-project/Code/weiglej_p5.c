@@ -2,7 +2,7 @@
  *                  Project 5                       *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     04 Dec 2019                         *
+ *  Edited:     05 Dec 2019                         *
  ****************************************************
  * Draws the 3d animation of a Wankel rotary engine *
  * as well as a scene for the engine to be in.      *
@@ -16,6 +16,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include "SOIL/SOIL.h"
 #include "drawfunctions.h"
 
 // Animation
@@ -51,6 +52,13 @@ static GLfloat LIGHT3_Y = 0.0;
 static GLfloat light3_z = 500.0;
 static GLfloat light3_l = 1.0;
 static GLfloat light3_direction[] = {0.0, 0.0, -1.0};
+
+// Textures
+static GLuint chrome_tex;
+static GLuint wood_tex;
+static GLuint conc_tex;
+static GLuint wall_tex;
+static GLuint ceil_tex;
 
 void init (void)
 {
@@ -99,6 +107,8 @@ void init (void)
     glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
 
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
@@ -109,6 +119,66 @@ void init (void)
     glEnableClientState(GL_NORMAL_ARRAY);
     glClearColor(0.5, 0.5, 0.5, 0.0);
     glShadeModel(GL_SMOOTH);
+
+    chrome_tex = SOIL_load_OGL_texture(
+            "../Bitmaps/chrome_sphere.bmp",
+            SOIL_LOAD_RGBA,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_MIPMAPS);
+    if (!chrome_tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, chrome_tex);
+
+    wood_tex = SOIL_load_OGL_texture(
+            "../Bitmaps/wood.bmp",
+            SOIL_LOAD_RGBA,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);
+    if (!wood_tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, wood_tex);
+
+    conc_tex = SOIL_load_OGL_texture(
+            "../Bitmaps/concrete.bmp",
+            SOIL_LOAD_RGBA,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);
+    if (!conc_tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, conc_tex);
+
+    wall_tex = SOIL_load_OGL_texture(
+            "../Bitmaps/wall.bmp",
+            SOIL_LOAD_RGBA,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);
+    if (!conc_tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, wall_tex);
+
+    ceil_tex = SOIL_load_OGL_texture(
+            "../Bitmaps/ceiling.bmp",
+            SOIL_LOAD_RGBA,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);
+    if (!conc_tex) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, ceil_tex);
+
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+            GL_LINEAR_MIPMAP_NEAREST);
 }
 
 
@@ -137,30 +207,37 @@ void reshape (int w, int h)
 void draw_environment (void)
 {
     // ROOM
-    glPushMatrix();
-        glTranslatef(-2000, -637, -325);
-        glScalef(3000, 1500, 1);
-        unit_square();
-    glPopMatrix();
-    glPushMatrix();
-        glTranslatef(1000, -637, -325);
-        glRotatef(-90, 0, 1, 0);
-        glScalef(3000, 1500, 1);
-        unit_square();
-    glPopMatrix();
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glCullFace(GL_FRONT);
+    glBindTexture(GL_TEXTURE_2D, wall_tex);
+    walls();
+    glBindTexture(GL_TEXTURE_2D, ceil_tex);
+    ceiling();
+    glCullFace(GL_BACK);
+    glBindTexture(GL_TEXTURE_2D, conc_tex);
+    conc_floor();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_CULL_FACE);
 
     // TABLES
+    glBindTexture(GL_TEXTURE_2D, wood_tex);
     glPushMatrix();
         table();
     glPopMatrix();
     glPushMatrix();
-        glTranslatef(750, 0, 250);
+        glTranslatef(710, 0, 300);
         glRotatef(90, 0, 1, 0);
         table();
     glPopMatrix();
 
     // FLASHLIGHT
     glPushMatrix();
+        glTranslatef(250, -173, 0);
         flashlight();
     glPopMatrix();
 
@@ -170,11 +247,13 @@ void draw_environment (void)
     glPopMatrix();
 
     // OVERHEAD LIGHT FIXTURES
+    glBindTexture(GL_TEXTURE_2D, chrome_tex);
     glPushMatrix();
+        glTranslatef(-250, 450, 0);
         overhead_light();
     glPopMatrix();
     glPushMatrix();
-        glTranslatef(500, 0, 0);
+        glTranslatef(250, 450, 0);
         overhead_light();
     glPopMatrix();
 }
@@ -207,8 +286,8 @@ void draw_wankel (void)
         intake_exhaust();
     glPopMatrix();
 
-    // ROTOR
     ECC_SHFT_HEADING = -ECC_SHFT_I * 3.1415926535897932384626433832795 / 180.0;
+    // ROTOR
     glPushMatrix();
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
@@ -224,7 +303,6 @@ void draw_wankel (void)
     // PINION
     glPushMatrix();
         glScalef(30.0, 30.0, 1.0);
-        x_disk_surface(30.0, 0.0, -20.0, 0.9);
         outer_gear_surface(0.0, 10);
         outer_gear_surface(-20.0, 10);
         gear_teeth_outline(10, 0);
@@ -235,7 +313,7 @@ void draw_wankel (void)
         glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3), 0.0, 0.0, 1.0);
         glScalef(60.0, 60.0, 1.0);
-        x_disk_surface(60.0, 0.0, -20.0, 1.3);
+        z_cylinder(-20, 20, 1.3);
         inner_gear_surface(0.0, 5);
         inner_gear_surface(-20.0, 5);
         gear_teeth_outline(5, 1);
@@ -508,6 +586,8 @@ void keyboard (unsigned char key, int x, int y)
                 CAM_ANGLE_Y = 360;
             glutPostRedisplay();
             break;
+        case 27: case 'f':
+            exit(0);
         default:
             break;
     }

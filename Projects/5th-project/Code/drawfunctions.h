@@ -12,27 +12,27 @@ void unit_square (void);
 
 void unit_cube (void);
 
+void z_cylinder (GLfloat, GLfloat, GLfloat);
+
+void x_cylinder (GLfloat, GLfloat, GLfloat);
+
+void circle (GLfloat, GLfloat);
+
+void zy_circle (GLfloat, GLfloat);
+
 void inner_gear_surface (GLfloat, int);
 
 void outer_gear_surface (GLfloat, int);
 
 void gear_teeth_outline (int, int);
 
-void unit_circle (GLfloat);
-
-void x_unit_circle (GLfloat);
-
-void x_disk_surface (GLfloat, GLfloat, GLfloat, GLfloat);
-
-void z_disk_surface (GLfloat, GLfloat, GLfloat, GLfloat);
+void eccentric_shaft (GLfloat, GLfloat);
 
 void intake_exhaust (void);
 
 void chambers (void);
 
 void rotor (void);
-
-void eccentric_shaft (GLfloat, GLfloat);
 
 void housing (void);
 
@@ -47,5 +47,11 @@ void toolbox (void);
 void overhead_light (void);
 
 void flashlight (void);
+
+void walls (void);
+
+void ceiling (void);
+
+void conc_floor (void);
 
 #endif

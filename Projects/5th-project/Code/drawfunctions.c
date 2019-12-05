@@ -2,10 +2,11 @@
  *                drawfunctions.c                   *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     21 Nov 2019                         *
+ *  Edited:     05 Dec 2019                         *
  ****************************************************
  * Contains the functions for drawing the parts of  *
- * a Wankel rotary engine in 3d                     *
+ * a Wankel rotary engine in 3d as well as an       *
+ * environment around it                            *
  ****************************************************/
 
 #include <GL/glut.h>
@@ -118,34 +119,98 @@ void unit_square (void)
  ****************************************************/
 void unit_cube (void)
 {
-    static GLfloat vertexValues[] = {
-        // front
-        0, 0, 0, -1, -1, 1,   //0
-        0, 1, 0, -1,  1, 1,   //1
-        1, 1, 0,  1,  1, 1,   //2
-        1, 0, 0,  1, -1, 1,   //3
-        // back
-        0, 0, -1, -1, -1, -1,   //4
-        0, 1, -1, -1,  1, -1,   //5
-        1, 1, -1,  1,  1, -1,   //6
-        1, 0, -1,  1, -1, -1,   //7
-    };
+    glutSolidCube(1);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+}
 
-    glVertexPointer(3, GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[0]);
-    glNormalPointer(GL_FLOAT, 6*sizeof(GLfloat), &vertexValues[3]);
 
-    static GLubyte top[] = { 1, 5, 6, 2, };
-    static GLubyte front[] = { 0, 1, 2, 3, };
-    static GLubyte right[] = { 3, 2, 6, 7, };
-    static GLubyte back[] = { 7, 6, 5, 4, };
-    static GLubyte left[] = { 4, 5, 1, 0, };
-    static GLubyte bottom[] = { 0, 4, 7, 3, };
+/****************************************************
+ *                  z_cylinder                      *
+ ****************************************************
+ * Draws a cylinder that runs along the z axis      *
+ ****************************************************/
+void z_cylinder (GLfloat z, GLfloat h, GLfloat r)
+{
+    glPushMatrix();
+        glTranslatef(0, 0, z);
 
-    static GLvoid *indices[] = { top, front, right, back, left, bottom, };
+        GLUquadricObj *q = gluNewQuadric();
+        gluQuadricDrawStyle(q, GLU_FILL);
+        gluQuadricOrientation(q, GLU_OUTSIDE);
+        gluQuadricNormals(q, GLU_SMOOTH);
+        gluQuadricTexture(q, GL_TRUE);
+        gluCylinder(q, r, r, h, 60, 60);
+        gluDeleteQuadric(q);
+    glPopMatrix();
+}
 
-    static GLsizei count[] = { 4, 4, 4, 4, 4, 4, };
 
-    glMultiDrawElements(GL_QUADS, count, GL_UNSIGNED_BYTE, indices, 6);
+/****************************************************
+ *                  x_cylinder                      *
+ ****************************************************
+ * Draws a cylinder that runs along the x axis      *
+ ****************************************************/
+void x_cylinder (GLfloat x, GLfloat h, GLfloat r)
+{
+    glPushMatrix();
+        glRotatef(90, 0, 1, 0);
+        glTranslatef(0, 0, x);
+
+        GLUquadricObj *q = gluNewQuadric();
+        gluQuadricDrawStyle(q, GLU_FILL);
+        gluQuadricOrientation(q, GLU_OUTSIDE);
+        gluQuadricNormals(q, GLU_SMOOTH);
+        gluQuadricTexture(q, GL_TRUE);
+        gluCylinder(q, r, r, h, 60, 60);
+        gluDeleteQuadric(q);
+    glPopMatrix();
+}
+
+
+/****************************************************
+ *                     circle                       *
+ ****************************************************
+ * Draws a circle that is on the typical x,y coord  *
+ * system with the z coordinate set by z and radius *
+ * set by r                                         *
+ ****************************************************/
+void circle (GLfloat z, GLfloat r)
+{
+    glPushMatrix();
+        glTranslatef(0, 0, z);
+
+        GLUquadricObj *q = gluNewQuadric();
+        gluQuadricDrawStyle(q, GLU_FILL);
+        gluQuadricOrientation(q, GLU_OUTSIDE);
+        gluQuadricNormals(q, GLU_SMOOTH);
+        gluQuadricTexture(q, GL_TRUE);
+        gluDisk(q, 0, r, 60, 60);
+        gluDeleteQuadric(q);
+    glPopMatrix();
+}
+
+
+/****************************************************
+ *                   zy_circle                      *
+ ****************************************************
+ * Draws a circle that is on the z,y coord system   *
+ * with the x coordinate set by x and radius by r   *
+ ****************************************************/
+void zy_circle (GLfloat x, GLfloat r)
+{
+    glPushMatrix();
+        glRotatef(90, 0, 1, 0);
+        glTranslatef(0, 0, x);
+
+        GLUquadricObj *q = gluNewQuadric();
+        gluQuadricDrawStyle(q, GLU_FILL);
+        gluQuadricOrientation(q, GLU_OUTSIDE);
+        gluQuadricNormals(q, GLU_SMOOTH);
+        gluQuadricTexture(q, GL_TRUE);
+        gluDisk(q, 0, r, 60, 60);
+        gluDeleteQuadric(q);
+    glPopMatrix();
 }
 
 
@@ -320,232 +385,35 @@ void gear_teeth_outline (int gear_spacing, int inner)
 
 
 /****************************************************
- *                  unit_circle                     *
- ****************************************************
- * Draws a circle where the z location is set by    *
- * depth                                            *
- ****************************************************/
-void unit_circle (GLfloat depth)
-{
-    glBegin(GL_POLYGON);
-        double heading;
-        for (int i = 0; i < 360; i += 360 / SIDES)
-        {
-            heading = i * M_PI / 180;
-            glVertex3d(cos(heading), sin(heading), depth);
-        }
-    glEnd();
-}
-
-
-/****************************************************
- *                x_unit_circle                     *
- ****************************************************
- * Draws a circle where the x location is set by    *
- * x and the circle is drawn parallel to the z      *
- * axis                                             *
- ****************************************************/
-void x_unit_circle (GLfloat x)
-{
-    GLdouble v[3], n[3];
-    glBegin(GL_POLYGON);
-        double heading;
-        for (int i = 0; i < 360; i += 360 / SIDES)
-        {
-            heading = i * M_PI / 180;
-
-            n[0] = v[0] = (x);
-            n[1] = v[1] = (cos(heading));
-            n[2] = v[2] = (sin(heading));
-            normalize(n);
-            glNormal3dv(n);
-            glVertex3dv(v);
-        }
-    glEnd();
-}
-
-
-/****************************************************
- *                 x_disk_surface                   *
- ****************************************************
- * Draws lines on the surface of a disk's perimeter *
- * that is parallel to the x axis                   *
- ****************************************************/
-void x_disk_surface (GLfloat divisions, GLfloat z1, GLfloat z2, GLfloat scale)
-{
-    GLdouble v[3], n[3];
-    glBegin(GL_TRIANGLE_STRIP);
-        double heading;
-        for (int i = 0; i <= 360; i += 360 / divisions)
-        {
-            heading = i * M_PI / 180;
-
-            n[0] = v[0] = (cos(heading) * scale);
-            n[1] = v[1] = (sin(heading) * scale);
-            n[2] = v[2] = (z1);
-            normalize(n);
-            glNormal3dv(n);
-            glVertex3dv(v);
-
-            n[0] = v[0] = (cos(heading) * scale);
-            n[1] = v[1] = (sin(heading) * scale);
-            n[2] = v[2] = (z2);
-            normalize(n);
-            glNormal3dv(n);
-            glVertex3dv(v);
-        }
-    glEnd();
-}
-
-
-/****************************************************
- *                  z_disk_surface                  *
- ****************************************************
- * Draws lines on the surface of a disk's perimeter *
- * that is parallel to the z axis                   *
- ****************************************************/
-void z_disk_surface (GLfloat divisions, GLfloat x1, GLfloat x2, GLfloat scale)
-{
-    GLdouble v[3], n[3];
-    glBegin(GL_TRIANGLE_STRIP);
-        GLdouble heading;
-        for (int i = 0; i <= 360; i += 360 / divisions)
-        {
-            heading = i * M_PI / 180;
-
-            n[0] = v[0] = (x1);
-            n[1] = v[1] = (cos(heading) * scale);
-            n[2] = v[2] = (sin(heading) * scale);
-            normalize(n);
-            glNormal3dv(n);
-            glVertex3dv(v);
-
-            n[0] = v[0] = (x2);
-            n[1] = v[1] = (cos(heading) * scale);
-            n[2] = v[2] = (sin(heading) * scale);
-            normalize(n);
-            glNormal3dv(n);
-            glVertex3dv(v);
-        }
-    glEnd();
-}
-
-
-/****************************************************
  *                 eccentric_shaft                  *
  ****************************************************
  * Draws the eccentric shaft                        *
  ****************************************************/
 void eccentric_shaft (GLfloat ECC_SHFT_HEADING, GLfloat ECC_SHFT_I)
 {
-    GLdouble v[3], n[3];
     glMaterialfv(GL_FRONT, GL_AMBIENT,  silver_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE,  silver_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
     glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
 
     glPushMatrix();
-        glTranslatef((cos(ECC_SHFT_HEADING) * 26), (sin(ECC_SHFT_HEADING) * 26), 0.0);
+        glTranslatef((cos(ECC_SHFT_HEADING) * 26),
+                (sin(ECC_SHFT_HEADING) * 26), 0.0);
         glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
         glScalef(60.0, 60.0, 1.0);
-        x_disk_surface(60, -20, -80, 1.3);
-        glPushMatrix();
-            glScalef(1.3, 1.3, 1.0);
-            glBegin(GL_TRIANGLE_STRIP);
-                double heading;
-                for (int i = 0; i <= 360; i += 360 / (SIDES / 6))
-                {
-                    heading = i * M_PI / 180;
-
-                    n[0] = v[0] = (cos(heading));
-                    n[1] = v[1] = (sin(heading));
-                    n[2] = v[2] = (-20);
-                    normalize(n);
-                    glNormal3dv(n);
-                    glVertex3dv(v);
-
-                    glNormal3d(0.0, 0.0, 1.0);  // front in rotor
-                    glVertex3d(0.0, 0.0, -20.0);
-                }
-            glEnd();
-            glBegin(GL_TRIANGLE_STRIP);
-                for (int i = 0; i <= 360; i += 360 / (SIDES / 6))
-                {
-                    heading = i * M_PI / 180;
-
-                    n[0] = v[0] = (cos(heading));
-                    n[1] = v[1] = (sin(heading));
-                    n[2] = v[2] = (-80);
-                    normalize(n);
-                    glNormal3dv(n);
-                    glVertex3dv(v);
-
-                    glNormal3d(0.0, 0.0, -1.0); // back in rotor
-                    glVertex3d(0.0, 0.0, -80.0);
-                }
-            glEnd();
-        glPopMatrix();
+        z_cylinder(-80, 60, 1.3);
+        circle(-20, 1.3);
+        circle(-80, 1.3);
     glPopMatrix();
     glPushMatrix();
         glRotatef((-ECC_SHFT_I/3) + 30, 0.0, 0.0, 1.0);
         glScalef(30.0, 30.0, 1.0);
-        x_disk_surface(30.0, 10.0, -20.0, 0.7);
-        x_disk_surface(30.0, 40.0, 10.0, 0.4);
-        x_disk_surface(30.0, -80, -120, 0.7);
-        glPushMatrix();
-            glScalef(0.7, 0.7, 1.0);
-            glBegin(GL_TRIANGLE_STRIP);
-                for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
-                {
-                    heading = i * M_PI / 180;
-
-                    n[0] = v[0] = (cos(heading));
-                    n[1] = v[1] = (sin(heading));
-                    n[2] = v[2] = (10.0);
-                    normalize(n);
-                    glNormal3dv(n);
-                    glVertex3dv(v);
-
-                    glNormal3d(0.0, 0.0, 1.0);  // one back from front
-                    glVertex3d(0.0, 0.0, 10.0);
-                }
-            glEnd();
-            glBegin(GL_TRIANGLE_STRIP);
-                for (int i = 0; i <= 360; i += 360 / (SIDES / 12))
-                {
-                    heading = i * M_PI / 180;
-
-                    n[0] = v[0] = (cos(heading));
-                    n[1] = v[1] = (sin(heading));
-                    n[2] = v[2] = (-120);
-                    normalize(n);
-                    glNormal3dv(n);
-                    glVertex3dv(v);
-
-                    glNormal3d(0.0, 0.0, -1.0); // backmost
-                    glVertex3d(0.0, 0.0, -120.0);
-                }
-            glEnd();
-        glPopMatrix();
-        glPushMatrix();
-            glScalef(0.4, 0.4, 1.0);
-            glBegin(GL_TRIANGLE_STRIP);
-                for (int i = 0; i <= 360; i += 360 / (SIDES / 24))
-                {
-                    heading = i * M_PI / 180;
-
-                    n[0] = v[0] = (cos(heading));
-                    n[1] = v[1] = (sin(heading));
-                    n[2] = v[2] = (40.0);
-                    normalize(n);
-                    glNormal3dv(n);
-                    glVertex3dv(v);
-
-                    glNormal3d(0.0, 0.0, 1.0);  // frontmost
-                    glVertex3d(0.0, 0.0, 40.0);
-                }
-            glEnd();
-        glPopMatrix();
+        z_cylinder(-20, 30, 0.7);
+        circle(10, 0.7);
+        z_cylinder(10, 30, 0.4);
+        circle(40, 0.4);
+        z_cylinder(-120, 40, 0.7);
+        circle(-120, 0.7);
     glPopMatrix();
 }
 
@@ -562,7 +430,7 @@ void intake_exhaust (void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, obi_specular);
     glMateriali(GL_FRONT, GL_SHININESS, obi_shine);
 
-    z_disk_surface(20.0, 0.0, 35.0, 15.0);
+    x_cylinder(0, 35, 15);
 }
 
 
@@ -1005,7 +873,7 @@ void housing (void)
 /****************************************************
  *                  spark_plug                      *
  ****************************************************
- * Draws the spark plug and its surface             *
+ * Draws the spark plug                             *
  ****************************************************/
 void spark_plug (void)
 {
@@ -1014,11 +882,11 @@ void spark_plug (void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
     glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
 
-    z_disk_surface(10.0, 0.0, 17.0, 5.0);
+    x_cylinder(0, 17, 5);
     glPushMatrix();
         glScalef(1.0, 5.0, 5.0);
-        x_unit_circle(0.0);
-        x_unit_circle(17.0);
+        zy_circle(0, 1);
+        zy_circle(17, 1);
     glPopMatrix();
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, silver_ambient);
@@ -1026,11 +894,11 @@ void spark_plug (void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
     glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
 
-    z_disk_surface(12.0, 17.0, 23.0, 6.0);
+    x_cylinder(17, 6, 6);
     glPushMatrix();
         glScalef(1.0, 6.0, 6.0);
-        x_unit_circle(17.0);
-        x_unit_circle(23.0);
+        zy_circle(17, 1);
+        zy_circle(23, 1);
     glPopMatrix();
 
     glMaterialfv(GL_FRONT, GL_AMBIENT,  wplastic_ambient);
@@ -1038,11 +906,11 @@ void spark_plug (void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, wplastic_specular);
     glMateriali(GL_FRONT, GL_SHININESS, wplastic_shine);
 
-    z_disk_surface(10.0, 23.0, 44.0, 5.0);
+    x_cylinder(23, 21, 5);
     glPushMatrix();
         glScalef(1.0, 5.0, 5.0);
-        x_unit_circle(23.0);
-        x_unit_circle(44.0);
+        zy_circle(23, 1);
+        zy_circle(44, 1);
     glPopMatrix();
 
     glMaterialfv(GL_FRONT, GL_AMBIENT,  obi_ambient);
@@ -1050,11 +918,11 @@ void spark_plug (void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, obi_specular);
     glMateriali(GL_FRONT, GL_SHININESS, obi_shine);
 
-    z_disk_surface(8.0, 44.0, 52.0, 3.0);
+    x_cylinder(44, 8, 3);
     glPushMatrix();
         glScalef(1.0, 3.0, 3.0);
-        x_unit_circle(44.0);
-        x_unit_circle(52.0);
+        zy_circle(44, 1);
+        zy_circle(52, 1);
     glPopMatrix();
 }
 
@@ -1118,22 +986,28 @@ void sparks (void)
 void table (void)
 {
     //top
+    glEnable(GL_TEXTURE_2D);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glPushMatrix();
         glMaterialfv(GL_FRONT, GL_AMBIENT,  wood_ambient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  wood_diffuse);
         glMaterialfv(GL_FRONT, GL_SPECULAR, wood_specular);
         glMateriali(GL_FRONT, GL_SHININESS, wood_shine);
-        glTranslatef(-500, -237, 170);
+        glTranslatef(0, -214, 0);
         glScalef(1000, 50, 400);
         unit_cube();
     glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
     //legs
     glPushMatrix();
         glMaterialfv(GL_FRONT, GL_AMBIENT,  obi_ambient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  obi_diffuse);
         glMaterialfv(GL_FRONT, GL_SPECULAR, obi_specular);
         glMateriali(GL_FRONT, GL_SHININESS, obi_shine);
-        glTranslatef(-500, -237, 145);
+        glTranslatef(-488, -442, 187);
         glRotatef(180, 1, 0, 0);
         glScalef(25, 400, 25);
         unit_cube(); //front left
@@ -1165,7 +1039,7 @@ void toolbox (void)
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  ruby_diffuse);
         glMaterialfv(GL_FRONT, GL_SPECULAR, ruby_specular);
         glMateriali(GL_FRONT, GL_SHININESS, ruby_shine);
-        glTranslatef(-1050, -637, 170);
+        glTranslatef(-800, -300, 0);
         glPushMatrix();
             glScalef(500, 700, 400);
             unit_cube();
@@ -1175,27 +1049,27 @@ void toolbox (void)
         glMaterialfv(GL_FRONT, GL_SPECULAR, silver_specular);
         glMateriali(GL_FRONT, GL_SHININESS, silver_shine);
         glPushMatrix();
-            glTranslatef(50, 150, 5);
+            glTranslatef(0, -200, 205);
             glScalef(400, 10, 10);
             unit_cube();
         glPopMatrix();
         glPushMatrix();
-            glTranslatef(50, 300, 5);
+            glTranslatef(0, -50, 205);
             glScalef(400, 10, 10);
             unit_cube();
         glPopMatrix();
         glPushMatrix();
-            glTranslatef(50, 450, 5);
+            glTranslatef(0, 100, 205);
             glScalef(400, 10, 10);
             unit_cube();
         glPopMatrix();
         glPushMatrix();
-            glTranslatef(50, 550, 5);
+            glTranslatef(0, 200, 205);
             glScalef(400, 10, 10);
             unit_cube();
         glPopMatrix();
         glPushMatrix();
-            glTranslatef(50, 625, 5);
+            glTranslatef(0, 275, 205);
             glScalef(400, 10, 10);
             unit_cube();
         glPopMatrix();
@@ -1210,24 +1084,20 @@ void toolbox (void)
  ****************************************************/
 void overhead_light (void)
 {
+    glEnable(GL_TEXTURE_2D);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  psilver_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  psilver_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, psilver_specular);
+    glMateriali(GL_FRONT, GL_SHININESS, psilver_shine);
     glPushMatrix();
-        glMaterialfv(GL_FRONT, GL_AMBIENT,  psilver_ambient);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE,  psilver_diffuse);
-        glMaterialfv(GL_FRONT, GL_SPECULAR, psilver_specular);
-        glMateriali(GL_FRONT, GL_SHININESS, psilver_shine);
-        glTranslatef(-250, 450, 0);
         glRotatef(90, 0, 0, 1);
-        glPushMatrix();
-            glScalef(70, 30, 30);
-            z_disk_surface(20, 0, 1, 1);
-            x_unit_circle(1);
-        glPopMatrix();
-        glPushMatrix();
-            glTranslatef(70, 0, 0);
-            glScalef(300, 3, 3);
-            z_disk_surface(20, 0, 1, 1);
-        glPopMatrix();
+        x_cylinder(0, 70, 30);
+        zy_circle(70, 30);
+        x_cylinder(70, 350, 3);
     glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
 }
 
 
@@ -1243,26 +1113,72 @@ void flashlight (void)
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  tin_diffuse);
         glMaterialfv(GL_FRONT, GL_SPECULAR, tin_specular);
         glMateriali(GL_FRONT, GL_SHININESS, tin_shine);
-        glTranslatef(250, -170, 0);
         glRotatef(45, 0, 1, 0);
         glRotatef(-3, 0, 0, 1);
         glPushMatrix();
             glScalef(110, 10, 10);
-            z_disk_surface(20, 0, 1, 1);
-            x_unit_circle(1);
+            x_cylinder(0, 1, 1);
+            zy_circle(1, 1);
         glPopMatrix();
         glPushMatrix();
             glTranslatef(-30, 0, 0);
             glScalef(30, 15, 15);
-            z_disk_surface(20, 0, 1, 1);
-            x_unit_circle(1);
+            x_cylinder(0, 1, 1);
+            zy_circle(1, 1);
         glPopMatrix();
         glPushMatrix();
             glTranslatef(-55, 0, 0);
             glScalef(30, 14.8, 14.8);
             glMaterialfv(GL_FRONT, GL_EMISSION, flashlight_emission);
-            x_unit_circle(1);
+            zy_circle(1, 1);
             glMaterialfv(GL_FRONT, GL_EMISSION, zero_emission);
         glPopMatrix();
+    glPopMatrix();
+}
+
+
+/****************************************************
+ *                   walls                          *
+ ****************************************************/
+void walls (void)
+{
+    glPushMatrix();
+        glTranslatef(-2000, -637, -325);
+        glScalef(3000, 1500, 1);
+        unit_square();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(1000, -637, -325);
+        glRotatef(-90, 0, 1, 0);
+        glScalef(3000, 1500, 1);
+        unit_square();
+    glPopMatrix();
+}
+
+
+/****************************************************
+ *                  ceiling                         *
+ ****************************************************/
+void ceiling (void)
+{
+    glPushMatrix();
+        glTranslatef(-2000, 865, -325);
+        glRotatef(90, 1, 0, 0);
+        glScalef(3000, 3000, 1);
+        unit_square();
+    glPopMatrix();
+}
+
+
+/****************************************************
+ *                conc_floor                        *
+ ****************************************************/
+void conc_floor (void)
+{
+    glPushMatrix();
+        glTranslatef(-2000, -637, -325);
+        glRotatef(90, 1, 0, 0);
+        glScalef(3000, 3000, 1);
+        unit_square();
     glPopMatrix();
 }
