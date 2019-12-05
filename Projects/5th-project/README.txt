@@ -4,6 +4,7 @@ Wankel Rotary Engine
 
 MIPMAPPING has been applied using SOIL's automatic mipmapping at texture load
 time.
+Very noticeable when looking at the environment map applied to the barrel.
 
 CAMERA CONTROLS have been implemented using the keyboard rather than the menu.
 Camera controls are as follows:

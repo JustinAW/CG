@@ -59,6 +59,7 @@ static GLuint wood_tex;
 static GLuint conc_tex;
 static GLuint wall_tex;
 static GLuint ceil_tex;
+static GLuint barr_refl;
 
 void init (void)
 {
@@ -119,6 +120,7 @@ void init (void)
     glEnableClientState(GL_NORMAL_ARRAY);
     glClearColor(0.5, 0.5, 0.5, 0.0);
     glShadeModel(GL_SMOOTH);
+    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
     chrome_tex = SOIL_load_OGL_texture(
             "../Bitmaps/chrome_sphere.bmp",
@@ -174,6 +176,17 @@ void init (void)
         exit(1);
     }
     glBindTexture(GL_TEXTURE_2D, ceil_tex);
+
+    barr_refl = SOIL_load_OGL_texture(
+            "../Bitmaps/barrel_reflect.bmp",
+            SOIL_LOAD_RGBA,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);
+    if (!barr_refl) {
+        printf("***NO BITMAP RETRIEVED***\n");
+        exit(1);
+    }
+    glBindTexture(GL_TEXTURE_2D, barr_refl);
 
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -255,6 +268,14 @@ void draw_environment (void)
     glPushMatrix();
         glTranslatef(250, 450, 0);
         overhead_light();
+    glPopMatrix();
+
+
+    // BARREL
+    glBindTexture(GL_TEXTURE_2D, barr_refl);
+    glPushMatrix();
+        glTranslatef(700, -742, 1000);
+        barrel();
     glPopMatrix();
 }
 

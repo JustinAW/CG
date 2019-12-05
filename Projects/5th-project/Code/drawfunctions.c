@@ -1182,3 +1182,18 @@ void conc_floor (void)
         unit_square();
     glPopMatrix();
 }
+
+
+void barrel (void)
+{
+    glEnable(GL_TEXTURE_2D);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glPushMatrix();
+        glRotatef(-90, 1, 0, 0);
+        z_cylinder(100, 500, 150);
+        glDisable(GL_TEXTURE_2D);
+        circle(100, 150);
+        circle(600, 150);
+    glPopMatrix();
+}

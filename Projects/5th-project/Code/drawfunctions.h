@@ -54,4 +54,6 @@ void ceiling (void);
 
 void conc_floor (void);
 
+void barrel (void);
+
 #endif
