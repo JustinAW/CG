@@ -2,7 +2,7 @@
  *                drawfunctions.c                   *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     05 Dec 2019                         *
+ *  Edited:     06 Dec 2019                         *
  ****************************************************
  * Contains the functions for drawing the parts of  *
  * a Wankel rotary engine in 3d as well as an       *
@@ -66,7 +66,7 @@ static GLfloat bronze_specular[] = {0.393548, 0.271906, 0.166721, 1.0};
 static GLfloat bronze_shine = 25.6;
 
 static GLfloat wood_ambient[] = {0.25, 0.148, 0.06475, 1.0};
-static GLfloat wood_diffuse[] = {0.4, 0.2168, 0.1036, 1.0};
+static GLfloat wood_diffuse[] = {0.3, 0.1168, 0.0036, 1.0};
 static GLfloat wood_specular[] = {0.393548, 0.271906, 0.166721, 1.0};
 static GLfloat wood_shine = 5.0;
 
@@ -77,8 +77,6 @@ static GLfloat spark_emission[] = {1.0, 0.97, 0.52, 1.0};
 
 /****************************************************
  *                       sq                         *
- ****************************************************
- * squares a number                                 *
  ****************************************************/
 GLfloat sq (GLdouble x)
 {
@@ -88,8 +86,6 @@ GLfloat sq (GLdouble x)
 
 /****************************************************
  *                    normalize                     *
- ****************************************************
- * Normalizes a vector                              *
  ****************************************************/
 void normalize (GLdouble *v)
 {
@@ -100,7 +96,9 @@ void normalize (GLdouble *v)
     v[2] /= n;
 }
 
-
+/****************************************************
+ *                  unit_square                     *
+ ****************************************************/
 void unit_square (void)
 {
     glBegin(GL_QUADS);
@@ -109,19 +107,6 @@ void unit_square (void)
         glVertex3d(1,1,0);
         glVertex3d(1,0,0);
     glEnd();
-}
-
-
-/****************************************************
- *                    unit_cube                     *
- ****************************************************
- * Draws a length 1 cube with origin at 0,0,0       *
- ****************************************************/
-void unit_cube (void)
-{
-    glutSolidCube(1);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
 }
 
 
@@ -441,6 +426,9 @@ void intake_exhaust (void)
  ****************************************************/
 void rotor (void)
 {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+
     glMaterialfv(GL_FRONT, GL_AMBIENT,  psilver_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE,  psilver_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, psilver_specular);
@@ -578,6 +566,9 @@ void rotor (void)
             }
         glEnd();
     glPopMatrix();
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 
@@ -588,6 +579,9 @@ void rotor (void)
  ****************************************************/
 void housing (void)
 {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+
     glMaterialfv(GL_FRONT, GL_AMBIENT,  pchrome_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE,  pchrome_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, pchrome_specular);
@@ -867,6 +861,9 @@ void housing (void)
     };
 
     glMultiDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_BYTE, indices, 3);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 
@@ -934,6 +931,9 @@ void spark_plug (void)
  ****************************************************/
 void sparks (void)
 {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+
     static GLfloat vertexValues[] = {
         2.0, 1.0, 0.0,      //0
         0.0, -13.0, 0.0,    //1
@@ -975,6 +975,9 @@ void sparks (void)
     glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_BYTE, spark_tips);
     glDrawElements(GL_POLYGON, 9, GL_UNSIGNED_BYTE, spark_body);
     glMaterialfv(GL_FRONT, GL_EMISSION, zero_emission);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 
@@ -985,18 +988,18 @@ void sparks (void)
  ****************************************************/
 void table (void)
 {
-    //top
-    glEnable(GL_TEXTURE_CUBE_MAP);
+    //top tex
     glEnable(GL_TEXTURE_2D);
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-    glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
-            GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    glPushMatrix();
+        glTranslatef(-500, -188, -200);
+        glRotatef(90, 1, 0, 0);
+        glScalef(1000, 400, 1);
+        unit_square();
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+    //top
     glPushMatrix();
         glMaterialfv(GL_FRONT, GL_AMBIENT,  wood_ambient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  wood_diffuse);
@@ -1004,31 +1007,29 @@ void table (void)
         glMateriali(GL_FRONT, GL_SHININESS, wood_shine);
         glTranslatef(0, -214, 0);
         glScalef(1000, 50, 400);
-        unit_cube();
+        glutSolidCube(1);
     glPopMatrix();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_TEXTURE_CUBE_MAP);
     //legs
     glPushMatrix();
         glMaterialfv(GL_FRONT, GL_AMBIENT,  obi_ambient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  obi_diffuse);
         glMaterialfv(GL_FRONT, GL_SPECULAR, obi_specular);
         glMateriali(GL_FRONT, GL_SHININESS, obi_shine);
-        glTranslatef(-488, -442, 187);
+        glTranslatef(-488, -440, 187);
         glRotatef(180, 1, 0, 0);
         glScalef(25, 400, 25);
-        unit_cube(); //front left
+        glutSolidCube(1); //front left
         glPushMatrix();
             glTranslatef(39, 0, 0);
-            unit_cube(); //front right
+            glutSolidCube(1); //front right
         glPopMatrix();
         glPushMatrix();
             glTranslatef(0, 0, 15);
-            unit_cube(); //back left
+            glutSolidCube(1); //back left
         glPopMatrix();
         glPushMatrix();
             glTranslatef(39, 0, 15);
-            unit_cube(); //back right
+            glutSolidCube(1); //back right
         glPopMatrix();
     glPopMatrix();
 }
@@ -1049,7 +1050,7 @@ void toolbox (void)
         glTranslatef(-800, -300, 0);
         glPushMatrix();
             glScalef(500, 700, 400);
-            unit_cube();
+            glutSolidCube(1);
         glPopMatrix();
         glMaterialfv(GL_FRONT, GL_AMBIENT,  silver_ambient);
         glMaterialfv(GL_FRONT, GL_DIFFUSE,  silver_diffuse);
@@ -1058,27 +1059,27 @@ void toolbox (void)
         glPushMatrix();
             glTranslatef(0, -200, 205);
             glScalef(400, 10, 10);
-            unit_cube();
+            glutSolidCube(1);
         glPopMatrix();
         glPushMatrix();
             glTranslatef(0, -50, 205);
             glScalef(400, 10, 10);
-            unit_cube();
+            glutSolidCube(1);
         glPopMatrix();
         glPushMatrix();
             glTranslatef(0, 100, 205);
             glScalef(400, 10, 10);
-            unit_cube();
+            glutSolidCube(1);
         glPopMatrix();
         glPushMatrix();
             glTranslatef(0, 200, 205);
             glScalef(400, 10, 10);
-            unit_cube();
+            glutSolidCube(1);
         glPopMatrix();
         glPushMatrix();
             glTranslatef(0, 275, 205);
             glScalef(400, 10, 10);
-            unit_cube();
+            glutSolidCube(1);
         glPopMatrix();
     glPopMatrix();
 }
@@ -1191,15 +1192,28 @@ void conc_floor (void)
 }
 
 
+/****************************************************
+ *                   barrel                         *
+ ****************************************************/
 void barrel (void)
 {
-    glEnable(GL_TEXTURE_2D);
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glEnable(GL_TEXTURE_CUBE_MAP);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
+            GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+
     glPushMatrix();
         glRotatef(-90, 1, 0, 0);
         z_cylinder(100, 500, 150);
-        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_TEXTURE_CUBE_MAP);
         circle(100, 150);
         circle(600, 150);
     glPopMatrix();
@@ -1213,4 +1227,6 @@ void barrel (void)
         glRotatef(90, 1, 0, 0);
         glutSolidTorus(10, 150, 60, 60);
     glPopMatrix();
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
 }

@@ -1,7 +1,6 @@
 #ifndef DRAWFUNCTIONS_H
 #define DRAWFUNCTIONS_H
 
-
 void glMultiDrawElements (GLenum, const GLsizei *, GLenum, const GLvoid *, GLsizei);
 
 GLfloat sq (GLdouble);
@@ -9,8 +8,6 @@ GLfloat sq (GLdouble);
 void normalize (GLdouble *);
 
 void unit_square (void);
-
-void unit_cube (void);
 
 void z_cylinder (GLfloat, GLfloat, GLfloat);
 

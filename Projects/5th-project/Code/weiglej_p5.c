@@ -2,7 +2,7 @@
  *                  Project 5                       *
  ****************************************************
  *  Author:     Justin Weigle                       *
- *  Edited:     05 Dec 2019                         *
+ *  Edited:     06 Dec 2019                         *
  ****************************************************
  * Draws the 3d animation of a Wankel rotary engine *
  * as well as a scene for the engine to be in.      *
@@ -110,14 +110,13 @@ void init (void)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
+    glEnable(GL_TEXTURE_GEN_R);
 
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
     glEnable(GL_LIGHT2);
     glEnable(GL_LIGHT3);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
     glClearColor(0.5, 0.5, 0.5, 0.0);
     glShadeModel(GL_SMOOTH);
     glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
@@ -133,12 +132,7 @@ void init (void)
     }
     glBindTexture(GL_TEXTURE_2D, chrome_tex);
 
-    wood_tex = SOIL_load_OGL_cubemap(
-            "../Bitmaps/wood.bmp",
-            "../Bitmaps/wood.bmp",
-            "../Bitmaps/wood.bmp",
-            "../Bitmaps/wood.bmp",
-            "../Bitmaps/wood.bmp",
+    wood_tex = SOIL_load_OGL_texture(
             "../Bitmaps/wood.bmp",
             SOIL_LOAD_RGBA,
             SOIL_CREATE_NEW_ID,
@@ -147,7 +141,7 @@ void init (void)
         printf("***NO BITMAP RETRIEVED***\n");
         exit(1);
     }
-    glBindTexture(GL_TEXTURE_CUBE_MAP, wood_tex);
+    glBindTexture(GL_TEXTURE_2D, wood_tex);
 
     conc_tex = SOIL_load_OGL_texture(
             "../Bitmaps/concrete.bmp",
@@ -182,8 +176,13 @@ void init (void)
     }
     glBindTexture(GL_TEXTURE_2D, ceil_tex);
 
-    barr_refl = SOIL_load_OGL_texture(
-            "../Bitmaps/barrel_reflect.bmp",
+    barr_refl = SOIL_load_OGL_cubemap(
+            "../Bitmaps/barrel_reflect1.png",
+            "../Bitmaps/barrel_reflect2.png",
+            "../Bitmaps/barrel_reflect3.png",
+            "../Bitmaps/barrel_reflect4.png",
+            "../Bitmaps/barrel_reflect5.png",
+            "../Bitmaps/barrel_reflect6.png",
             SOIL_LOAD_RGBA,
             SOIL_CREATE_NEW_ID,
             SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);
@@ -191,12 +190,14 @@ void init (void)
         printf("***NO BITMAP RETRIEVED***\n");
         exit(1);
     }
-    glBindTexture(GL_TEXTURE_2D, barr_refl);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, barr_refl);
 
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
             GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 
@@ -229,8 +230,6 @@ void draw_environment (void)
     glEnable(GL_TEXTURE_2D);
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
     glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glCullFace(GL_FRONT);
     glBindTexture(GL_TEXTURE_2D, wall_tex);
     walls();
@@ -243,7 +242,7 @@ void draw_environment (void)
     glDisable(GL_CULL_FACE);
 
     // TABLES
-    glBindTexture(GL_TEXTURE_CUBE_MAP, wood_tex);
+    glBindTexture(GL_TEXTURE_2D, wood_tex);
     glPushMatrix();
         table();
     glPopMatrix();
@@ -275,9 +274,8 @@ void draw_environment (void)
         overhead_light();
     glPopMatrix();
 
-
     // BARREL
-    glBindTexture(GL_TEXTURE_2D, barr_refl);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, barr_refl);
     glPushMatrix();
         glTranslatef(700, -742, 1000);
         barrel();
@@ -293,13 +291,6 @@ void draw_environment (void)
  ****************************************************/
 void draw_wankel (void)
 {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glColor3f(0.0, 0.0, 0.0);
-
-// BACK BUFFER drawing ========================================================
-    glDrawBuffer(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
     // INTAKE
     glPushMatrix();
         glTranslatef(-160, 77.0, -30.0);
@@ -376,6 +367,10 @@ void draw_wankel (void)
  ****************************************************/
 void display (void)
 {
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glDrawBuffer(GL_BACK);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
     glPushMatrix();
         gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
         glRotatef(CAM_ANGLE_X, 0, 1, 0);
@@ -547,6 +542,49 @@ GLfloat get_magnitude_cam (void)
 
 
 /****************************************************
+ *                      mouse                       *
+ ****************************************************
+ * Can zoom in and out with mouse wheel             *
+ ****************************************************/
+void mouse (int btn, int state, int x, int y)
+{
+    GLfloat m = get_magnitude_cam();
+    if (state == GLUT_DOWN){
+    switch (btn)
+    {
+        case 3:
+            if ((CAM_X == 0.0) && (CAM_Y == 0.0) && (CAM_Z == 0.0))
+            {
+                printf("Full zoom, zoom out... if you want to\n");
+                glutPostRedisplay();
+                break;
+            }
+            CAM_X -= (CAM_X / m) * ZOOM;
+            CAM_Y -= (CAM_Y / m) * ZOOM;
+            CAM_Z -= (CAM_Z / m) * ZOOM;
+            glutPostRedisplay();
+            break;
+        // ZOOM OUT
+        case 4:
+            if ((CAM_X == 0.0) && (CAM_Y == 0.0) && (CAM_Z == 0.0))
+            {
+                CAM_X = 0.0;
+                CAM_Y = 0.0;
+                CAM_Z = 50.0;
+                glutPostRedisplay();
+                break;
+            }
+            CAM_X += (CAM_X / m) * ZOOM;
+            CAM_Y += (CAM_Y / m) * ZOOM;
+            CAM_Z += (CAM_Z / m) * ZOOM;
+            glutPostRedisplay();
+            break;
+    }
+    }
+}
+
+
+/****************************************************
  *                  keyboard                        *
  ****************************************************
  * Used to control the camera                       *
@@ -679,12 +717,13 @@ int main (int argc, char** argv)
     glutAddSubMenu("Light Control", lightmenu);
     glutAddMenuEntry("Reset", 1);
     glutAddMenuEntry("Exit", 2);
-    glutAttachMenu (GLUT_RIGHT_BUTTON);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 
-    glutReshapeFunc (reshape);
-    glutDisplayFunc (display);
-    glutKeyboardFunc (keyboard);
-    glutSpecialFunc (spot_control);
+    glutReshapeFunc(reshape);
+    glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+    glutMouseFunc(mouse);
+    glutSpecialFunc(spot_control);
     glutIdleFunc(idle);
     glutMainLoop ();
     return 0;
